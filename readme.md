@@ -101,7 +101,7 @@ Seting up the Development-Environment
 You can either create a debian and/or jar package with maven. Alternatively you can download an upcoming version from the imedias servers or the [this github repository](https://github.com/Kennox/rscc/releases).
 The ".jar"-file can be run with the following code:
 ```
-java -jar rsccfx.jar
+sudo java -jar rsccfx.jar
 ```
 
 To install the debian packge (recommend!) you can run the following command in the respective directory:

@@ -156,9 +156,9 @@ public class RsccSupportPresenter implements ControlledPresenter {
         (observable, oldValue, newValue) -> {
           if (oldValue != newValue) {
             if (newValue) {
-              view.validationImg.load(validImage);
+              Platform.runLater(() -> view.validationImg.load(validImage));
             } else {
-              view.validationImg.load(invalidImage);
+              Platform.runLater(() -> view.validationImg.load(invalidImage));
             }
           }
         }
