@@ -1,64 +1,12 @@
 #!/bin/sh
 echo "[Desktop Entry]
 Categories=System;
-Exec=java -jar /usr/bin/rsccfx.jar
+Exec=sudo java -jar /usr/bin/rsccfx.jar
 Icon=rscc
 Name=Remote Support
 Name[de]=Fernwartung (JavaFX)
 Name[en]=Remote Support (JavaFX)
 Name[it]=Assistenza Remota (JavaFX)
+Name[fr]=Contrôle à distance (JavaFX)
 StartupNotify=true
 Type=Application" > /usr/share/applications/ch-imedias-rsccfx.desktop
-mkdir /home/user/.rscc
-echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<supporters>
-    <supporter>
-        <description>imedias</description>
-        <address>agora.imedias.ch</address>
-        <port></port>
-        <encrypted>false</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-    <supporter>
-        <description>imedias (encrypted)</description>
-        <address>agora.imedias.ch</address>
-        <port></port>
-        <encrypted>true</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-    <supporter>
-        <description>IFE Informatik AG</description>
-        <address>46.14.169.243</address>
-        <port></port>
-        <encrypted>false</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-    <supporter>
-        <description>Edelmanns Informatik GmbH</description>
-        <address>lernstick.edelmanns.ch</address>
-        <port></port>
-        <encrypted>false</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-    <supporter>
-        <description>Ronny Standtke</description>
-        <address>standtke.nsupdate.info</address>
-        <port></port>
-        <encrypted>false</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-    <supporter>
-        <description>dindan solutions GmbH</description>
-        <address>dindan.dyndns.info</address>
-        <port></port>
-        <encrypted>false</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-    <supporter>
-        <description></description>
-        <address></address>
-        <port></port>
-        <encrypted>false</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-</supporters>' > /home/user/.rscc/rscc-defaults-lernstick.xml

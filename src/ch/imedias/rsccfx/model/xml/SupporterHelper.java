@@ -1,6 +1,7 @@
 package ch.imedias.rsccfx.model.xml;
 
 import ch.imedias.rsccfx.RsccApp;
+import ch.imedias.rsccfx.model.Rscc;
 import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -20,10 +21,17 @@ public class SupporterHelper {
 
   private static final Logger LOGGER =
       Logger.getLogger(SupporterHelper.class.getName());
+  private Rscc model;
   private static final String SUPPORT_ADDRESSES = "supportAddresses";
-  private static final String DEFAULT_SUPPORTERS_FILENAME =
-          "/home/user/.rscc/rscc-defaults-lernstick.xml";
   private final Preferences preferences = Preferences.userNodeForPackage(RsccApp.class);
+
+  /**
+   * Initializes a new SupporterHelper object.
+   * @param model Rscc model.
+   */
+  public SupporterHelper(Rscc model) {
+    this.model = model;
+  }
 
   /**
    * Gets the supporter list from the preferences file.
@@ -54,7 +62,7 @@ public class SupporterHelper {
   public List<Supporter> getDefaultSupporters() {
     LOGGER.info("Loading default supporter list");
     File supportersXmlFile =
-        new File(DEFAULT_SUPPORTERS_FILENAME);
+        new File(model.getPathToDefaultSupporters());
     return getSupportersFromXml(supportersXmlFile);
   }
 

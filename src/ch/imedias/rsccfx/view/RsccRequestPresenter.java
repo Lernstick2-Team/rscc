@@ -47,7 +47,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
     this.model = model;
     this.view = view;
     headerPresenter = new HeaderPresenter(model, view.headerView);
-    supporterHelper = new SupporterHelper();
+    supporterHelper = new SupporterHelper(model);
     initHeader();
     initSupporterList();
     attachEvents();
