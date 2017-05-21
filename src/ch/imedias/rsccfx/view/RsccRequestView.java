@@ -5,7 +5,6 @@ import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.util.KeyUtil;
 import ch.imedias.rsccfx.view.util.KeyTextField;
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.util.logging.Logger;
@@ -77,7 +76,6 @@ public class RsccRequestView extends BorderPane {
     this.model = model;
     headerView = new HeaderView(model);
     this.keyUtil = model.getKeyUtil();
-    SvgImageLoaderFactory.install();
     initFieldData();
     layoutForm();
     layoutKeyGenerationPane();
