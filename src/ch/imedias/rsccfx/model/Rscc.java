@@ -33,7 +33,7 @@ import javafx.beans.property.StringProperty;
  * Handles communication with the keyserver.
  */
 public class Rscc {
-  public static final int PACKAGE_SIZE = 10000; // needed, since a static method access it.
+  private static final int PACKAGE_SIZE = 10000; // needed, since a static method access it.
   private static final Logger LOGGER =
       Logger.getLogger(Rscc.class.getName());
   /**
@@ -64,7 +64,8 @@ public class Rscc {
   private final StringProperty connectionStatusText = new SimpleStringProperty();
   private final StringProperty connectionStatusStyle = new SimpleStringProperty();
 
-  private final IntegerProperty udpPackageSize = new SimpleIntegerProperty(PACKAGE_SIZE);
+  private final IntegerProperty udpPackageSize = new SimpleIntegerProperty(
+      getUdpPackageSizeStatic());
   private final IntegerProperty proxyPort = new SimpleIntegerProperty(2601);
   private final IntegerProperty stunServerPort = new SimpleIntegerProperty(3478);
 
@@ -587,6 +588,10 @@ public class Rscc {
 
   public int getUdpPackageSize() {
     return udpPackageSize.get();
+  }
+
+  public static int getUdpPackageSizeStatic() {
+    return PACKAGE_SIZE;
   }
 
   public void setUdpPackageSize(int udpPackageSize) {
