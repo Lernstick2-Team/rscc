@@ -81,6 +81,8 @@ public class PopOverHelper {
 
   /**
    * Initializes PopOver according to view.
+   * @param model is needed for correct resizing.
+   * @param viewName is required to change content in popover boxes.
    */
   public PopOverHelper(Rscc model, String viewName) {
     this.model = model;
