@@ -23,26 +23,30 @@ public class RsccTest {
   private static final String KEY_SERVER_HTTP_PORT = "800";
 
   Rscc model;
+  SystemCommanderReturnValues returnValues;
   SystemCommander mockSystemCommander;
   KeyUtil mockKeyUtil;
+
 
   /**
    * Initializes test fixture before each test.
    */
-  //  @Before
-  //  public void setUp() throws Exception {
-  //    mockSystemCommander = mock(SystemCommander.class);
-  //    mockKeyUtil = mock(KeyUtil.class);
-  //    model = new Rscc(mockSystemCommander, mockKeyUtil);
-  //    // since commandStringGenerator is mainly a utility function and is being tested separately
-  //    // call the real method
-  //    doCallRealMethod().when(mockSystemCommander).commandStringGenerator(any(), any(), any());
-  //    model.setKeyServerIp(KEY_SERVER_IP);
-  //    model.setKeyServerHttpPort(KEY_SERVER_HTTP_PORT);
-  //    when(mockSystemCommander.executeTerminalCommand(
-  //        argThat(string -> string.contains("port_share.sh")))).thenReturn(KEY);
-  //    when(mockKeyUtil.getKey()).thenReturn(KEY);
-  //  }
+  @Before
+  public void setUp() throws Exception {
+    mockSystemCommander = mock(SystemCommander.class);
+    mockKeyUtil = mock(KeyUtil.class);
+    model = new Rscc(mockSystemCommander, mockKeyUtil);
+    returnValues = new SystemCommanderReturnValues();
+    // since commandStringGenerator is mainly a utility function and is being tested separately
+    // call the real method
+    doCallRealMethod().when(mockSystemCommander).commandStringGenerator(any(), any(), any());
+    model.setKeyServerIp(KEY_SERVER_IP);
+    model.setKeyServerHttpPort(KEY_SERVER_HTTP_PORT);
+    returnValues.setOutputString(KEY);
+    when(mockSystemCommander.executeTerminalCommand(
+        argThat(string -> string.contains("port_share.sh")))).thenReturn(returnValues);
+    when(mockKeyUtil.getKey()).thenReturn(KEY);
+  }
 
   /**
    * Test for Constructor {@link Rscc#Rscc(SystemCommander,KeyUtil)}.
