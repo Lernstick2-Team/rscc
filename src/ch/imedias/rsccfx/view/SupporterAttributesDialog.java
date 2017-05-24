@@ -136,10 +136,8 @@ public class SupporterAttributesDialog extends DialogPane {
   }
 
   private void createSupporterDialog() {
-    while (!validateName()) {
       dialog.showAndWait()
           .filter(response -> response == applyBtnType)
           .ifPresent(response -> saveData());
-    }
   }
 }
