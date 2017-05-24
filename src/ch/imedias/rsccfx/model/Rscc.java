@@ -13,8 +13,10 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
@@ -41,6 +43,15 @@ public class Rscc {
    * Important: Make sure to NOT include a / in the beginning or the end.
    */
   private static final String DOCKER_FOLDER_NAME = "docker-build_p2p";
+  private static final String DEFAULT_SUPPORTERS_FILE_NAME = "rscc-defaults-lernstick.xml";
+  private String pathToResources;
+  private String pathToResourceDocker;
+  //TODO: Replace when the StunFileGeneration is ready
+  private String pathToStunDump;
+  private String pathToDefaultSupporters;
+  private static final String[] EXTRACTED_RESOURCES =
+      {DOCKER_FOLDER_NAME, STUN_DUMP_FILE_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
+
   /**
    * sh files can not be executed in the JAR file and therefore must be extracted.
    * ".rscc" is a hidden folder in the user's home directory (e.g. /home/user)
@@ -77,11 +88,6 @@ public class Rscc {
   private final BooleanProperty isForcingServerMode = new SimpleBooleanProperty(false);
   private final BooleanProperty isVncSessionRunning = new SimpleBooleanProperty(false);
 
-  //TODO: Replace when the StunFileGeneration is ready
-  private final String pathToStunDumpFile = this.getClass()
-      .getClassLoader().getResource(STUN_DUMP_FILE_NAME)
-      .toExternalForm().replace("file:", "");
-
   private final KeyUtil keyUtil;
 
   private boolean isLocalIceSuccessful = false;
@@ -92,7 +98,9 @@ public class Rscc {
   private VncViewerHandler vncViewer;
   private VncServerHandler vncServer;
   private Rscccfp rscccfp;
-  private String pathToResourceDocker;
+
+  private static final UnaryOperator<String> REMOVE_FILE_IN_PATH =
+      string -> string.replaceFirst("file:", "");
 
   /**
    * Initializes the Rscc model class.
@@ -113,7 +121,6 @@ public class Rscc {
     this.keyUtil = keyUtil;
     defineResourcePath();
     readServerConfig();
-
   }
 
 
@@ -123,18 +130,37 @@ public class Rscc {
    */
   private void defineResourcePath() {
     String userHome = System.getProperty("user.home");
+    LOGGER.fine("userHome " + userHome);
     URL theLocationOftheRunningClass = this.getClass().getProtectionDomain()
         .getCodeSource().getLocation();
+    LOGGER.fine("Source Location: " + theLocationOftheRunningClass);
     File actualClass = new File(theLocationOftheRunningClass.getFile());
     if (actualClass.isDirectory()) {
+      LOGGER.fine("Running in IDE");
+      // set paths of the files
       pathToResourceDocker =
-          getClass().getClassLoader().getResource(DOCKER_FOLDER_NAME)
-              .getFile().replaceFirst("file:", "");
-
+          REMOVE_FILE_IN_PATH.apply(
+              getClass().getClassLoader().getResource(DOCKER_FOLDER_NAME).getFile()
+          );
+      pathToStunDump =
+          REMOVE_FILE_IN_PATH.apply(
+              getClass().getClassLoader().getResource(STUN_DUMP_FILE_NAME).getFile()
+          );
+      pathToDefaultSupporters =
+          REMOVE_FILE_IN_PATH.apply(
+              getClass().getClassLoader().getResource(DEFAULT_SUPPORTERS_FILE_NAME).getFile()
+          );
     } else {
-      pathToResourceDocker = userHome + "/" + RSCC_FOLDER_NAME + "/" + DOCKER_FOLDER_NAME;
-      extractJarContents(theLocationOftheRunningClass,
-          userHome + "/" + RSCC_FOLDER_NAME, DOCKER_FOLDER_NAME);
+      LOGGER.fine("Running in JAR");
+      pathToResources = userHome + "/" + RSCC_FOLDER_NAME;
+      // set paths of the files
+      pathToResourceDocker = pathToResources + "/" + DOCKER_FOLDER_NAME;
+      pathToStunDump = pathToResources + "/" + STUN_DUMP_FILE_NAME;
+      pathToDefaultSupporters = pathToResources + "/" + DEFAULT_SUPPORTERS_FILE_NAME;
+      // extract all resources out of the JAR file
+      Arrays.stream(EXTRACTED_RESOURCES).forEach(resource ->
+          extractJarContents(theLocationOftheRunningClass, pathToResources, resource)
+      );
     }
   }
 
@@ -145,7 +171,9 @@ public class Rscc {
    */
   private void extractJarContents(URL sourceLocation, String destinationDirectory, String filter) {
     JarFile jarFile = null;
+    LOGGER.fine("Extract Jar Contents");
     try {
+      LOGGER.fine("sourceLocation: " + sourceLocation.getFile());
       jarFile = new JarFile(new File(sourceLocation.getFile()));
     } catch (IOException e) {
       LOGGER.severe("Exception thrown when trying to get file from: "
@@ -156,13 +184,14 @@ public class Rscc {
     while (contentList.hasMoreElements()) {
       JarEntry item = contentList.nextElement();
       if (item.getName().contains(filter)) {
-        LOGGER.fine(item.getName());
+        LOGGER.fine("JarEntry: " + item.getName());
         File targetFile = new File(destinationDirectory, item.getName());
         if (!targetFile.exists()) {
           targetFile.getParentFile().mkdirs();
           targetFile = new File(destinationDirectory, item.getName());
         }
         if (item.isDirectory()) {
+          LOGGER.fine("JarEntry: " + item.getName() + " is a directory");
           continue;
         }
         try (
@@ -172,7 +201,6 @@ public class Rscc {
           while (fromStream.available() > 0) {
             toStream.write(fromStream.read());
           }
-
         } catch (FileNotFoundException e) {
           LOGGER.severe("Exception thrown when reading from file: "
               + targetFile.getName()
@@ -232,7 +260,7 @@ public class Rscc {
     setConnectionStatus("Requesting key from server...", 1);
 
     String command = systemCommander.commandStringGenerator(
-        pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()), pathToStunDumpFile);
+        pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()), pathToStunDump);
     String key = systemCommander.executeTerminalCommand(command);
 
     keyUtil.setKey(key); // update key in model
@@ -624,5 +652,9 @@ public class Rscc {
 
   public void setStunServerPort(int stunServerPort) {
     this.stunServerPort.set(stunServerPort);
+  }
+
+  public String getPathToDefaultSupporters() {
+    return pathToDefaultSupporters;
   }
 }
