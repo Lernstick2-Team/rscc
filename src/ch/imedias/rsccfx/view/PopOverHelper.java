@@ -36,12 +36,10 @@ public class PopOverHelper {
 
   private final Strings strings = new Strings();
   private final Rscc model;
-
+  private final double sliderWidth = overlayWidth / 1.2;
   // Get Screensize
   Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
   private final double overlayWidth = primaryScreenBounds.getWidth() / 9;
-  private final double sliderWidth = overlayWidth / 1.2;
-
   // SettingsProperties
   BooleanProperty viewOnly = new SimpleBooleanProperty(false);
 
@@ -99,7 +97,6 @@ public class PopOverHelper {
         layoutRequest();
         helpPopOver.setContentNode(requestHelpBox);
         settingsPopOver.setContentNode(requestSettingsBox);
-        handleRequestSettings();
         requestSettingsBindings();
         invokeExpertSettings();
         break;
@@ -238,20 +235,6 @@ public class PopOverHelper {
   private void supportSettingsBindings() {
     model.vncQualityProperty().bindBidirectional(supportQualitySldr
         .sliderValueProperty());
-  }
-
-  /**
-   * Kills the VncServer if settings Popover is showing.
-   * Starts the VncServer after popover is closed.
-   */
-  private void handleRequestSettings() {
-    settingsPopOver.showingProperty().addListener((observableValue, oldValue, newValue) -> {
-      if (newValue) {
-        model.getVncServer().killVncServer();
-      } else {
-        model.getVncServer().start();
-      }
-    });
   }
 
   private void invokeExpertSettings() {
