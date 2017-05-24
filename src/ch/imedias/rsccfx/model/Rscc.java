@@ -330,9 +330,9 @@ public class Rscc {
     setConnectionStatus("Connected to keyserver.", 1);
 
     SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
-    System.out.println("ExitCode: "+returnValues.getExitCode());
-    if(returnValues.getExitCode() != 0 ){
-      System.out.println("ExitCode: "+returnValues.getExitCode());
+    System.out.println("ExitCode: " + returnValues.getExitCode());
+    if (returnValues.getExitCode() != 0) {
+      System.out.println("ExitCode: " + returnValues.getExitCode());
       return;
     }
 
