@@ -122,10 +122,11 @@ public class SupporterAttributesDialog extends DialogPane {
     dialog.setDialogPane(this);
   }
 
-  private void setupBindings(){
+  private void setupBindings() {
     descriptionLbl.textProperty().addListener(
         (observable, oldValue, newValue) ->
-            dialog.getDialogPane().lookupButton(applyBtnType).setDisable("".equals(newValue)));
+            dialog.getDialogPane().lookupButton(applyBtnType).setDisable("".equals(newValue))
+    );
   }
 
   private boolean validateName() {
@@ -136,8 +137,8 @@ public class SupporterAttributesDialog extends DialogPane {
   }
 
   private void createSupporterDialog() {
-      dialog.showAndWait()
-          .filter(response -> response == applyBtnType)
-          .ifPresent(response -> saveData());
+    dialog.showAndWait()
+        .filter(response -> response == applyBtnType)
+        .ifPresent(response -> saveData());
   }
 }
