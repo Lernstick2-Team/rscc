@@ -252,9 +252,9 @@ public class Rscc {
 
     String command = systemCommander.commandStringGenerator(
         pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()), pathToStunDump);
-    String key = systemCommander.executeTerminalCommand(command);
+    SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
 
-    keyUtil.setKey(key); // update key in model
+    keyUtil.setKey(returnValues.getOutputString()); // update key in model
     rscccfp = new Rscccfp(this, true);
     rscccfp.setDaemon(true);
     rscccfp.start();
@@ -329,7 +329,12 @@ public class Rscc {
 
     setConnectionStatus("Connected to keyserver.", 1);
 
-    systemCommander.executeTerminalCommand(command);
+    SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
+    System.out.println("ExitCode: "+returnValues.getExitCode());
+    if(returnValues.getExitCode() != 0 ){
+      System.out.println("ExitCode: "+returnValues.getExitCode());
+      return;
+    }
 
     rscccfp = new Rscccfp(this, false);
     rscccfp.setDaemon(true);
