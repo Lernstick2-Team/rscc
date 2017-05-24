@@ -4,6 +4,9 @@ import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.xml.Supporter;
 import ch.imedias.rsccfx.view.util.NumberTextField;
+import java.util.Optional;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -22,7 +25,7 @@ public class SupporterAttributesDialog extends DialogPane {
 
   final Dialog dialog = new Dialog();
   final GridPane attributePane = new GridPane();
-  final Label descriptionLbl = new Label();
+  final Label nameLbl = new Label();
   final Label addressLbl = new Label();
   final Label portLbl = new Label();
   final Label pictureLbl = new Label();
@@ -40,6 +43,8 @@ public class SupporterAttributesDialog extends DialogPane {
   Strings strings = new Strings();
   private Supporter supporter;
 
+  BooleanProperty validDescription = new SimpleBooleanProperty(false);
+
   /**
    * Initializes all the GUI components needed in the DialogPane.
    *
@@ -51,16 +56,14 @@ public class SupporterAttributesDialog extends DialogPane {
     this.supporter = supporter;
     initFieldData();
     layoutForm();
-    createSupporterDialog();
+    attachEventListeners();
     setupBindings();
-    // TODO: Validate that a description has been entered, else 2 + buttons can be created
-
   }
 
   private void initFieldData() {
     // populate fields which require initial data
     dialog.setTitle(strings.dialogTitleText);
-    descriptionLbl.setText(strings.dialogNameText);
+    nameLbl.setText(strings.dialogNameText);
     addressLbl.setText(strings.dialogAddressText);
     portLbl.setText(strings.dialogPortText);
     pictureLbl.setText(strings.dialogImageText);
@@ -103,7 +106,7 @@ public class SupporterAttributesDialog extends DialogPane {
     dialog.setWidth(500);
     attributePane.setId("dialogAttributePane");
 
-    attributePane.add(descriptionLbl, 0, 0);
+    attributePane.add(nameLbl, 0, 0);
     attributePane.add(nameFld, 1, 0);
     attributePane.add(addressLbl, 0, 1);
     attributePane.add(addressFld, 1, 1);
@@ -122,23 +125,41 @@ public class SupporterAttributesDialog extends DialogPane {
     dialog.setDialogPane(this);
   }
 
-  private void setupBindings() {
-    descriptionLbl.textProperty().addListener(
-        (observable, oldValue, newValue) ->
-            dialog.getDialogPane().lookupButton(applyBtnType).setDisable("".equals(newValue))
+  private void attachEventListeners() {
+    nameFld.textProperty().addListener(
+        (observable, oldValue, newValue) -> setValidDescription(!"".equals(newValue.trim()))
     );
   }
 
-  private boolean validateName() {
-    if (nameFld.getText().trim().isEmpty()) {
-      return false;
-    }
-    return true;
+  private void setupBindings(){
+    dialog.getDialogPane().lookupButton(applyBtnType).disableProperty().bind(
+        validDescriptionProperty().not()
+    );
   }
 
-  private void createSupporterDialog() {
-    dialog.showAndWait()
-        .filter(response -> response == applyBtnType)
-        .ifPresent(response -> saveData());
+  /**
+   * Shows the current dialog and saves the supporter, if the apply button was pressed.
+   * @return true, if the apply button was pressed
+   */
+  public boolean show() {
+    Optional applyButton = dialog.showAndWait()
+        .filter(response -> response == applyBtnType);
+    boolean applyButtonPressed = applyButton.isPresent();
+    if (applyButtonPressed) {
+      saveData();
+    }
+    return applyButtonPressed;
+  }
+
+  private boolean isValidDescription() {
+    return validDescription.get();
+  }
+
+  private BooleanProperty validDescriptionProperty() {
+    return validDescription;
+  }
+
+  private void setValidDescription(boolean validDescription) {
+    this.validDescription.set(validDescription);
   }
 }

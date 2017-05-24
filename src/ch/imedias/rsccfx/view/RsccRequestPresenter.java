@@ -165,12 +165,14 @@ public class RsccRequestPresenter implements ControlledPresenter {
     attachContextMenu(supporterBtn, supporter);
 
     supporterBtn.setOnAction(event -> {
-      // if create new button (last button) was pressed
-      if (supporters.get(supporters.size() - 1) == supporter) {
+      // Open Dialog to modify data
+      SupporterAttributesDialog supporterAttributesDialog =
+          new SupporterAttributesDialog(supporter);
+      boolean supporterSaved = supporterAttributesDialog.show();
+      Supporter lastSupporter = supporters.get(supporters.size() - 1);
+      if (lastSupporter == supporter && supporterSaved) {
         createNewSupporterBtn(new Supporter());
       }
-      // Open Dialog to modify data
-      new SupporterAttributesDialog(supporter);
       // Update data in button name and save to preferences
       supporterBtn.setText(supporter.toString());
       supporterHelper.saveSupporters(supporters);

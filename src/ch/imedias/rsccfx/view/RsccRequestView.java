@@ -109,7 +109,7 @@ public class RsccRequestView extends BorderPane {
 
     titleLbl.getStyleClass().add("titleLbl");
 
-    descriptionLbl.getStyleClass().add("descriptionLbl"); // TODO: Styling
+    descriptionLbl.getStyleClass().add("nameLbl"); // TODO: Styling
 
     supporterDescriptionLbl.getStyleClass().add("supporterDescriptionLbl");
 
@@ -125,7 +125,7 @@ public class RsccRequestView extends BorderPane {
 
     contentBox.getChildren().addAll(keyGenerationTitledPane, keyGenerationInnerPane,
         supporterTitledPane);
-    descriptionLbl.getStyleClass().add("descriptionLbl"); // TODO: Styling
+    descriptionLbl.getStyleClass().add("nameLbl"); // TODO: Styling
 
     VBox.setVgrow(keyGenerationInnerPane, Priority.ALWAYS);
     keyGenerationInnerPane.getStyleClass().add("contentRequest");
