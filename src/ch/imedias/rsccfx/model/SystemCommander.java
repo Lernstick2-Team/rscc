@@ -28,7 +28,8 @@ public class SystemCommander {
       StringBuilder output = new StringBuilder();
       // Execute Command
       process = Runtime.getRuntime().exec(command);
-      process.waitFor();
+      int exitCode = process.waitFor();
+      System.out.println(exitCode);
       // read the output from the command
       BufferedReader outputReader = new BufferedReader(new
           InputStreamReader(process.getInputStream()));
