@@ -155,6 +155,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
   /**
    * Creates new SupporterButton and adds it to the GridPane.
+   * @param supporter the supporter which a button should be created for.
    */
   public void createNewSupporterBtn(Supporter supporter) {
     supporters.add(supporter);
