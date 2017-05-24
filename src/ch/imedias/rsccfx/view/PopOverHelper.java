@@ -35,10 +35,10 @@ public class PopOverHelper {
   private static final int QUALITY_VALUE = 6;
   private final Strings strings = new Strings();
   private final Rscc model;
-  private final double sliderWidth = overlayWidth / 1.2;
   // Get Screensize
   Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
   private final double overlayWidth = primaryScreenBounds.getWidth() / 9;
+  private final double sliderWidth = overlayWidth / 1.2;
   // SettingsProperties
   BooleanProperty viewOnly = new SimpleBooleanProperty(false);
 
