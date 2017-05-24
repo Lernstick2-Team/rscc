@@ -211,7 +211,12 @@ public class Rscc {
   private void keyServerSetup() {
     String command = systemCommander.commandStringGenerator(
         pathToResourceDocker, "use.sh", getKeyServerIp(), getKeyServerHttpPort());
-    systemCommander.executeTerminalCommand(command);
+    SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
+
+    if (returnValues.getExitCode() != 0) {
+      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+    }
+
   }
 
   /**
@@ -237,6 +242,7 @@ public class Rscc {
     String command = systemCommander.commandStringGenerator(
         pathToResourceDocker, "port_stop.sh", keyUtil.getKey());
     systemCommander.executeTerminalCommand(command);
+
     keyUtil.setKey("");
   }
 
@@ -252,7 +258,13 @@ public class Rscc {
 
     String command = systemCommander.commandStringGenerator(
         pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()), pathToStunDump);
+
     SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
+
+    if (returnValues.getExitCode() != 0) {
+      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+      return;
+    }
 
     keyUtil.setKey(returnValues.getOutputString()); // update key in model
     rscccfp = new Rscccfp(this, true);
@@ -330,9 +342,11 @@ public class Rscc {
     setConnectionStatus("Connected to keyserver.", 1);
 
     SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
-    System.out.println("ExitCode: " + returnValues.getExitCode());
+
     if (returnValues.getExitCode() != 0) {
-      System.out.println("ExitCode: " + returnValues.getExitCode());
+      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+      setConnectionStatus(
+          "Key " + getKeyUtil().getKey() + " could not be verified by the server.", 3);
       return;
     }
 
