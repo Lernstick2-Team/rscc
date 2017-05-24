@@ -19,6 +19,7 @@ public class VncServerHandler extends Thread {
    * @param model The one and only Model.
    * @param hostAddress Address to connect to.
    * @param vncViewerPort Port to connect to.
+   * @param reverseMode Defines if reversemode should be used.
    */
   public VncServerHandler(Rscc model, String hostAddress,
                           Integer vncViewerPort, boolean reverseMode) {
@@ -28,7 +29,6 @@ public class VncServerHandler extends Thread {
     this.vncViewerPort = vncViewerPort;
     this.systemCommander = model.getSystemCommander();
   }
-
 
   /**
    * Starts the VNCServer in the given mode (Reverse or normal).
