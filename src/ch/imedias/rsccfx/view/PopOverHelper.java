@@ -33,7 +33,6 @@ public class PopOverHelper {
   private static final int QUALITY_MIN = 0;
   private static final int QUALITY_MAX = 9;
   private static final int QUALITY_VALUE = 6;
-
   private final Strings strings = new Strings();
   private final Rscc model;
   private final double sliderWidth = overlayWidth / 1.2;
