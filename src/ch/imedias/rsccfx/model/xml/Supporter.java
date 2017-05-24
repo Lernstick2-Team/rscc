@@ -12,7 +12,7 @@ public class Supporter implements Serializable {
 
   private String description;
   private String address;
-  private int port;
+  private String port;
   private boolean encrypted;
   private boolean chargeable;
 
@@ -23,7 +23,7 @@ public class Supporter implements Serializable {
   public Supporter() {
     this.description = "";
     this.address = "";
-    this.port = 5500;
+    this.port = "";
     this.encrypted = false;
     this.chargeable = false;
   }
@@ -38,7 +38,7 @@ public class Supporter implements Serializable {
    * @param chargeable  if the supporter is chargeable.
    */
   public Supporter(
-      String description, String address, int port, boolean encrypted, boolean chargeable) {
+      String description, String address, String port, boolean encrypted, boolean chargeable) {
     this.description = description;
     this.address = address;
     this.port = port;
@@ -89,7 +89,7 @@ public class Supporter implements Serializable {
    *
    * @return the port.
    */
-  public int getPort() {
+  public String getPort() {
     return port;
   }
 
@@ -99,7 +99,7 @@ public class Supporter implements Serializable {
    * @param port the port to set.
    */
   @XmlElement
-  public void setPort(int port) {
+  public void setPort(String port) {
     this.port = port;
   }
 
