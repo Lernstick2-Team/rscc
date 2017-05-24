@@ -57,7 +57,7 @@ public class SystemCommander {
   /**
    * Executes a TerminalCommand, that listen for a specified StringOutput and sets the
    * setIsVncSessionRunning accordingly.
-   *
+   * @return TODO: @jpduloch: what does it return? Don't get it.
    * @param command                 to be executed
    * @param whatTerminalNeedsToShow String to compare to and when to set connection ongoing in model
    */
@@ -121,7 +121,8 @@ public class SystemCommander {
 
   /**
    * Generates String to run command.
-   *
+   * @return combines all the params into one simple command for the terminal
+   *                     and returns it as a string.
    * @param pathToScript path to the script that should be run.
    *                     Should be fully qualified but can also be null.
    * @param scriptName   name of the script to be run.
@@ -144,6 +145,10 @@ public class SystemCommander {
     return commandString.toString();
   }
 
+  /**
+   * Sets the model.
+   * @param model The model which should be set.
+   */
   public void setModel(Rscc model) {
     this.model = model;
   }
