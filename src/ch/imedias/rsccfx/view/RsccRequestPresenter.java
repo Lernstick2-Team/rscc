@@ -37,6 +37,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
   private PopOverHelper popOverHelper;
   private int buttonSize = 0;
 
+
   /**
    * Initializes a new RsccRequestPresenter with the matching view.
    *
@@ -47,7 +48,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
     this.model = model;
     this.view = view;
     headerPresenter = new HeaderPresenter(model, view.headerView);
-    supporterHelper = new SupporterHelper();
+    supporterHelper = new SupporterHelper(model);
     initHeader();
     initSupporterList();
     attachEvents();

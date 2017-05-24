@@ -2,10 +2,8 @@ package ch.imedias.rsccfx.view;
 
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
-import javafx.geometry.HPos;
+import ch.imedias.rsccfx.model.Rscc;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
@@ -13,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.ToggleSwitch;
 
 /**
@@ -26,7 +25,7 @@ public class ExpertSettingsDialog extends DialogPane {
   final Label vncPortLbl = new Label();
   final Label icePortLbl = new Label();
   final Label udpPackageSizeLbl = new Label();
-  final Label localForwadingPortLbl = new Label();
+  final Label proxyPortLbl = new Label();
   final Label stunServerPortLbl = new Label();
   final Label stunServersLbl = new Label();
 
@@ -37,7 +36,7 @@ public class ExpertSettingsDialog extends DialogPane {
   final TextField vncPortFld = new TextField();
   final TextField icePortFld = new TextField();
   final TextField udpPackageSizeFld = new TextField();
-  final TextField localForwardingPortFld = new TextField();
+  final TextField proxyPortFld = new TextField();
   final TextField stunServerPortFld = new TextField();
 
   final ListView stunServersList = new ListView();
@@ -47,11 +46,14 @@ public class ExpertSettingsDialog extends DialogPane {
   final GridPane settingsPane = new GridPane();
 
   private final Strings strings = new Strings();
+  private final Rscc model;
+
 
   /**
    * Initializes all the GUI components needed in the DialogPane.
    */
-  public ExpertSettingsDialog() {
+  public ExpertSettingsDialog(Rscc model) {
+    this.model = model;
     this.getStylesheets().add(RsccApp.styleSheet);
     initFieldData();
     layoutForm();
@@ -67,7 +69,7 @@ public class ExpertSettingsDialog extends DialogPane {
     vncPortLbl.textProperty().set(strings.expertVncPortLbl);
     icePortLbl.textProperty().set(strings.expertIcePortLbl);
     udpPackageSizeLbl.textProperty().set(strings.expertUdpPackageSizeLbl);
-    localForwadingPortLbl.textProperty().set(strings.expertForwardingPortLbl);
+    proxyPortLbl.textProperty().set(strings.expertProxyPortLbl);
     stunServersLbl.textProperty().set(strings.expertStunserverLbl);
     stunServerPortLbl.textProperty().set(strings.expertStunServerPortLbl);
   }
@@ -98,8 +100,8 @@ public class ExpertSettingsDialog extends DialogPane {
     settingsPane.add(icePortFld, 1, 5);
     settingsPane.add(udpPackageSizeLbl, 0, 6);
     settingsPane.add(udpPackageSizeFld, 1, 6);
-    settingsPane.add(localForwadingPortLbl, 0, 7);
-    settingsPane.add(localForwardingPortFld, 1, 7);
+    settingsPane.add(proxyPortLbl, 0, 7);
+    settingsPane.add(proxyPortFld, 1, 7);
     settingsPane.add(stunServerPortLbl, 0, 8);
     settingsPane.add(stunServerPortFld, 1, 8);
     settingsPane.add(stunServersLbl, 0, 9);
@@ -114,9 +116,24 @@ public class ExpertSettingsDialog extends DialogPane {
     dialog.setDialogPane(this);
   }
 
-
   private void bindFieldsToModel() {
     // make bindings to the model
+    forceConnectOverServerTgl.selectedProperty().bindBidirectional(
+        model.isForcingServerModeProperty());
+    keyServerIpFld.textProperty().bindBidirectional(model.keyServerIpProperty());
+    keyServerHttpPortFld.textProperty().bindBidirectional(model.keyServerHttpPortProperty());
+    vncPortFld.textProperty().bindBidirectional(model.vncPortProperty(),
+        new NumberStringConverter("#"));
+    icePortFld.textProperty().bindBidirectional(model.icePortProperty(),
+        new NumberStringConverter("#"));
+    // TODO: These properties were missing - please check if they are alright.
+    udpPackageSizeFld.textProperty().bindBidirectional(model.udpPackageSizeProperty(),
+        new NumberStringConverter("#"));
+    proxyPortFld.textProperty().bindBidirectional(model.proxyPortProperty(),
+        new NumberStringConverter("#"));
+    stunServerPortFld.textProperty().bindBidirectional(model.stunServerPortProperty(),
+        new NumberStringConverter("#"));
+    // TODO: Stunserver-List needs to be binded
   }
 
 }
