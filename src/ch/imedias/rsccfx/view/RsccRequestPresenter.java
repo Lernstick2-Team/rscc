@@ -194,44 +194,22 @@ public class RsccRequestPresenter implements ControlledPresenter {
     int row = GridPane.getRowIndex(button);
     int column = GridPane.getColumnIndex(button);
     view.supporterInnerPane.getChildren().remove(button);
-    for (int i = buttonIndex; i < buttonList.size(); i++) {
-      Button currentButton = (Button) buttonList.get(i);
-      GridPane.setRowIndex(currentButton, row++);
-      GridPane.setRowIndex(currentButton, column++);
+    for (int i = buttonIndex; i < buttonList.size() - 1; i++) {
+      Button nextButton = (Button) buttonList.get(i + 1);
+      // copy positions from next button
+      int nextButtonRow = GridPane.getRowIndex(nextButton);
+      int nextButtonCol = GridPane.getColumnIndex(nextButton);
+      // set button at new position
+      GridPane.setRowIndex(nextButton, row);
+      GridPane.setColumnIndex(nextButton, column);
+      row = nextButtonRow;
+      column = nextButtonCol;
     }
+    // last button needs to be set
+    Button lastButton = (Button) buttonList.get(buttonList.size());
+    GridPane.setRowIndex(lastButton, row);
+    GridPane.setColumnIndex(lastButton, column);
 
-    int i = 0;
-    boolean found = false;
-    while(!found) {
-      buttonList.
-    }
-
-    for (int i = 0; i < buttonList.size(); i++) {
-      if()
-    }
-        stream()
-        .filter(node -> )
-    Button supporterBtn = new Button(supporter.toString());
-    supporterBtn.getStyleClass().add("supporterBtn");
-    initButtonSize(supporterBtn);
-    attachContextMenu(supporterBtn, supporter);
-
-    supporterBtn.setOnAction(event -> {
-      // if create new button (last button) was pressed
-      if (supporters.get(supporters.size() - 1) == supporter) {
-        createNewSupporterBtn(new Supporter());
-      }
-      // Open Dialog to modify data
-      new SupporterAttributesDialog(supporter);
-      // Update data in button name and save to preferences
-      supporterBtn.setText(supporter.toString());
-      supporterHelper.saveSupporters(supporters);
-    });
-
-    int row = buttonSize / GRID_MAXIMUM_COLUMNS;
-    int column = buttonSize % GRID_MAXIMUM_COLUMNS;
-    view.supporterInnerPane.getChildren().stream().
-    view.supporterInnerPane.add(supporterBtn, column, row);
     buttonSize--;
   }
 
@@ -248,8 +226,11 @@ public class RsccRequestPresenter implements ControlledPresenter {
       /*TODO start connection*/
     });
 
+    MenuItem deleteMenuItem = new MenuItem("Delete");
+    deleteMenuItem.setOnAction(event -> deleteSupporterBtn(button, supporter));
+
     // Add MenuItem to ContextMenu
-    contextMenu.getItems().addAll(editMenuItem, connectMenuItem);
+    contextMenu.getItems().addAll(editMenuItem, connectMenuItem, deleteMenuItem);
 
     // When user right-click on Supporterbutton
     button.setOnContextMenuRequested(event -> contextMenu.show(button, event.getScreenX(),
