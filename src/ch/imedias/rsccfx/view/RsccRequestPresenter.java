@@ -189,26 +189,34 @@ public class RsccRequestPresenter implements ControlledPresenter {
    * Deletes a SupporterButton.
    */
   public void deleteSupporterBtn(Button button, Supporter supporter) {
-    ObservableList<Node> buttonList = view.supporterInnerPane.getChildren();
-    int buttonIndex = buttonList.indexOf(button);
-    int row = GridPane.getRowIndex(button);
-    int column = GridPane.getColumnIndex(button);
-    view.supporterInnerPane.getChildren().remove(button);
-    for (int i = buttonIndex; i < buttonList.size(); i++) {
-      Button nextButton = (Button) buttonList.get(i);
-      // copy positions from next button
-      LOGGER.info("currentButton: " + nextButton.textProperty().get());
-      int nextButtonRow = GridPane.getRowIndex(nextButton);
-      int nextButtonCol = GridPane.getColumnIndex(nextButton);
-      LOGGER.info("currentRow: " + row);
-      LOGGER.info("currentCol: " + column);
-      // set button at new position
-      GridPane.setRowIndex(nextButton, row);
-      GridPane.setColumnIndex(nextButton, column);
-      row = nextButtonRow;
-      column = nextButtonCol;
-      LOGGER.info("nextRow: " + row);
-      LOGGER.info("nextCol: " + column);
+    // checks if the last button wants to get deleted. Maybe.
+    if (supporters.get(supporters.size() - 1) != supporter) {
+      ObservableList<Node> buttonList = view.supporterInnerPane.getChildren();
+      int buttonIndex = buttonList.indexOf(button);
+      int row = GridPane.getRowIndex(button);
+      int column = GridPane.getColumnIndex(button);
+      view.supporterInnerPane.getChildren().remove(button);
+      for (int i = buttonIndex; i < buttonList.size(); i++) {
+        Button nextButton = (Button) buttonList.get(i);
+        // copy positions from next button
+        LOGGER.info("currentButton: " + nextButton.textProperty().get());
+        int nextButtonRow = GridPane.getRowIndex(nextButton);
+        int nextButtonCol = GridPane.getColumnIndex(nextButton);
+        LOGGER.info("currentRow: " + row);
+        LOGGER.info("currentCol: " + column);
+        // set button at new position
+        GridPane.setRowIndex(nextButton, row);
+        GridPane.setColumnIndex(nextButton, column);
+        row = nextButtonRow;
+        column = nextButtonCol;
+        LOGGER.info("nextRow: " + row);
+        LOGGER.info("nextCol: " + column);
+      }
+      buttonSize--;
+
+      // remove the supporter and save list.
+      supporters.remove(supporter);
+      supporterHelper.saveSupporters(supporters);
     }
     // last button needs to be set
     /*Button lastButton = (Button) buttonList.get(buttonList.size());
@@ -218,7 +226,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
     // TODO: Delete from supporter list as well.
 
 
-    buttonSize--;
+
   }
 
   private void attachContextMenu(Button button, Supporter supporter) {
