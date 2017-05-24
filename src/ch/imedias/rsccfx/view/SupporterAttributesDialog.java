@@ -24,6 +24,7 @@ import javafx.scene.layout.Priority;
 public class SupporterAttributesDialog extends DialogPane {
 
   private static final int DEFAULT_PORT = 5500;
+  // TODO: add correct default encrypted port
   private static final int DEFAULT_ENCRYPTED_PORT = DEFAULT_PORT;
 
   final Dialog dialog = new Dialog();
@@ -147,7 +148,7 @@ public class SupporterAttributesDialog extends DialogPane {
   }
 
   private boolean isEmpty(String string){
-    return !"".equals(string.trim());
+    return "".equals(string.trim());
   }
 
   /**
@@ -177,6 +178,6 @@ public class SupporterAttributesDialog extends DialogPane {
   }
 
   private void validateName(){
-    setNameValid(isEmpty(nameFld.getText()));
+    setNameValid(!isEmpty(nameFld.getText()));
   }
 }
