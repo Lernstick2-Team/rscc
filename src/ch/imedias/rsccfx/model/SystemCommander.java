@@ -57,9 +57,9 @@ public class SystemCommander {
   /**
    * Executes a TerminalCommand, that listen for a specified StringOutput and sets the
    * setIsVncSessionRunning accordingly.
-   * @return TODO: @jpduloch: what does it return? Don't get it.
-   * @param command                 to be executed
-   * @param whatTerminalNeedsToShow String to compare to and when to set connection ongoing in model
+   * @param command                 to be executed.
+   * @param whatTerminalNeedsToShow String to compare to, when to set connection ongoing in model.
+   * @return String trimmed output of the terminal without whitespaces at beginning / end.
    */
   public String executeTerminalCommandAndUpdateModel(String command,
                                                      String whatTerminalNeedsToShow) {
@@ -121,12 +121,12 @@ public class SystemCommander {
 
   /**
    * Generates String to run command.
-   * @return combines all the params into one simple command for the terminal
-   *                     and returns it as a string.
    * @param pathToScript path to the script that should be run.
    *                     Should be fully qualified but can also be null.
    * @param scriptName   name of the script to be run.
    * @param attributes   optional arguments that should be included in the command.
+   * @return combines all the params into one simple command for the terminal
+   *                     and returns it as a string.
    */
   public String commandStringGenerator(
       String pathToScript, String scriptName, String... attributes) {

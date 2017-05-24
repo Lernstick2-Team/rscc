@@ -51,7 +51,7 @@ public class SupporterHelper {
   }
 
   /**
-   * Saves supporters from a list to the preferences fil
+   * Saves supporters from a list to the preferences file.
    * @param supporters the list which should be in the xml.
    */
   public void saveSupporters(List<Supporter> supporters) {
