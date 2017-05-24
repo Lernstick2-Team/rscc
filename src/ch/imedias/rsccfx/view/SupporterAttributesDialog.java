@@ -141,18 +141,19 @@ public class SupporterAttributesDialog extends DialogPane {
     );
   }
 
-  private void setupBindings(){
+  private void setupBindings() {
     dialog.getDialogPane().lookupButton(applyBtnType).disableProperty().bind(
         nameValidProperty().not()
     );
   }
 
-  private boolean isEmpty(String string){
+  private boolean isEmpty(String string) {
     return "".equals(string.trim());
   }
 
   /**
    * Shows the current dialog and saves the supporter, if the apply button was pressed.
+   *
    * @return true, if the apply button was pressed
    */
   public boolean show() {
@@ -177,7 +178,7 @@ public class SupporterAttributesDialog extends DialogPane {
     this.nameValid.set(nameValid);
   }
 
-  private void validateName(){
+  private void validateName() {
     setNameValid(!isEmpty(nameFld.getText()));
   }
 }
