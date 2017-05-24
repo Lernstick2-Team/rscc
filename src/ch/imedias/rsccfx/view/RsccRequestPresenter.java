@@ -170,12 +170,14 @@ public class RsccRequestPresenter implements ControlledPresenter {
           new SupporterAttributesDialog(supporter);
       boolean supporterSaved = supporterAttributesDialog.show();
       Supporter lastSupporter = supporters.get(supporters.size() - 1);
-      if (lastSupporter == supporter && supporterSaved) {
-        createNewSupporterBtn(new Supporter());
+      if (supporterSaved) {
+        if (lastSupporter == supporter) {
+          createNewSupporterBtn(new Supporter());
+        }
+        // Update data in button name and save to preferences
+        supporterBtn.setText(supporter.toString());
+        supporterHelper.saveSupporters(supporters);
       }
-      // Update data in button name and save to preferences
-      supporterBtn.setText(supporter.toString());
-      supporterHelper.saveSupporters(supporters);
     });
 
     int row = buttonSize / GRID_MAXIMUM_COLUMNS;
@@ -190,7 +192,17 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     MenuItem editMenuItem = new MenuItem("Edit");
 
-    editMenuItem.setOnAction(event -> new SupporterAttributesDialog(supporter));
+    editMenuItem.setOnAction(event -> {
+      // Open Dialog to modify data
+      SupporterAttributesDialog supporterAttributesDialog =
+          new SupporterAttributesDialog(supporter);
+      boolean supporterSaved = supporterAttributesDialog.show();
+      if (supporterSaved) {
+        // Update data in button name and save to preferences
+        button.setText(supporter.toString());
+        supporterHelper.saveSupporters(supporters);
+      }
+    });
 
     MenuItem connectMenuItem = new MenuItem("Call");
     connectMenuItem.setOnAction(event -> {

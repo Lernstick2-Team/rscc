@@ -43,7 +43,7 @@ public class SupporterAttributesDialog extends DialogPane {
   Strings strings = new Strings();
   private Supporter supporter;
 
-  BooleanProperty validDescription = new SimpleBooleanProperty(false);
+  BooleanProperty nameValid = new SimpleBooleanProperty(false);
 
   /**
    * Initializes all the GUI components needed in the DialogPane.
@@ -71,6 +71,8 @@ public class SupporterAttributesDialog extends DialogPane {
     encryptedLbl.setText(strings.dialogEncryptedLbl);
 
     nameFld.setText(supporter.getDescription());
+    validateName();
+
     addressFld.setText(supporter.getAddress());
     portFld.setText(String.valueOf(supporter.getPort()));
     pictureFld.setText("/images/sup.jpg");
@@ -127,14 +129,18 @@ public class SupporterAttributesDialog extends DialogPane {
 
   private void attachEventListeners() {
     nameFld.textProperty().addListener(
-        (observable, oldValue, newValue) -> setValidDescription(!"".equals(newValue.trim()))
+        (observable, oldValue, newValue) -> validateName()
     );
   }
 
   private void setupBindings(){
     dialog.getDialogPane().lookupButton(applyBtnType).disableProperty().bind(
-        validDescriptionProperty().not()
+        nameValidProperty().not()
     );
+  }
+
+  private boolean isEmpty(String string){
+    return !"".equals(string.trim());
   }
 
   /**
@@ -151,15 +157,19 @@ public class SupporterAttributesDialog extends DialogPane {
     return applyButtonPressed;
   }
 
-  private boolean isValidDescription() {
-    return validDescription.get();
+  private boolean getNameValid() {
+    return nameValid.get();
   }
 
-  private BooleanProperty validDescriptionProperty() {
-    return validDescription;
+  private BooleanProperty nameValidProperty() {
+    return nameValid;
   }
 
-  private void setValidDescription(boolean validDescription) {
-    this.validDescription.set(validDescription);
+  private void setNameValid(boolean nameValid) {
+    this.nameValid.set(nameValid);
+  }
+
+  private void validateName(){
+    setNameValid(isEmpty(nameFld.getText()));
   }
 }
