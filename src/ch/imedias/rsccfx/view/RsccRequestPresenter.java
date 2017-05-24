@@ -202,8 +202,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
     for (int i = buttonIndex; i < buttonList.size(); i++) {
       Button nextButton = (Button) buttonList.get(i);
       // copy positions from next button
-      int nextButtonRow = GridPane.getRowIndex(nextButton);
-      int nextButtonCol = GridPane.getColumnIndex(nextButton);
+      final int nextButtonRow = GridPane.getRowIndex(nextButton);
+      final int nextButtonCol = GridPane.getColumnIndex(nextButton);
       // set button at new position
       GridPane.setRowIndex(nextButton, row);
       GridPane.setColumnIndex(nextButton, column);
@@ -219,7 +219,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
   private void attachContextMenu(Button button, Supporter supporter) {
     // Create ContextMenu
-    ContextMenu contextMenu = new ContextMenu();
+    final ContextMenu contextMenu = new ContextMenu();
 
     MenuItem editMenuItem = new MenuItem("Edit");
 
