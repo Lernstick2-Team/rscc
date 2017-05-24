@@ -21,12 +21,13 @@ public class SupporterHelper {
 
   private static final Logger LOGGER =
       Logger.getLogger(SupporterHelper.class.getName());
-  private Rscc model;
   private static final String SUPPORT_ADDRESSES = "supportAddresses";
   private final Preferences preferences = Preferences.userNodeForPackage(RsccApp.class);
+  private Rscc model;
 
   /**
    * Initializes a new SupporterHelper object.
+   *
    * @param model Rscc model.
    */
   public SupporterHelper(Rscc model) {

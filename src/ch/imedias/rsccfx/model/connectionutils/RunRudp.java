@@ -75,8 +75,8 @@ public class RunRudp extends Thread {
             .getHostAddress() + ":" + model.getRemoteClientPort());
 
         //TCP Server
-        LOGGER.info("Create new tcp-server on " + model.getLocalForwardingPort());
-        tcpServerSocket = new ServerSocket(model.getLocalForwardingPort());
+        LOGGER.info("Create new tcp-server on " + model.getProxyPort());
+        tcpServerSocket = new ServerSocket(model.getProxyPort());
         tcpSocket = tcpServerSocket.accept();
         tcpSocket.setTcpNoDelay(true);
 
@@ -87,7 +87,7 @@ public class RunRudp extends Thread {
             .getHostAddress());
 
         startProxy(tcpInputStream, tcpOutputStream, rudpInputStream, rudpOutputStream,
-            model.getPackageSize());
+            model.getUdpPackageSize());
 
         rudpSocket.close();
         tcpSocket.close();
@@ -120,7 +120,7 @@ public class RunRudp extends Thread {
         LOGGER.info("Sucessful tcp connection");
 
         startProxy(tcpInputStream, tcpOutputStream, rudpInputStream, rudpOutputStream,
-            model.getPackageSize());
+            model.getUdpPackageSize());
 
         rudpSocket2.close();
         tcpSocket.close();
@@ -142,7 +142,7 @@ public class RunRudp extends Thread {
         final OutputStream rudpOutputStream = rudpSocket2.getOutputStream();
 
         //TCP Server
-        tcpServerSocket = new ServerSocket(model.getLocalForwardingPort());
+        tcpServerSocket = new ServerSocket(model.getProxyPort());
         tcpSocket = tcpServerSocket.accept();
         tcpSocket.setTcpNoDelay(true);
         LOGGER.info("TCP connected");
@@ -154,7 +154,7 @@ public class RunRudp extends Thread {
             .getHostAddress());
 
         startProxy(tcpInputStream, tcpOutputStream, rudpInputStream, rudpOutputStream,
-            model.getPackageSize());
+            model.getUdpPackageSize());
 
         rudpSocket2.close();
         tcpSocket.close();
@@ -192,7 +192,7 @@ public class RunRudp extends Thread {
         LOGGER.info("Sucessful tcp connection");
 
         startProxy(tcpInputStream, tcpOutputStream, rudpInputStream, rudpOutputStream,
-            model.getPackageSize());
+            model.getUdpPackageSize());
 
         rudpSocket.close();
         tcpSocket.close();

@@ -37,6 +37,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
   private PopOverHelper popOverHelper;
   private int buttonSize = 0;
 
+
   /**
    * Initializes a new RsccRequestPresenter with the matching view.
    *

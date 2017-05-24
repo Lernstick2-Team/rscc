@@ -27,12 +27,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
       Logger.getLogger(RsccSupportPresenter.class.getName());
 
   private static final double WIDTH_SUBTRACTION_ENTERKEY = 100d;
-
-  private String validImage =
-      getClass().getClassLoader().getResource("images/valid.svg").toExternalForm();
-  private String invalidImage =
-      getClass().getClassLoader().getResource("images/invalid.svg").toExternalForm();
-
   private final Rscc model;
   private final RsccSupportView view;
   private final HeaderPresenter headerPresenter;
@@ -40,6 +34,10 @@ public class RsccSupportPresenter implements ControlledPresenter {
   private final BooleanProperty serviceRunning = new SimpleBooleanProperty(false);
   Task startServiceTask;
   ProcessExecutor offerProcessExecutor = new ProcessExecutor();
+  private String validImage =
+      getClass().getClassLoader().getResource("images/valid.svg").toExternalForm();
+  private String invalidImage =
+      getClass().getClassLoader().getResource("images/invalid.svg").toExternalForm();
   private ViewController viewParent;
   private PopOverHelper popOverHelper;
 
