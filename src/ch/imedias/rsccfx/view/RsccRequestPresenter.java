@@ -194,21 +194,29 @@ public class RsccRequestPresenter implements ControlledPresenter {
     int row = GridPane.getRowIndex(button);
     int column = GridPane.getColumnIndex(button);
     view.supporterInnerPane.getChildren().remove(button);
-    for (int i = buttonIndex; i < buttonList.size() - 1; i++) {
-      Button nextButton = (Button) buttonList.get(i + 1);
+    for (int i = buttonIndex; i < buttonList.size(); i++) {
+      Button nextButton = (Button) buttonList.get(i);
       // copy positions from next button
+      LOGGER.info("currentButton: " + nextButton.textProperty().get());
       int nextButtonRow = GridPane.getRowIndex(nextButton);
       int nextButtonCol = GridPane.getColumnIndex(nextButton);
+      LOGGER.info("currentRow: " + row);
+      LOGGER.info("currentCol: " + column);
       // set button at new position
       GridPane.setRowIndex(nextButton, row);
       GridPane.setColumnIndex(nextButton, column);
       row = nextButtonRow;
       column = nextButtonCol;
+      LOGGER.info("nextRow: " + row);
+      LOGGER.info("nextCol: " + column);
     }
     // last button needs to be set
-    Button lastButton = (Button) buttonList.get(buttonList.size());
+    /*Button lastButton = (Button) buttonList.get(buttonList.size());
     GridPane.setRowIndex(lastButton, row);
-    GridPane.setColumnIndex(lastButton, column);
+    GridPane.setColumnIndex(lastButton, column);*/
+
+    // TODO: Delete from supporter list as well.
+
 
     buttonSize--;
   }
