@@ -44,14 +44,6 @@ public class Rscc {
    */
   private static final String DOCKER_FOLDER_NAME = "docker-build_p2p";
   private static final String DEFAULT_SUPPORTERS_FILE_NAME = "rscc-defaults-lernstick.xml";
-  private String pathToResources;
-  private String pathToResourceDocker;
-  //TODO: Replace when the StunFileGeneration is ready
-  private String pathToStunDump;
-  private String pathToDefaultSupporters;
-  private static final String[] EXTRACTED_RESOURCES =
-      {DOCKER_FOLDER_NAME, STUN_DUMP_FILE_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
-
   /**
    * sh files can not be executed in the JAR file and therefore must be extracted.
    * ".rscc" is a hidden folder in the user's home directory (e.g. /home/user)
@@ -60,36 +52,36 @@ public class Rscc {
   private static final String STUN_DUMP_FILE_NAME = "ice4jDemoDump.ice";
   private static final String[] STUN_SERVERS = {
       "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
+  private static final String[] EXTRACTED_RESOURCES =
+      {DOCKER_FOLDER_NAME, STUN_DUMP_FILE_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
+  private static final UnaryOperator<String> REMOVE_FILE_IN_PATH =
+      string -> string.replaceFirst("file:", "");
   private final SystemCommander systemCommander;
-
   private final StringProperty keyServerIp = new SimpleStringProperty("86.119.39.89");
   private final StringProperty keyServerHttpPort = new SimpleStringProperty("800");
   private final IntegerProperty vncPort = new SimpleIntegerProperty(5900);
   private final IntegerProperty icePort = new SimpleIntegerProperty(5050);
-
   private final BooleanProperty vncViewOnly = new SimpleBooleanProperty();
   private final DoubleProperty vncQuality = new SimpleDoubleProperty();
   private final DoubleProperty vncCompression = new SimpleDoubleProperty();
-
   private final BooleanProperty vncBgr233 = new SimpleBooleanProperty();
   private final StringProperty connectionStatusText = new SimpleStringProperty();
   private final StringProperty connectionStatusStyle = new SimpleStringProperty();
-
   private final IntegerProperty udpPackageSize = new SimpleIntegerProperty(
       getUdpPackageSizeStatic());
   private final IntegerProperty proxyPort = new SimpleIntegerProperty(2601);
   private final IntegerProperty stunServerPort = new SimpleIntegerProperty(3478);
-
   private final String[] connectionStatusStyles = {
       "statusBox", "statusBoxInitialize", "statusBoxSuccess", "statusBoxFail"};
-
   private final StringProperty terminalOutput = new SimpleStringProperty();
-
   private final BooleanProperty isForcingServerMode = new SimpleBooleanProperty(false);
   private final BooleanProperty isVncSessionRunning = new SimpleBooleanProperty(false);
-
   private final KeyUtil keyUtil;
-
+  private String pathToResources;
+  private String pathToResourceDocker;
+  //TODO: Replace when the StunFileGeneration is ready
+  private String pathToStunDump;
+  private String pathToDefaultSupporters;
   private boolean isLocalIceSuccessful = false;
   private boolean isRemoteIceSuccessful = false;
   private InetAddress remoteClientIpAddress;
@@ -98,9 +90,6 @@ public class Rscc {
   private VncViewerHandler vncViewer;
   private VncServerHandler vncServer;
   private Rscccfp rscccfp;
-
-  private static final UnaryOperator<String> REMOVE_FILE_IN_PATH =
-      string -> string.replaceFirst("file:", "");
 
   /**
    * Initializes the Rscc model class.
@@ -123,7 +112,9 @@ public class Rscc {
     readServerConfig();
   }
 
-
+  public static int getUdpPackageSizeStatic() {
+    return PACKAGE_SIZE;
+  }
 
   /**
    * Sets resource path, according to the application running either as a JAR or in the IDE.
@@ -616,10 +607,6 @@ public class Rscc {
 
   public int getUdpPackageSize() {
     return udpPackageSize.get();
-  }
-
-  public static int getUdpPackageSizeStatic() {
-    return PACKAGE_SIZE;
   }
 
   public void setUdpPackageSize(int udpPackageSize) {
