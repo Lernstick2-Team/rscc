@@ -52,6 +52,7 @@ public class SupporterAttributesDialog extends DialogPane {
     initFieldData();
     layoutForm();
     createSupporterDialog();
+    setupBindings();
     // TODO: Validate that a description has been entered, else 2 + buttons can be created
 
   }
@@ -121,6 +122,11 @@ public class SupporterAttributesDialog extends DialogPane {
     dialog.setDialogPane(this);
   }
 
+  private void setupBindings(){
+    descriptionLbl.textProperty().addListener(
+        (observable, oldValue, newValue) ->
+            dialog.getDialogPane().lookupButton(applyBtnType).setDisable("".equals(newValue)));
+  }
 
   private boolean validateName() {
     if (nameFld.getText().trim().isEmpty()) {
@@ -133,13 +139,7 @@ public class SupporterAttributesDialog extends DialogPane {
     while (!validateName()) {
       dialog.showAndWait()
           .filter(response -> response == applyBtnType)
-          .ifPresent(response -> {
-            if (!validateName()) {
-              alert.showAndWait();
-            } else {
-              saveData();
-            }
-          });
+          .ifPresent(response -> saveData());
     }
   }
 }
