@@ -94,7 +94,7 @@ public class SupporterAttributesDialog extends DialogPane {
       int defaultPort = encryptedCBox.isSelected() ? DEFAULT_ENCRYPTED_PORT : DEFAULT_PORT;
       portFld.setText(String.valueOf(defaultPort));
     }
-    supporter.setPort(Integer.valueOf(portFld.getText()));
+    supporter.setPort(portFld.getText());
     supporter.setEncrypted(encryptedCBox.isSelected());
     supporter.setChargeable(chargeableCBox.isSelected());
   }
