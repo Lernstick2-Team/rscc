@@ -23,6 +23,9 @@ import javafx.scene.layout.Priority;
  */
 public class SupporterAttributesDialog extends DialogPane {
 
+  private static final int DEFAULT_PORT = 5500;
+  private static final int DEFAULT_ENCRYPTED_PORT = DEFAULT_PORT;
+
   final Dialog dialog = new Dialog();
   final GridPane attributePane = new GridPane();
   final Label nameLbl = new Label();
@@ -87,6 +90,10 @@ public class SupporterAttributesDialog extends DialogPane {
   private void saveData() {
     supporter.setDescription(nameFld.getText());
     supporter.setAddress(addressFld.getText());
+    if (isEmpty(portFld.getText())) {
+      int defaultPort = encryptedCBox.isSelected() ? DEFAULT_ENCRYPTED_PORT : DEFAULT_PORT;
+      portFld.setText(String.valueOf(defaultPort));
+    }
     supporter.setPort(Integer.valueOf(portFld.getText()));
     supporter.setEncrypted(encryptedCBox.isSelected());
     supporter.setChargeable(chargeableCBox.isSelected());
