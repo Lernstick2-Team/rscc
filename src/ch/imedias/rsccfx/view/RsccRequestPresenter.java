@@ -199,18 +199,13 @@ public class RsccRequestPresenter implements ControlledPresenter {
       for (int i = buttonIndex; i < buttonList.size(); i++) {
         Button nextButton = (Button) buttonList.get(i);
         // copy positions from next button
-        LOGGER.info("currentButton: " + nextButton.textProperty().get());
         int nextButtonRow = GridPane.getRowIndex(nextButton);
         int nextButtonCol = GridPane.getColumnIndex(nextButton);
-        LOGGER.info("currentRow: " + row);
-        LOGGER.info("currentCol: " + column);
         // set button at new position
         GridPane.setRowIndex(nextButton, row);
         GridPane.setColumnIndex(nextButton, column);
         row = nextButtonRow;
         column = nextButtonCol;
-        LOGGER.info("nextRow: " + row);
-        LOGGER.info("nextCol: " + column);
       }
       buttonSize--;
 
@@ -218,15 +213,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
       supporters.remove(supporter);
       supporterHelper.saveSupporters(supporters);
     }
-    // last button needs to be set
-    /*Button lastButton = (Button) buttonList.get(buttonList.size());
-    GridPane.setRowIndex(lastButton, row);
-    GridPane.setColumnIndex(lastButton, column);*/
-
-    // TODO: Delete from supporter list as well.
-
-
-
   }
 
   private void attachContextMenu(Button button, Supporter supporter) {
