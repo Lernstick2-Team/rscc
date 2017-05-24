@@ -101,7 +101,7 @@ public class RsccSupportView extends BorderPane {
 
     titleLbl.getStyleClass().add("titleLbl");
 
-    descriptionLbl.getStyleClass().add("descriptionLbl");
+    descriptionLbl.getStyleClass().add("nameLbl");
 
     statusLbl.getStyleClass().add("statusLbl");
     statusBox.getChildren().add(statusLbl);
@@ -114,7 +114,7 @@ public class RsccSupportView extends BorderPane {
 
     startServiceBtn.setId("startServiceBtn");
     startServiceTitleLbl.getStyleClass().add("titleLbl");
-    startServiceDescriptionLbl.getStyleClass().add("descriptionLbl");
+    startServiceDescriptionLbl.getStyleClass().add("nameLbl");
 
     contentBox.getChildren().addAll(keyInputTitledPane, keyInputInnerPane, startServiceTitledPane);
     VBox.setVgrow(keyInputInnerPane, Priority.ALWAYS);
