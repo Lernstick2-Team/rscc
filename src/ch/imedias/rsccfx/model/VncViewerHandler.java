@@ -22,6 +22,7 @@ public class VncViewerHandler extends Thread {
    * @param model The one and only Model.
    * @param hostAddress Address to connect to.
    * @param vncViewerPort Port to connect to.
+   * @param listeningMode defines if it should listen or not.
    */
   public VncViewerHandler(Rscc model, String hostAddress,
                           Integer vncViewerPort, boolean listeningMode) {
