@@ -189,30 +189,27 @@ public class RsccRequestPresenter implements ControlledPresenter {
    * Deletes a SupporterButton.
    */
   public void deleteSupporterBtn(Button button, Supporter supporter) {
-    // checks if the last button wants to get deleted. Maybe.
-    if (supporters.get(supporters.size() - 1) != supporter) {
-      ObservableList<Node> buttonList = view.supporterInnerPane.getChildren();
-      int buttonIndex = buttonList.indexOf(button);
-      int row = GridPane.getRowIndex(button);
-      int column = GridPane.getColumnIndex(button);
-      view.supporterInnerPane.getChildren().remove(button);
-      for (int i = buttonIndex; i < buttonList.size(); i++) {
-        Button nextButton = (Button) buttonList.get(i);
-        // copy positions from next button
-        int nextButtonRow = GridPane.getRowIndex(nextButton);
-        int nextButtonCol = GridPane.getColumnIndex(nextButton);
-        // set button at new position
-        GridPane.setRowIndex(nextButton, row);
-        GridPane.setColumnIndex(nextButton, column);
-        row = nextButtonRow;
-        column = nextButtonCol;
-      }
-      buttonSize--;
-
-      // remove the supporter and save list.
-      supporters.remove(supporter);
-      supporterHelper.saveSupporters(supporters);
+    ObservableList<Node> buttonList = view.supporterInnerPane.getChildren();
+    int buttonIndex = buttonList.indexOf(button);
+    int row = GridPane.getRowIndex(button);
+    int column = GridPane.getColumnIndex(button);
+    view.supporterInnerPane.getChildren().remove(button);
+    for (int i = buttonIndex; i < buttonList.size(); i++) {
+      Button nextButton = (Button) buttonList.get(i);
+      // copy positions from next button
+      int nextButtonRow = GridPane.getRowIndex(nextButton);
+      int nextButtonCol = GridPane.getColumnIndex(nextButton);
+      // set button at new position
+      GridPane.setRowIndex(nextButton, row);
+      GridPane.setColumnIndex(nextButton, column);
+      row = nextButtonRow;
+      column = nextButtonCol;
     }
+    buttonSize--;
+
+    // remove the supporter and save list.
+    supporters.remove(supporter);
+    supporterHelper.saveSupporters(supporters);
   }
 
   private void attachContextMenu(Button button, Supporter supporter) {
@@ -235,8 +232,12 @@ public class RsccRequestPresenter implements ControlledPresenter {
     contextMenu.getItems().addAll(editMenuItem, connectMenuItem, deleteMenuItem);
 
     // When user right-click on Supporterbutton
-    button.setOnContextMenuRequested(event -> contextMenu.show(button, event.getScreenX(),
-        event.getScreenY()));
+    button.setOnContextMenuRequested(event -> {
+      if (supporters.get(supporters.size() - 1) != supporter) {
+        contextMenu.show(button, event.getScreenX(),
+            event.getScreenY());
+      }
+    });
   }
 
   private void initButtonSize(Button button) {
