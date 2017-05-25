@@ -124,7 +124,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
     view.reloadKeyBtn.prefHeightProperty().bind(view.generatedKeyFld.heightProperty());
     view.generatedKeyFld.prefWidthProperty().bind(scene.widthProperty()
         .subtract(100d));
-
   }
 
   /**

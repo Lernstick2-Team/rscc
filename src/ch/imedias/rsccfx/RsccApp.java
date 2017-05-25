@@ -3,7 +3,6 @@ package ch.imedias.rsccfx;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.SystemCommander;
 import ch.imedias.rsccfx.model.util.KeyUtil;
-import ch.imedias.rsccfx.view.HeaderPresenter;
 import ch.imedias.rsccfx.view.RsccHomePresenter;
 import ch.imedias.rsccfx.view.RsccHomeView;
 import ch.imedias.rsccfx.view.RsccRequestPresenter;
@@ -85,8 +84,6 @@ public class RsccApp extends Application {
     stage.setMinWidth((screenWidth / 1.8) / 1.2);
     stage.setMinHeight((screenHeight / 1.5) / 1.3);
 
-
-
     // Initialize stylesheets
     // Choose CSS depending on the resolution and set scaling factor
     double resolution = screenHeight * screenWidth;
@@ -110,7 +107,6 @@ public class RsccApp extends Application {
       // Full HD resolution
       rootTextSize = ROOT_TEXT_SIZE_FULL_HD;
       LOGGER.info("Full HD Resolution, Text Size: " + rootTextSize);
-
     }
 
     scalingFactor = rootTextSize / ROOT_TEXT_SIZE_4K;
