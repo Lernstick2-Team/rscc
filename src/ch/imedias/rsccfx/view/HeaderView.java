@@ -23,7 +23,7 @@ import javafx.scene.layout.RowConstraints;
  */
 public class HeaderView extends GridPane {
   private static final Logger LOGGER =
-      Logger.getLogger(Rscc.class.getName());
+      Logger.getLogger(HeaderView.class.getName());
 
   private static final double ICON_SIZE = 40;
 

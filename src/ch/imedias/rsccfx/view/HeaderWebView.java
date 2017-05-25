@@ -1,6 +1,5 @@
 package ch.imedias.rsccfx.view;
 
-import ch.imedias.rsccfx.model.Rscc;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.concurrent.Worker;
@@ -15,7 +14,7 @@ import javafx.scene.web.WebView;
  */
 public class HeaderWebView extends VBox {
   private static final Logger LOGGER =
-      Logger.getLogger(Rscc.class.getName());
+      Logger.getLogger(HeaderWebView.class.getName());
 
   //final String wikiUrl = "https://wiki.lernstick.ch";
   final ProgressBar progressBar = new ProgressBar();
