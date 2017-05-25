@@ -180,6 +180,13 @@ public class RsccSupportPresenter implements ControlledPresenter {
 
     });
 
+    model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
+          if (oldValue && !newValue) {
+            view.keyFld.clear();
+          }
+        }
+    );
+
   }
 
   private void initBindings() {
@@ -188,13 +195,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
         Bindings.or(
             model.connectionEstablishmentRunningProperty(),
             keyUtil.keyValidProperty().not())
-    );
-
-    model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
-          if (oldValue && !newValue) {
-            view.keyFld.clear();
-          }
-        }
     );
   }
 
@@ -209,6 +209,5 @@ public class RsccSupportPresenter implements ControlledPresenter {
     headerPresenter.setSettingsBtnAction(event ->
         popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
     // TODO: Set actions on buttons (Help, Settings)
-
   }
 }
