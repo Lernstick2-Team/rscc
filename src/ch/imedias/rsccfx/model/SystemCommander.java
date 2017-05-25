@@ -56,6 +56,11 @@ public class SystemCommander {
   }
 
 
+  /**
+   * Starts and returns a Process based on a conmmand.
+   * @param command A String to be executed.
+   * @return A Process-Object.
+   */
   public Process startProcess(String command) {
     Process process;
     try {
