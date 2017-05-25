@@ -42,4 +42,11 @@
         <encrypted>false</encrypted>
         <chargeable>false</chargeable>
     </supporter>
+    <supporter>
+        <description></description>
+        <address></address>
+        <port></port>
+        <encrypted>false</encrypted>
+        <chargeable>false</chargeable>
+    </supporter>
 </supporters>

@@ -5,7 +5,6 @@ import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.util.KeyUtil;
 import ch.imedias.rsccfx.view.util.KeyTextField;
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.util.logging.Logger;
@@ -77,7 +76,6 @@ public class RsccRequestView extends BorderPane {
     this.model = model;
     headerView = new HeaderView(model);
     this.keyUtil = model.getKeyUtil();
-    SvgImageLoaderFactory.install();
     initFieldData();
     layoutForm();
     layoutKeyGenerationPane();
@@ -111,7 +109,7 @@ public class RsccRequestView extends BorderPane {
 
     titleLbl.getStyleClass().add("titleLbl");
 
-    descriptionLbl.getStyleClass().add("descriptionLbl"); // TODO: Styling
+    descriptionLbl.getStyleClass().add("nameLbl"); // TODO: Styling
 
     supporterDescriptionLbl.getStyleClass().add("supporterDescriptionLbl");
 
@@ -127,7 +125,7 @@ public class RsccRequestView extends BorderPane {
 
     contentBox.getChildren().addAll(keyGenerationTitledPane, keyGenerationInnerPane,
         supporterTitledPane);
-    descriptionLbl.getStyleClass().add("descriptionLbl"); // TODO: Styling
+    descriptionLbl.getStyleClass().add("nameLbl"); // TODO: Styling
 
     VBox.setVgrow(keyGenerationInnerPane, Priority.ALWAYS);
     keyGenerationInnerPane.getStyleClass().add("contentRequest");

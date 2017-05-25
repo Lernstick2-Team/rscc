@@ -167,7 +167,7 @@
 }
 
 #scrollPane {
-    -fx-background: none;
+    -fx-background-color: transparent;
 }
 
 #reloadKeyBtn {
@@ -207,8 +207,9 @@
     /*-fx-padding: 10, 20, 10, 20;*/
     /*-fx-spacing: 150;*/
     -fx-background-image: url("../images/supporter_background.svg");
+    -fx-background-size: 70%;
     -fx-background-repeat: no-repeat;
-    -fx-background-position: center top;
+    -fx-background-position: center;
 }
 
 #connectBtn, #startServiceBtn{

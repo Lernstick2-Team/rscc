@@ -33,15 +33,12 @@ public class PopOverHelper {
   private static final int QUALITY_MIN = 0;
   private static final int QUALITY_MAX = 9;
   private static final int QUALITY_VALUE = 6;
-
   private final Strings strings = new Strings();
   private final Rscc model;
-
   // Get Screensize
   Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
   private final double overlayWidth = primaryScreenBounds.getWidth() / 9;
   private final double sliderWidth = overlayWidth / 1.2;
-
   // SettingsProperties
   BooleanProperty viewOnly = new SimpleBooleanProperty(false);
 
@@ -102,7 +99,6 @@ public class PopOverHelper {
         layoutRequest();
         helpPopOver.setContentNode(requestHelpBox);
         settingsPopOver.setContentNode(requestSettingsBox);
-        handleRequestSettings();
         requestSettingsBindings();
         invokeExpertSettings();
         break;
@@ -256,7 +252,7 @@ public class PopOverHelper {
   }
 
   private void invokeExpertSettings() {
-    expertSettingsBtn.setOnAction(actionEvent -> new ExpertSettingsDialog());
+    expertSettingsBtn.setOnAction(actionEvent -> new ExpertSettingsDialog(model));
   }
 
   public boolean isViewOnly() {

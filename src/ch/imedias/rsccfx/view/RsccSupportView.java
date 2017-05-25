@@ -11,7 +11,7 @@ import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
-import javafx.scene.image.ImageView;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -20,6 +20,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 
 /**
  * Defines all elements shown in the support section.
@@ -50,11 +52,10 @@ public class RsccSupportView extends BorderPane {
 
   final Button connectBtn = new Button();
   final Button startServiceBtn = new Button();
-
-  private final Rscc model;
   final Strings strings = new Strings();
-
-  ImageView validationImgView;
+  private final Rscc model;
+  private final WebView validationImgView = new WebView();
+  final WebEngine validationImg = validationImgView.getEngine();
 
   private Pane emptyPane = new Pane();
 
@@ -87,11 +88,6 @@ public class RsccSupportView extends BorderPane {
     //statusLbl.setText(strings.supportStatusLblReady);
     statusLbl.setText(strings.supportStatusLblWaiting);
 
-    validationImgView = new ImageView(getClass()
-        .getClassLoader()
-        .getResource("dialog-error.png")
-        .toExternalForm());                     // TODO: Check what to do here.
-
     keyInputTitledPane.setText(strings.supportKeyInputPane);
     startServiceTitledPane.setText(strings.supportAdressBookPane);
   }
@@ -105,7 +101,7 @@ public class RsccSupportView extends BorderPane {
 
     titleLbl.getStyleClass().add("titleLbl");
 
-    descriptionLbl.getStyleClass().add("descriptionLbl");
+    descriptionLbl.getStyleClass().add("nameLbl");
 
     statusLbl.getStyleClass().add("statusLbl");
     statusBox.getChildren().add(statusLbl);
@@ -113,20 +109,20 @@ public class RsccSupportView extends BorderPane {
 
     keyFld.getStyleClass().add("keyFld");
 
-    validationImgView.setSmooth(true);
-
     connectBtn.setId("connectBtn");
     connectBtn.setDisable(true);
 
     startServiceBtn.setId("startServiceBtn");
     startServiceTitleLbl.getStyleClass().add("titleLbl");
-    startServiceDescriptionLbl.getStyleClass().add("descriptionLbl");
+    startServiceDescriptionLbl.getStyleClass().add("nameLbl");
 
     contentBox.getChildren().addAll(keyInputTitledPane, keyInputInnerPane, startServiceTitledPane);
     VBox.setVgrow(keyInputInnerPane, Priority.ALWAYS);
     keyInputInnerPane.getStyleClass().add("contentSupport");
     VBox.setVgrow(startServiceInnerPane, Priority.ALWAYS);
     startServiceInnerPane.getStyleClass().add("contentSupport");
+
+    validationImgView.setBlendMode(BlendMode.DARKEN); // makes background transparent
 
     setTop(headerView);
     setCenter(contentBox);
@@ -157,7 +153,7 @@ public class RsccSupportView extends BorderPane {
     ColumnConstraints col1 = new ColumnConstraints();
     col1.setPercentWidth(40);
     ColumnConstraints col2 = new ColumnConstraints();
-    col2.setPercentWidth(10);
+    col2.setPercentWidth(5);
     ColumnConstraints col3 = new ColumnConstraints();
     col3.setPercentWidth(50);
     keyInputInnerPane.getColumnConstraints().addAll(col1, col2, col3);
@@ -199,7 +195,7 @@ public class RsccSupportView extends BorderPane {
           GridPane.setValignment(node, VPos.CENTER);
           GridPane.setHalignment(node, HPos.CENTER);
           GridPane.setMargin(node, new Insets(10));
-          startServiceInnerPane.setAlignment(Pos.CENTER);
+      startServiceInnerPane.setAlignment(Pos.CENTER);
         }
     );
 

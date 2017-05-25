@@ -5,12 +5,15 @@ import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.ViewController;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.util.KeyUtil;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 
 /**
@@ -23,16 +26,15 @@ public class RsccSupportPresenter implements ControlledPresenter {
       Logger.getLogger(RsccSupportPresenter.class.getName());
 
   private static final double WIDTH_SUBTRACTION_ENTERKEY = 100d;
-
-  private final Image validImage =
-      new Image(getClass().getClassLoader().getResource("emblem-default.png").toExternalForm());
-  private final Image invalidImage =
-      new Image(getClass().getClassLoader().getResource("dialog-error.png").toExternalForm());
-
   private final Rscc model;
   private final RsccSupportView view;
   private final HeaderPresenter headerPresenter;
   private final KeyUtil keyUtil;
+  private final BooleanProperty serviceRunning = new SimpleBooleanProperty(false);
+  private String validImage =
+      getClass().getClassLoader().getResource("images/valid.svg").toExternalForm();
+  private String invalidImage =
+      getClass().getClassLoader().getResource("images/invalid.svg").toExternalForm();
   private ViewController viewParent;
   private PopOverHelper popOverHelper;
 
@@ -46,11 +48,16 @@ public class RsccSupportPresenter implements ControlledPresenter {
     this.model = model;
     this.view = view;
     this.keyUtil = model.getKeyUtil();
+    initImages();
     headerPresenter = new HeaderPresenter(model, view.headerView);
     attachEvents();
     initHeader();
     initBindings();
     popOverHelper = new PopOverHelper(model, RsccApp.SUPPORT_VIEW);
+  }
+
+  private void initImages() {
+    view.validationImg.load(invalidImage);
   }
 
   /**
@@ -72,6 +79,7 @@ public class RsccSupportPresenter implements ControlledPresenter {
 
     view.keyFld.prefWidthProperty().bind(scene.widthProperty()
         .subtract(WIDTH_SUBTRACTION_ENTERKEY));
+
   }
 
   /**
@@ -129,11 +137,24 @@ public class RsccSupportPresenter implements ControlledPresenter {
 
     // make it possible to connect by pressing enter
     view.keyFld.setOnKeyPressed(ke -> {
-      if (ke.getCode() == KeyCode.ENTER) {
+      if (ke.getCode() == KeyCode.ENTER && keyUtil.isKeyValid()) {
         model.connectToUser();
       }
     });
 
+
+    // change valid image depending on if the key is valid or not
+    keyUtil.keyValidProperty().addListener(
+        (observable, oldValue, newValue) -> {
+          if (oldValue != newValue) {
+            if (newValue) {
+              Platform.runLater(() -> view.validationImg.load(validImage));
+            } else {
+              Platform.runLater(() -> view.validationImg.load(invalidImage));
+            }
+          }
+        }
+    );
 
     // when the service is running, disable all interactions
     view.headerView.settingsBtn.disableProperty().bind(model.vncViewerProcessRunningProperty());
