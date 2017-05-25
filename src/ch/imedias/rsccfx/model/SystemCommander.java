@@ -56,6 +56,21 @@ public class SystemCommander {
   }
 
 
+  public Process startProcess(String command) {
+    Process process;
+    try {
+      process = Runtime.getRuntime().exec(command);
+    } catch (Exception exception) {
+      LOGGER.severe("Exception thrown when running the command: "
+          + command
+          + "\n Exception Message: " + exception.getMessage());
+      throw new IllegalArgumentException();
+    }
+    return process;
+  }
+
+
+
   /**
    * Generates String to run command.
    *
