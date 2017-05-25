@@ -79,7 +79,7 @@ public class Rscc {
       "statusBox", "statusBoxInitialize", "statusBoxSuccess", "statusBoxFail"};
   private final StringProperty terminalOutput = new SimpleStringProperty();
 
-  private final BooleanProperty forcingServerMode = new SimpleBooleanProperty(true);
+  private final BooleanProperty forcingServerMode = new SimpleBooleanProperty(false);
   private final BooleanProperty vncSessionRunning = new SimpleBooleanProperty(false);
   private final BooleanProperty vncServerProcessRunning = new SimpleBooleanProperty(false);
   private final BooleanProperty vncViewerProcessRunning = new SimpleBooleanProperty(false);
