@@ -53,8 +53,6 @@ public class VncServerHandler {
 
           LOGGER.info("Strating VNC-Server with command: " + commandArray.toString());
 
-//          process = Runtime.getRuntime().exec(commandArray.toString());
-
           process = model.getSystemCommander().startProcess(commandArray.toString());
           model.setVncServerProcessRunning(true);
 
@@ -120,7 +118,6 @@ public class VncServerHandler {
 
           LOGGER.info("Strating VNC-Server with command: " + commandArray.toString());
 
-//          process = Runtime.getRuntime().exec(commandArray.toString());
           process = model.getSystemCommander().startProcess(commandArray.toString());
 
           InputStream errorStream = process.getErrorStream();

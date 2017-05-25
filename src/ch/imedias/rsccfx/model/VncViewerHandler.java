@@ -53,7 +53,6 @@ public class VncViewerHandler {
 
           LOGGER.info("Strating VNCViewer with command: " + commandArray.toString());
 
-//          process = Runtime.getRuntime().exec(commandArray.toString());
           process = model.getSystemCommander().startProcess(commandArray.toString());
 
           model.setVncViewerProcessRunning(true);
@@ -119,7 +118,6 @@ public class VncViewerHandler {
 
           LOGGER.info("Strating VNCViewer with command: " + commandArray.toString());
 
-//          process = Runtime.getRuntime().exec(commandArray.toString());
           process = model.getSystemCommander().startProcess(commandArray.toString());
 
           InputStream errorStream = process.getErrorStream();
