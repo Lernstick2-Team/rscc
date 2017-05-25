@@ -23,7 +23,7 @@ public class SystemCommander {
    * @param command terminal command to be executed.
    * @return String trimmed output of the terminal without whitespaces at beginning / end.
    */
-  public String executeTerminalCommandAndReturnOutput(String command) {
+  public String executeTerminalCommand(String command) {
     Process process;
     String outputString = ""; // standard return value
     try {

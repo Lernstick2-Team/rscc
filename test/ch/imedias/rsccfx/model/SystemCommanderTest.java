@@ -22,12 +22,12 @@ public class SystemCommanderTest {
   }
 
   /**
-   * Test for {@link SystemCommander#executeTerminalCommandAndReturnOutput(String)}.
+   * Test for {@link SystemCommander#executeTerminalCommand(String)}.
    */
   @Test
   public void testExecuteTerminalCommandIllegalArguments() throws Exception {
     try {
-      systemCommander.executeTerminalCommandAndReturnOutput(null);
+      systemCommander.executeTerminalCommand(null);
       fail("IllegalArgumentException was expected when Command is null");
     } catch (Exception e) {
       // expected behavior
@@ -35,14 +35,14 @@ public class SystemCommanderTest {
   }
 
   /**
-   * Test for {@link SystemCommander#executeTerminalCommandAndReturnOutput(String)}.
+   * Test for {@link SystemCommander#executeTerminalCommand(String)}.
    * Compares method output using standard Linux shell-command "echo".
    */
   @Test
   public void testExecuteTerminalCommand() throws Exception {
     String testTerminalCommand = "testExecuteTerminalCommand";
     StringBuilder command = new StringBuilder("echo ").append(testTerminalCommand);
-    String output = systemCommander.executeTerminalCommandAndReturnOutput(command.toString());
+    String output = systemCommander.executeTerminalCommand(command.toString());
     assertEquals(testTerminalCommand, output);
   }
 

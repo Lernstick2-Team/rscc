@@ -39,7 +39,7 @@ public class RsccTest {
     doCallRealMethod().when(mockSystemCommander).commandStringGenerator(any(), any(), any());
     model.setKeyServerIp(KEY_SERVER_IP);
     model.setKeyServerHttpPort(KEY_SERVER_HTTP_PORT);
-    when(mockSystemCommander.executeTerminalCommandAndReturnOutput(
+    when(mockSystemCommander.executeTerminalCommand(
         argThat(string -> string.contains("port_share.sh")))).thenReturn(KEY);
     when(mockKeyUtil.getKey()).thenReturn(KEY);
   }
@@ -88,7 +88,7 @@ public class RsccTest {
    * Not marked with a @Test annotation because it is indirectly called in other tests.
    */
   public void testKeyServerSetup() throws Exception {
-    verify(mockSystemCommander).executeTerminalCommandAndReturnOutput(
+    verify(mockSystemCommander).executeTerminalCommand(
         argThat(script -> script.contains("use.sh")
             && script.contains(KEY_SERVER_IP)
             && script.contains(KEY_SERVER_HTTP_PORT)));
@@ -100,7 +100,7 @@ public class RsccTest {
   @Test
   public void testKillConnection() throws Exception {
     model.killConnection();
-    verify(mockSystemCommander).executeTerminalCommandAndReturnOutput(
+    verify(mockSystemCommander).executeTerminalCommand(
         argThat(script -> script.contains("port_stop.sh")
             && script.endsWith(KEY)));
     verify(mockKeyUtil).getKey();
@@ -114,7 +114,7 @@ public class RsccTest {
     model.requestKeyFromServer();
     testKeyServerSetup();
     // make sure the script was executed
-    verify(mockSystemCommander).executeTerminalCommandAndReturnOutput(
+    verify(mockSystemCommander).executeTerminalCommand(
         argThat(script -> script.contains("port_share.sh")));
     // make sure the key which is being returned is set right
     verify(mockKeyUtil).setKey(KEY);
@@ -128,7 +128,7 @@ public class RsccTest {
     model.connectToUser();
     // make sure the scripts were executed
     this.testKeyServerSetup();
-    verify(mockSystemCommander).executeTerminalCommandAndReturnOutput(
+    verify(mockSystemCommander).executeTerminalCommand(
         argThat(script -> script.contains("port_connect.sh")
             && script.endsWith(KEY)));
     verify(mockKeyUtil).getKey();
@@ -141,9 +141,9 @@ public class RsccTest {
   public void testRefreshKey() {
     model.refreshKey();
     // make sure the scripts were executed
-    verify(mockSystemCommander).executeTerminalCommandAndReturnOutput(
+    verify(mockSystemCommander).executeTerminalCommand(
         argThat(script -> script.contains("port_stop.sh")));
-    verify(mockSystemCommander).executeTerminalCommandAndReturnOutput(
+    verify(mockSystemCommander).executeTerminalCommand(
         argThat(script -> script.contains("port_share.sh")));
     // make sure the key which is being returned is set right
     verify(mockKeyUtil).setKey(KEY);
@@ -156,7 +156,7 @@ public class RsccTest {
   //  public void testStartVncServer() {
   //    model.startVncServer();
   //    // make sure the scripts were executed
-  //    verify(mockSystemCommander).executeTerminalCommandAndReturnOutput(
+  //    verify(mockSystemCommander).executeTerminalCommand(
   //        argThat(script -> script.contains("x11vnc")));
   //  }
 
@@ -169,7 +169,7 @@ public class RsccTest {
   //    int vncPort = 5900;
   //    model.startVncViewer(hostAddress, vncPort);
   //    // make sure the scripts were executed
-  //    verify(mockSystemCommander).executeTerminalCommandAndReturnOutput(
+  //    verify(mockSystemCommander).executeTerminalCommand(
   //        argThat(script -> script.contains("vncviewer")
   //            && script.contains(hostAddress)));
   //  }

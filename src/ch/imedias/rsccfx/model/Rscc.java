@@ -229,7 +229,7 @@ public class Rscc {
   private void keyServerSetup() {
     String command = systemCommander.commandStringGenerator(
         pathToResourceDocker, "use.sh", getKeyServerIp(), getKeyServerHttpPort());
-    systemCommander.executeTerminalCommandAndReturnOutput(command);
+    systemCommander.executeTerminalCommand(command);
     isSshRunning.setValue(true);
   }
 
@@ -261,7 +261,7 @@ public class Rscc {
     LOGGER.info("SSH connection still active - try closing SSH connection");
     String command = systemCommander.commandStringGenerator(
         pathToResourceDocker, "port_stop.sh", keyUtil.getKey());
-    systemCommander.executeTerminalCommandAndReturnOutput(command);
+    systemCommander.executeTerminalCommand(command);
     keyUtil.setKey("");
     LOGGER.info("Everything should be closed");
   }
@@ -279,7 +279,7 @@ public class Rscc {
 
     String command = systemCommander.commandStringGenerator(
         pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()), pathToStunDumpFile);
-    String key = systemCommander.executeTerminalCommandAndReturnOutput(command);
+    String key = systemCommander.executeTerminalCommand(command);
 
     keyUtil.setKey(key); // update key in model
     rscccfp = new Rscccfp(this, true);
@@ -359,7 +359,7 @@ public class Rscc {
 
     setConnectionStatus("Connected to keyserver.", 1);
 
-    systemCommander.executeTerminalCommandAndReturnOutput(command);
+    systemCommander.executeTerminalCommand(command);
 
     rscccfp = new Rscccfp(this, false);
     rscccfp.setDaemon(true);
@@ -396,7 +396,6 @@ public class Rscc {
       vncViewer.startVncViewerConnecting("localhost",
           (rudp != null) ? getProxyPort() : vncPort.getValue());
       i++;
-      System.out.println(i);
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
