@@ -5,13 +5,11 @@ import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.ViewController;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.util.KeyUtil;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -191,13 +189,12 @@ public class RsccSupportPresenter implements ControlledPresenter {
             keyUtil.keyValidProperty().not())
     );
 
-
-    // bind validation image to keyValidProperty
-    view.validationImgView.imageProperty().bind(
-        Bindings.when(keyUtil.keyValidProperty())
+    // FIXME no clue what this does? why is this new a web view?
+    /* view.validationImgView.imageProperty().bind(
+         Bindings.when(keyUtil.keyValidProperty())
             .then(validImage)
-            .otherwise(invalidImage)
-    );
+           .otherwise(invalidImage)
+     );*/
   }
 
   /**

@@ -119,7 +119,7 @@ public class ExpertSettingsDialog extends DialogPane {
   private void bindFieldsToModel() {
     // make bindings to the model
     forceConnectOverServerTgl.selectedProperty().bindBidirectional(
-        model.isForcingServerModeProperty());
+        model.forcingServerModeProperty());
     keyServerIpFld.textProperty().bindBidirectional(model.keyServerIpProperty());
     keyServerHttpPortFld.textProperty().bindBidirectional(model.keyServerHttpPortProperty());
     vncPortFld.textProperty().bindBidirectional(model.vncPortProperty(),

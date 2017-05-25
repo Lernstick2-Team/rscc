@@ -1,10 +1,10 @@
 package ch.imedias.rsccfx.localization;
 
 /**
- *  Code generated at 09:52:29 16.05.2017
+ *  Code generated at 11:22:30 25.05.2017
  *  by generateStringsClass.py version 0.3.4
  *  based on properties file with hash:
- *  334b3d067fb0079e1043df17b6fdaacec028960a7838548b6fbedadad576a8b6
+ *  7c6da6a924411999ca90c08b3fd171621c3250057a8981a121711c097f7c133a
  */
 
 import java.util.Locale;
@@ -93,11 +93,12 @@ public class Strings {
   public String expertVncPortLbl;
   public String expertIcePortLbl;
   public String expertUdpPackageSizeLbl;
-  public String expertForwardingPortLbl;
+  public String expertProxyPortLbl;
   public String expertStunServerPortLbl;
   public String expertStunserverLbl;
   public String expertSettingsBtn;
   public String settingsTitleLbl;
+  public String supporterNameInformationDialog;
 
   public Strings() {
 
@@ -182,10 +183,11 @@ public class Strings {
     expertVncPortLbl = rscBndl.getString("expertVncPortLbl");
     expertIcePortLbl = rscBndl.getString("expertIcePortLbl");
     expertUdpPackageSizeLbl = rscBndl.getString("expertUdpPackageSizeLbl");
-    expertForwardingPortLbl = rscBndl.getString("expertForwardingPortLbl");
+    expertProxyPortLbl = rscBndl.getString("expertProxyPortLbl");
     expertStunServerPortLbl = rscBndl.getString("expertStunServerPortLbl");
     expertStunserverLbl = rscBndl.getString("expertStunserverLbl");
     expertSettingsBtn = rscBndl.getString("expertSettingsBtn");
     settingsTitleLbl = rscBndl.getString("settingsTitleLbl");
+    supporterNameInformationDialog = rscBndl.getString("supporterNameInformationDialog");
   }
 }

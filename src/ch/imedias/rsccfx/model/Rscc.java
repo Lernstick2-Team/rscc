@@ -394,7 +394,7 @@ public class Rscc {
     int i = 0;
     while (!isVncSessionRunning() && i < 10) {
       vncViewer.startVncViewerConnecting("localhost",
-          (rudp != null) ? LOCAL_FORWARDING_PORT : vncPort.getValue());
+          (rudp != null) ? getProxyPort() : vncPort.getValue());
       i++;
       System.out.println(i);
       try {
