@@ -9,9 +9,7 @@ import ch.imedias.rsccfx.model.xml.SupporterHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -40,7 +38,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
   private ViewController viewParent;
   private PopOverHelper popOverHelper;
   private int buttonSize = 0;
-
 
   /**
    * Initializes a new RsccRequestPresenter with the matching view.
