@@ -65,8 +65,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
   }
 
   private void attachEvents() {
-    //TODO event
-    view.disconnectBtn.setOnAction(event -> model.connectToUser());
+    //Disconnects session on button click
+    view.disconnectBtn.setOnAction(event -> model.killConnection());
 
     view.reloadKeyBtn.setOnAction(
         event -> {
