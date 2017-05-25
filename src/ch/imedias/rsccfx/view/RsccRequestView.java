@@ -20,7 +20,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -66,7 +65,6 @@ public class RsccRequestView extends BorderPane {
   Button reloadKeyBtn = new Button();
   final Button disconnectBtn = new Button();
 
-  private Pane emptyPane = new Pane();
 
   /**
    * Initializes all the GUI components needed to generate the key the supporter needs.
@@ -170,13 +168,13 @@ public class RsccRequestView extends BorderPane {
     GridPane.setConstraints(reloadKeyBtn, 1, 1);
     GridPane.setConstraints(titleLbl, 2, 0);
     GridPane.setConstraints(descriptionLbl, 2, 1);
-    GridPane.setConstraints(emptyPane, 0, 2);
     GridPane.setConstraints(statusBox, 0, 3);
     GridPane.setConstraints(disconnectBtn, 0, 2);
     GridPane.setColumnSpan(statusBox, 3);
 
+
     keyGenerationInnerPane.getChildren().addAll(generatedKeyFld, disconnectBtn,  reloadKeyBtn, titleLbl,
-        descriptionLbl, statusBox, emptyPane);
+        descriptionLbl, statusBox);
 
     // initial styling
     keyGenerationInnerPane.getChildren().stream()
