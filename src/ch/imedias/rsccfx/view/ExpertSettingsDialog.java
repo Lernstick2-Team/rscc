@@ -51,6 +51,7 @@ public class ExpertSettingsDialog extends DialogPane {
 
   /**
    * Initializes all the GUI components needed in the DialogPane.
+   * @param model The model is needed in the constructor.
    */
   public ExpertSettingsDialog(Rscc model) {
     this.model = model;

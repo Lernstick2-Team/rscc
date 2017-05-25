@@ -63,6 +63,8 @@ public class SystemCommander {
    *                     Should be fully qualified but can also be null.
    * @param scriptName   name of the script to be run.
    * @param attributes   optional arguments that should be included in the command.
+   * @return combines all the params into one simple command for the terminal
+   *                     and returns it as a string.
    */
   public String commandStringGenerator(
       String pathToScript, String scriptName, String... attributes) {

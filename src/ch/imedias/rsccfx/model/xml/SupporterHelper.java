@@ -37,6 +37,7 @@ public class SupporterHelper {
   /**
    * Gets the supporter list from the preferences file.
    * If no preferences are found the default list is generated.
+   * @return list of supporter.
    */
   public List<Supporter> loadSupporters() {
     // load preferences
@@ -51,7 +52,7 @@ public class SupporterHelper {
 
   /**
    * Saves supporters from a list to the preferences file.
-   * @param supporters TODO Add comment.
+   * @param supporters the list which should be in the xml.
    */
   public void saveSupporters(List<Supporter> supporters) {
     String supportersXml = supportersToXml(supporters);
@@ -59,8 +60,8 @@ public class SupporterHelper {
   }
 
   /**
-   * TODO Add comment.
-   * @return TODO Add comment.
+   * Returns a default list of supporters.
+   * @return list object of default supporters.
    */
   public List<Supporter> getDefaultSupporters() {
     LOGGER.info("Loading default supporter list");
@@ -69,11 +70,6 @@ public class SupporterHelper {
     return getSupportersFromXml(supportersXmlFile);
   }
 
-  /**
-   * TODO Add comment.
-   * @param file TODO Add comment.
-   * @return TODO Add comment.
-   */
   private List<Supporter> getSupportersFromXml(File file) {
     List<Supporter> supportersList = null;
     try {
@@ -89,11 +85,6 @@ public class SupporterHelper {
     return supportersList;
   }
 
-  /**
-   * TODO Add comment.
-   * @param string TODO Add comment.
-   * @return TODO Add comment.
-   */
   private List<Supporter> getSupportersFromXml(String string) {
     List<Supporter> supportersList = null;
     StringReader reader = new StringReader(string);
@@ -113,11 +104,6 @@ public class SupporterHelper {
     return supportersList;
   }
 
-  /**
-   * TODO Add comment.
-   * @param supporters TODO Add comment.
-   * @return TODO Add comment.
-   */
   private String supportersToXml(List<Supporter> supporters) {
     String string = null;
 
@@ -140,11 +126,6 @@ public class SupporterHelper {
     return string;
   }
 
-  /**
-   * TODO Add comment.
-   * @param supporters TODO Add comment.
-   * @param file TODO Add comment.
-   */
   private void supportersToXml(List<Supporter> supporters, File file) {
     try {
       JAXBContext jaxbContext = JAXBContext.newInstance(Supporters.class);
@@ -160,18 +141,10 @@ public class SupporterHelper {
     }
   }
 
-  /**
-   * TODO Add comment.
-   * @return TODO Add comment.
-   */
   private String getSupportersXmlFromPreferences() {
     return preferences.get(SUPPORT_ADDRESSES, null);
   }
 
-  /**
-   * TODO Add comment.
-   * @param supportersXmlString TODO Add comment.
-   */
   private void setSupportersInPreferences(String supportersXmlString) {
     if (supportersXmlString != null) {
       preferences.put(SUPPORT_ADDRESSES, supportersXmlString);
