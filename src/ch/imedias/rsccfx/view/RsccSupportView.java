@@ -18,7 +18,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -133,9 +132,6 @@ public class RsccSupportView extends BorderPane {
 
     setTop(headerView);
     setCenter(contentBox);
-
-
-
   }
 
   // TODO: Make layoutKeyInputPane same as Request View @martinfrancois @JenniferMue
@@ -168,7 +164,7 @@ public class RsccSupportView extends BorderPane {
     ColumnConstraints col3 = new ColumnConstraints();
     col3.setPercentWidth(50);
 
-    keyInputInnerPane.getColumnConstraints().addAll(col1);
+    keyInputInnerPane.getColumnConstraints().addAll(col1, col2, col3);
 
     // special styling
     GridPane.setVgrow(statusBox, Priority.NEVER);
@@ -222,7 +218,6 @@ public class RsccSupportView extends BorderPane {
     col2.setPercentWidth(50);
     startServiceInnerPane.getColumnConstraints().addAll(col1, col2);
 
-
     // special styling
     GridPane.setHalignment(startServiceTitleLbl, HPos.LEFT);
     GridPane.setValignment(startServiceTitleLbl, VPos.BOTTOM);
@@ -233,7 +228,6 @@ public class RsccSupportView extends BorderPane {
     GridPane.setValignment(statusBox, VPos.BOTTOM);
 
     GridPane.setMargin(titleLbl, new Insets(0));
-    startServiceInnerPane.setGridLinesVisible(true);
   }
 
   private void bindFieldsToModel() {

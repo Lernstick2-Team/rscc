@@ -128,6 +128,7 @@ public class RsccRequestView extends BorderPane {
 
     contentBox.getChildren().addAll(keyGenerationTitledPane, keyGenerationInnerPane,
         supporterTitledPane);
+    contentBox.getStyleClass().add("contentBox");
     descriptionLbl.getStyleClass().add("nameLbl");
 
     VBox.setVgrow(keyGenerationInnerPane, Priority.ALWAYS);
@@ -170,12 +171,11 @@ public class RsccRequestView extends BorderPane {
     GridPane.setConstraints(descriptionLbl, 2, 1);
     GridPane.setConstraints(emptyPane, 0, 2);
     GridPane.setConstraints(statusBox, 0, 3);
-
     GridPane.setColumnSpan(statusBox, 3);
 
     keyGenerationInnerPane.getChildren().addAll(generatedKeyFld, reloadKeyBtn, titleLbl,
         descriptionLbl, statusBox, emptyPane);
-
+    keyGenerationInnerPane.setAlignment(Pos.CENTER);
     // initial styling
     keyGenerationInnerPane.getChildren().stream()
         .forEach(node -> {
@@ -189,13 +189,8 @@ public class RsccRequestView extends BorderPane {
 
     // column division
     ColumnConstraints col1 = new ColumnConstraints();
-    col1.setPercentWidth(40);
-    ColumnConstraints col2 = new ColumnConstraints();
-    col2.setPercentWidth(10);
-    ColumnConstraints col3 = new ColumnConstraints();
-    col3.setPercentWidth(50);
-    keyGenerationInnerPane.getColumnConstraints().addAll(col1, col2, col3);
-    keyGenerationInnerPane.setGridLinesVisible(true);
+    col1.setPercentWidth(45);
+    keyGenerationInnerPane.getColumnConstraints().addAll(col1);
 
     // special styling
     GridPane.setVgrow(statusBox, Priority.NEVER);
@@ -205,6 +200,7 @@ public class RsccRequestView extends BorderPane {
     GridPane.setHalignment(descriptionLbl, HPos.LEFT);
     GridPane.setValignment(reloadKeyBtn, VPos.CENTER);
     GridPane.setMargin(titleLbl, new Insets(0));
+    GridPane.setMargin(generatedKeyFld, new Insets(0, 0, 10, 0));
     GridPane.setMargin(descriptionLbl, new Insets(0));
     keyGenerationInnerPane.setPadding(new Insets(10 * scalingFactor));
 
