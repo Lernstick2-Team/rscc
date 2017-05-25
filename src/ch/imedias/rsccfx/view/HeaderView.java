@@ -102,7 +102,6 @@ public class HeaderView extends GridPane {
 
           Button button = (Button) node;
           button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
         });
 
     this.prefHeightProperty().bind(BUTTON_SIZE);
@@ -121,7 +120,5 @@ public class HeaderView extends GridPane {
   private void bindFieldsToModel() {
     // make bindings to the model
   }
-
-
 }
 

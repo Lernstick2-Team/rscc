@@ -1,86 +1,160 @@
 package ch.imedias.rsccfx.model;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
+
 /**
  * This Class handles a VNC Server.
- * The Thread keeps running as long as the VNCServer is running.
  * Created by jp on 11/05/17.
  */
-public class VncServerHandler extends Thread {
-  private final SystemCommander systemCommander;
+public class VncServerHandler {
+  private static final Logger LOGGER =
+      Logger.getLogger(VncServerHandler.class.getName());
   private final Rscc model;
   private final String vncServerName = "x11vnc";
-  private String hostAddress;
-  private Integer vncViewerPort;
-  private boolean reverseMode;
-
+  private Process process;
 
   /**
-   * Constructor to instantiate a VNCViewer.
+   * Constructor to instantiate a VNCServer.
+   *
    * @param model The one and only Model.
-   * @param hostAddress Address to connect to.
-   * @param vncViewerPort Port to connect to.
    */
-  public VncServerHandler(Rscc model, String hostAddress,
-                          Integer vncViewerPort, boolean reverseMode) {
-    this.reverseMode = reverseMode;
+  public VncServerHandler(Rscc model) {
     this.model = model;
-    this.hostAddress = hostAddress;
-    this.vncViewerPort = vncViewerPort;
-    this.systemCommander = model.getSystemCommander();
   }
 
 
   /**
-   * Starts the VNCServer in the given mode (Reverse or normal).
+   * Starts VNC Server in Reverse Mode.
+   * Thread Live as long as connection is established.
+   *
+   * @param hostAddress   Address to connect to.
+   * @param vncViewerPort Port to connect to.
+   * @return true when conneting did not fail.
    */
-  public void run() {
-    if (reverseMode) {
-      startVncServerReverse();
-    } else {
-      startVncServer();
-    }
+  public boolean startVncServerReverse(String hostAddress, Integer vncViewerPort) {
+    final BooleanProperty connectionSucceed = new SimpleBooleanProperty(true);
+
+    Thread startServerProcessThread = new Thread() {
+      public void run() {
+        try {
+
+          StringBuilder commandArray = new StringBuilder();
+          commandArray.append(vncServerName);
+          commandArray.append(" ").append("-connect");
+          commandArray.append(" ").append(hostAddress + ":" + vncViewerPort);;
+
+          LOGGER.info("Strating VNC-Server with command: " + commandArray.toString());
+
+          process = model.getSystemCommander().startProcess(commandArray.toString());
+          model.setVncServerProcessRunning(true);
+
+          InputStream errorStream = process.getErrorStream();
+          BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+          String errorString;
+          while (process.isAlive()) {
+            errorString = errorReader.readLine();
+
+            if (errorString != null && errorString.contains("failed to connect")) {
+              LOGGER.info("Detected: failed to connect");
+              connectionSucceed.setValue(false);
+              killVncServerProcess();
+            }
+
+            if (errorString != null && errorString.contains("reverse_connect")
+                && errorString.contains("OK")) {
+              LOGGER.info("Detected: Reverse connect OK");
+              connectionSucceed.setValue(true);
+              model.setVncSessionRunning(true);
+            }
+          }
+
+          LOGGER.info("VNC - Server process has ended");
+          model.setVncSessionRunning(false);
+          model.setVncServerProcessRunning(false);
+
+
+          errorStream.close();
+
+        } catch (IOException e) {
+          e.getStackTrace();
+        }
+
+        LOGGER.info("Ending VNC Server Thread ");
+      }
+    };
+
+    startServerProcessThread.start();
+
+    return connectionSucceed.getValue();
   }
 
 
   /**
    * Starts this VNCServer listening on localhost.
    */
-  public void startVncServer() {
-    StringBuilder vncServerAttributes = new StringBuilder("-bg -localhost");
+  public void startVncServerListening() {
 
-    if (model.getVncViewOnly()) {
-      vncServerAttributes.append(" -viewonly");
-    }
-    vncServerAttributes.append(" -rfbport ").append(model.getVncPort());
+    Thread startServerProcessThread = new Thread() {
+      public void run() {
+        LOGGER.info("Starting VNC Server Thread");
+        model.setVncServerProcessRunning(true);
 
-    String command = systemCommander.commandStringGenerator(null,
-        vncServerName, vncServerAttributes.toString());
-    systemCommander.executeTerminalCommand(command);
-    //"connection from client"
+        try {
+
+          StringBuilder commandArray = new StringBuilder();
+          commandArray.append(vncServerName);
+          commandArray.append(" ").append("-localhost");
+          if (model.getVncViewOnly()) {
+            commandArray.append(" ").append("-viewonly");
+          }
+
+          LOGGER.info("Strating VNC-Server with command: " + commandArray.toString());
+
+          process = model.getSystemCommander().startProcess(commandArray.toString());
+
+          InputStream errorStream = process.getErrorStream();
+          BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+          String errorString;
+
+          while (process.isAlive()) {
+            errorString = errorReader.readLine();
+
+            if (errorString != null && errorString.contains("connection from client")) {
+              LOGGER.info("Client has connected");
+              model.setVncSessionRunning(true);
+            }
+
+          }
+
+          LOGGER.info("VNC - Server process has ended");
+          errorStream.close();
+          model.setVncSessionRunning(false);
+          model.setVncServerProcessRunning(false);
+
+        } catch (IOException e) {
+          e.getStackTrace();
+        }
+      }
+    };
+    startServerProcessThread.start();
   }
-
 
   /**
-   * Starts this VNCServer and connects to listen VNCViewer.
+   * kill the VNC Server process.
    */
-  private void startVncServerReverse() {
-    StringBuilder vncServerAttributes = new StringBuilder(
-        "-connect " + hostAddress + ":" + vncViewerPort);
-
-    String command = systemCommander.commandStringGenerator(null,
-        vncServerName, vncServerAttributes.toString());
-    systemCommander.executeTerminalCommandAndUpdateModel(command,
-        "OK");
-    //"OK"
+  public void killVncServerProcess() {
+    LOGGER.info("Stopping VNC-Server Process");
+    process.destroy();
+    model.setVncSessionRunning(false);
+    model.setVncServerProcessRunning(false);
   }
 
-
-  /**
-   * Kills all processes with the Name of the VNCServer.
-   */
-  public void killVncServer() {
-    String command = systemCommander.commandStringGenerator(null,
-        "killall", vncServerName);
-    systemCommander.executeTerminalCommand(command);
-  }
 }

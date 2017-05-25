@@ -51,6 +51,7 @@ public class ExpertSettingsDialog extends DialogPane {
 
   /**
    * Initializes all the GUI components needed in the DialogPane.
+   * @param model The model is needed in the constructor.
    */
   public ExpertSettingsDialog(Rscc model) {
     this.model = model;
@@ -119,21 +120,20 @@ public class ExpertSettingsDialog extends DialogPane {
   private void bindFieldsToModel() {
     // make bindings to the model
     forceConnectOverServerTgl.selectedProperty().bindBidirectional(
-        model.isForcingServerModeProperty());
+        model.forcingServerModeProperty());
     keyServerIpFld.textProperty().bindBidirectional(model.keyServerIpProperty());
     keyServerHttpPortFld.textProperty().bindBidirectional(model.keyServerHttpPortProperty());
     vncPortFld.textProperty().bindBidirectional(model.vncPortProperty(),
         new NumberStringConverter("#"));
     icePortFld.textProperty().bindBidirectional(model.icePortProperty(),
         new NumberStringConverter("#"));
-    // TODO: These properties were missing - please check if they are alright.
     udpPackageSizeFld.textProperty().bindBidirectional(model.udpPackageSizeProperty(),
         new NumberStringConverter("#"));
     proxyPortFld.textProperty().bindBidirectional(model.proxyPortProperty(),
         new NumberStringConverter("#"));
     stunServerPortFld.textProperty().bindBidirectional(model.stunServerPortProperty(),
         new NumberStringConverter("#"));
-    // TODO: Stunserver-List needs to be binded
+    // TODO: Stunserver-List needs to be binded @martinfrancois
   }
 
 }

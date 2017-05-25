@@ -81,6 +81,8 @@ public class PopOverHelper {
 
   /**
    * Initializes PopOver according to view.
+   * @param model is needed for correct resizing.
+   * @param viewName is required to change content in popover boxes.
    */
   public PopOverHelper(Rscc model, String viewName) {
     this.model = model;
@@ -234,6 +236,18 @@ public class PopOverHelper {
   private void supportSettingsBindings() {
     model.vncQualityProperty().bindBidirectional(supportQualitySldr
         .sliderValueProperty());
+
+    model.vncCompressionProperty().bindBidirectional(supportCompressionSldr
+        .sliderValueProperty());
+
+    model.vncBgr233Property().bindBidirectional(supportBgr233Tgl.selectedProperty());
+  }
+
+  /**
+   * Kills the VncServer if settings Popover is showing.
+   * Starts the VncServer after popover is closed.
+   */
+  private void handleRequestSettings() {
   }
 
   private void invokeExpertSettings() {

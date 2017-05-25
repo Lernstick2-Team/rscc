@@ -5,13 +5,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.LongProperty;
 
 public class SystemCommander {
   private static final Logger LOGGER =
       Logger.getLogger(SystemCommander.class.getName());
-  private Rscc model;
 
   /**
    * Executes a command in the Linux terminal.
@@ -59,68 +61,23 @@ public class SystemCommander {
 
 
   /**
-   * Executes a TerminalCommand, that listen for a specified StringOutput and sets the
-   * setIsVncSessionRunning accordingly.
-   *
-   * @param command                 to be executed
-   * @param whatTerminalNeedsToShow String to compare to and when to set connection ongoing in model
+   * Starts and returns a Process based on a conmmand.
+   * @param command A String to be executed.
+   * @return A Process-Object.
    */
-  public String executeTerminalCommandAndUpdateModel(String command,
-                                                     String whatTerminalNeedsToShow) {
-    Process p;
-    StringBuilder output = new StringBuilder();
-
+  public Process startProcess(String command) {
+    Process process;
     try {
-      p = Runtime.getRuntime().exec(command);
-      final InputStream errorStream = p.getErrorStream();
-      final InputStream inputStream = p.getInputStream();
-
-      Thread t = new Thread(new Runnable() {
-        public void run() {
-          BufferedReader reader = null;
-          BufferedReader reader2 = null;
-          try {
-            reader = new BufferedReader(new InputStreamReader(errorStream));
-            reader2 = new BufferedReader(new InputStreamReader(inputStream));
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-              if (line.contains(whatTerminalNeedsToShow)) {
-                model.setIsVncSessionRunning(true);
-              }
-              output.append(line);
-            }
-            while ((line = reader2.readLine()) != null) {
-              if (line.contains(whatTerminalNeedsToShow)) {
-                model.setIsVncSessionRunning(true);
-              }
-              output.append(line);
-            }
-
-          } catch (Exception e) {
-            LOGGER.info(e + " " + e.getStackTrace());
-
-          } finally {
-            if (reader != null) {
-              try {
-                reader.close();
-              } catch (IOException e) {
-                LOGGER.info(e + " " + e.getStackTrace());
-
-              }
-            }
-          }
-        }
-      });
-      t.start();
-      t.join();
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      model.setIsVncSessionRunning(false);
+      process = Runtime.getRuntime().exec(command);
+    } catch (Exception exception) {
+      LOGGER.severe("Exception thrown when running the command: "
+          + command
+          + "\n Exception Message: " + exception.getMessage());
+      throw new IllegalArgumentException();
     }
-    return output.toString();
-
+    return process;
   }
+
 
 
   /**
@@ -130,6 +87,8 @@ public class SystemCommander {
    *                     Should be fully qualified but can also be null.
    * @param scriptName   name of the script to be run.
    * @param attributes   optional arguments that should be included in the command.
+   * @return combines all the params into one simple command for the terminal
+   *                     and returns it as a string.
    */
   public String commandStringGenerator(
       String pathToScript, String scriptName, String... attributes) {
@@ -146,9 +105,5 @@ public class SystemCommander {
         .forEach((s) -> commandString.append(" ").append(s));
 
     return commandString.toString();
-  }
-
-  public void setModel(Rscc model) {
-    this.model = model;
   }
 }

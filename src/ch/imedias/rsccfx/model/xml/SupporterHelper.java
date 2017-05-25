@@ -37,6 +37,7 @@ public class SupporterHelper {
   /**
    * Gets the supporter list from the preferences file.
    * If no preferences are found the default list is generated.
+   * @return list of supporter.
    */
   public List<Supporter> loadSupporters() {
     // load preferences
@@ -51,6 +52,7 @@ public class SupporterHelper {
 
   /**
    * Saves supporters from a list to the preferences file.
+   * @param supporters the list which should be in the xml.
    */
   public void saveSupporters(List<Supporter> supporters) {
     String supportersXml = supportersToXml(supporters);
@@ -59,6 +61,7 @@ public class SupporterHelper {
 
   /**
    * Returns a default list of supporters.
+   * @return list object of default supporters.
    */
   public List<Supporter> getDefaultSupporters() {
     LOGGER.info("Loading default supporter list");
