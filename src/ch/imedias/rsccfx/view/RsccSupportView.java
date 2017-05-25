@@ -18,7 +18,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -167,20 +166,6 @@ public class RsccSupportView extends BorderPane {
 
     keyInputInnerPane.getColumnConstraints().addAll(col1, col2, col3);
 
-    RowConstraints row1 = new RowConstraints();
-    row1.setPercentHeight(25);
-    RowConstraints row2 = new RowConstraints();
-    row2.setPercentHeight(30);
-    RowConstraints row3 = new RowConstraints();
-    row3.setPercentHeight(35);
-    RowConstraints row4 = new RowConstraints();
-    row3.setPercentHeight(10);
-    keyInputInnerPane.getRowConstraints().addAll(row1, row2, row3, row4);
-
-
-
-
-
     // special styling
     GridPane.setVgrow(statusBox, Priority.NEVER);
     GridPane.setValignment(titleLbl, VPos.BOTTOM);
@@ -232,16 +217,6 @@ public class RsccSupportView extends BorderPane {
     ColumnConstraints col2 = new ColumnConstraints();
     col2.setPercentWidth(50);
     startServiceInnerPane.getColumnConstraints().addAll(col1, col2);
-
-    RowConstraints row1 = new RowConstraints();
-    row1.setPercentHeight(25);
-    RowConstraints row2 = new RowConstraints();
-    row2.setPercentHeight(30);
-    RowConstraints row3 = new RowConstraints();
-    row3.setPercentHeight(35);
-    RowConstraints row4 = new RowConstraints();
-    row3.setPercentHeight(10);
-    startServiceInnerPane.getRowConstraints().addAll(row1, row2, row3, row4);
 
     // special styling
     GridPane.setHalignment(startServiceTitleLbl, HPos.LEFT);
