@@ -127,7 +127,7 @@ public class RsccSupportView extends BorderPane {
     setTop(headerView);
     setCenter(contentBox);
   }
-
+  // TODO: Make layoutKeyInputPane same as Request View @martinfrancois @JenniferMue
   private void layoutKeyInputPane() {
     GridPane.setConstraints(keyFld, 0, 1);
     GridPane.setConstraints(validationImgView, 1, 1);
@@ -171,6 +171,7 @@ public class RsccSupportView extends BorderPane {
     GridPane.setMargin(keyFld, new Insets(0, 0, 10, 0));
     GridPane.setMargin(validationImgView, new Insets(0));
     GridPane.setMargin(connectBtn, new Insets(0));
+    keyInputInnerPane.setGridLinesVisible(true);
 
     keyInputInnerPane.setPadding(new Insets(10));
 

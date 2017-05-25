@@ -79,7 +79,7 @@ public class Rscc {
   private final KeyUtil keyUtil;
   private String pathToResources;
   private String pathToResourceDocker;
-  //TODO: Replace when the StunFileGeneration is ready
+  //TODO: Replace when the StunFileGeneration is ready @pwigger @jpduloch
   private String pathToStunDump;
   private String pathToDefaultSupporters;
   private boolean isLocalIceSuccessful = false;
