@@ -35,10 +35,12 @@ public class RsccSupportView extends BorderPane {
   final Label titleLbl = new Label();
   final Label descriptionLbl = new Label();
   final Label statusLbl = new Label();
+  final Label keyInputStatusLbl = new Label();
   final Label startServiceDescriptionLbl = new Label();
   final Label startServiceTitleLbl = new Label();
 
   final HBox statusBox = new HBox();
+  final HBox keyInputStatusBox = new HBox();
 
   final KeyTextField keyFld = new KeyTextField();
 
@@ -84,6 +86,9 @@ public class RsccSupportView extends BorderPane {
     startServiceDescriptionLbl.textProperty().set(strings.startServiceDescpriptionLbl);
     startServiceTitleLbl.textProperty().set(strings.startService);
 
+    statusLbl.textProperty().set(strings.supportStatusLblWaiting);
+    keyInputStatusLbl.textProperty().set(strings.requestStatusLblWaiting);
+
     keyInputTitledPane.setText(strings.supportKeyInputPane);
     startServiceTitledPane.setText(strings.supportAdressBookPane);
   }
@@ -91,6 +96,9 @@ public class RsccSupportView extends BorderPane {
   private void layoutForm() {
     keyInputTitledPane.setExpanded(true);
     keyInputTitledPane.setId("keyInputTitledPane");
+
+    descriptionLbl.getStyleClass().add("descriptionLbl");
+    startServiceDescriptionLbl.getStyleClass().add("descriptionLbl");
 
     startServiceTitledPane.setExpanded(false);
     startServiceTitledPane.setId("startServiceTitledPane");
@@ -100,8 +108,11 @@ public class RsccSupportView extends BorderPane {
     descriptionLbl.getStyleClass().add("nameLbl");
 
     statusLbl.getStyleClass().add("statusLbl");
+    keyInputStatusLbl.getStyleClass().add("statusLbl");
     statusBox.getChildren().add(statusLbl);
     statusBox.getStyleClass().add("statusBox");
+    keyInputStatusBox.getChildren().add(keyInputStatusLbl);
+    keyInputStatusBox.getStyleClass().add("statusBox");
 
     keyFld.getStyleClass().add("keyFld");
 
@@ -131,12 +142,12 @@ public class RsccSupportView extends BorderPane {
     GridPane.setConstraints(connectBtn, 0, 2);
     GridPane.setConstraints(titleLbl, 2, 0);
     GridPane.setConstraints(descriptionLbl, 2, 1);
-    GridPane.setConstraints(statusBox, 0, 3);
-
-    GridPane.setColumnSpan(statusBox, 3);
+    GridPane.setConstraints(keyInputStatusBox, 0, 3);
+    keyInputInnerPane.setGridLinesVisible(true);
+    GridPane.setColumnSpan(keyInputStatusBox, 3);
 
     keyInputInnerPane.getChildren().addAll(keyFld, validationImgView, connectBtn, titleLbl,
-        descriptionLbl, statusBox);
+        descriptionLbl, keyInputStatusBox);
     keyInputInnerPane.setAlignment(Pos.CENTER);
     keyInputInnerPane.getChildren().stream().forEach(node -> {
       GridPane.setVgrow(node, Priority.ALWAYS);
@@ -148,12 +159,27 @@ public class RsccSupportView extends BorderPane {
 
     // column division
     ColumnConstraints col1 = new ColumnConstraints();
-    col1.setPercentWidth(40);
+    col1.setPercentWidth(45);
     ColumnConstraints col2 = new ColumnConstraints();
     col2.setPercentWidth(5);
     ColumnConstraints col3 = new ColumnConstraints();
     col3.setPercentWidth(50);
+
     keyInputInnerPane.getColumnConstraints().addAll(col1, col2, col3);
+
+    RowConstraints row1 = new RowConstraints();
+    row1.setPercentHeight(25);
+    RowConstraints row2 = new RowConstraints();
+    row2.setPercentHeight(30);
+    RowConstraints row3 = new RowConstraints();
+    row3.setPercentHeight(35);
+    RowConstraints row4 = new RowConstraints();
+    row3.setPercentHeight(10);
+    keyInputInnerPane.getRowConstraints().addAll(row1, row2, row3, row4);
+
+
+
+
 
     // special styling
     GridPane.setVgrow(statusBox, Priority.NEVER);
@@ -182,6 +208,8 @@ public class RsccSupportView extends BorderPane {
 
     GridPane.setColumnSpan(statusBox, 2);
 
+    startServiceInnerPane.setGridLinesVisible(true);
+
     startServiceInnerPane.getChildren().addAll(startServiceBtn,
         startServiceDescriptionLbl, startServiceTitleLbl, emptyPane, statusBox);
 
@@ -193,6 +221,8 @@ public class RsccSupportView extends BorderPane {
           GridPane.setHalignment(node, HPos.CENTER);
           GridPane.setMargin(node, new Insets(10));
       startServiceInnerPane.setAlignment(Pos.CENTER);
+      GridPane.setVgrow(keyInputStatusBox, Priority.NEVER);
+      GridPane.setValignment(keyInputStatusBox, VPos.BOTTOM);
         }
     );
 

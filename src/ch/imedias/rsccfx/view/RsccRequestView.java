@@ -104,6 +104,9 @@ public class RsccRequestView extends BorderPane {
     keyGenerationTitledPane.setExpanded(true);
     keyGenerationTitledPane.setId("keyGenerationTitledPane");
 
+    descriptionLbl.getStyleClass().add("descriptionLbl");
+    supporterDescriptionLbl.getStyleClass().add("descriptionLbl");
+
     supporterTitledPane.setExpanded(false);
     supporterTitledPane.setId("supporterTitledPane");
 
