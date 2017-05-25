@@ -110,6 +110,13 @@ public class RsccRequestPresenter implements ControlledPresenter {
         view.statusLbl.textProperty().set(newValue);
       });
     });
+
+    model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
+          if (oldValue && !newValue) {
+            model.refreshKey();
+          }
+        }
+    );
   }
 
   /**
