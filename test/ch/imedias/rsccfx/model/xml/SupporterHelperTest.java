@@ -28,7 +28,7 @@ public class SupporterHelperTest {
         getClass().getClassLoader().getResource(Rscc.DEFAULT_SUPPORTERS_FILE_NAME).getFile()
     );
     when(mockModel.getPathToDefaultSupporters()).thenReturn(pathToDefaultSupporters);
-    supportersXml = ""
+   // supportersXml = ""
   }
 
   /**
