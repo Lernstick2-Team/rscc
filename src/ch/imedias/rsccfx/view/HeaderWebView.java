@@ -36,7 +36,6 @@ public class HeaderWebView extends VBox {
     // Bind the progress property of ProgressBar
     // with progress property of Worker
     progressBar.progressProperty().bind(worker.progressProperty());
-    System.out.println(this.widthProperty().getValue());
     progressBar.setPrefWidth(BROWSERWIDTH);
 
     this.getChildren().addAll(browser, progressBar);

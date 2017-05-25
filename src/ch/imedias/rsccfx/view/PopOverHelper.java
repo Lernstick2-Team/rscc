@@ -99,7 +99,6 @@ public class PopOverHelper {
         layoutRequest();
         helpPopOver.setContentNode(new HeaderWebView());
         settingsPopOver.setContentNode(supportSettingsBox);
-        handleRequestSettings();
         helpPopOver.setContentNode(requestHelpBox);
         settingsPopOver.setContentNode(requestSettingsBox);
         requestSettingsBindings();
