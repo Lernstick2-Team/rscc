@@ -47,16 +47,16 @@ public class Rscc {
    */
   private static final String DOCKER_FOLDER_NAME = "docker-build_p2p";
   private static final String DEFAULT_SUPPORTERS_FILE_NAME = "rscc-defaults-lernstick.xml";
+
   /**
    * sh files can not be executed in the JAR file and therefore must be extracted.
    * ".rscc" is a hidden folder in the user's home directory (e.g. /home/user)
    */
   private static final String RSCC_FOLDER_NAME = ".rscc";
-  private static final String STUN_DUMP_FILE_NAME = "ice4jDemoDump.ice";
   private static final String[] STUN_SERVERS = {
       "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
   private static final String[] EXTRACTED_RESOURCES =
-      {DOCKER_FOLDER_NAME, STUN_DUMP_FILE_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
+      {DOCKER_FOLDER_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
   private static final UnaryOperator<String> REMOVE_FILE_IN_PATH =
       string -> string.replaceFirst("file:", "");
   private final SystemCommander systemCommander;
@@ -86,18 +86,11 @@ public class Rscc {
   private final BooleanProperty connectionEstablishmentRunning = new SimpleBooleanProperty(false);
   private final BooleanProperty rscccfpHasTalkedToOtherClient = new SimpleBooleanProperty(false);
   private final BooleanProperty isSshRunning = new SimpleBooleanProperty(false);
-  private final LongProperty sshPid = new SimpleLongProperty(-1);
 
-
-  //TODO: Replace when the StunFileGeneration is ready
-  private final String pathToStunDumpFile = this.getClass()
-      .getClassLoader().getResource(STUN_DUMP_FILE_NAME)
-      .toExternalForm().replace("file:", "");
 
   private final KeyUtil keyUtil;
   private String pathToResources;
   private String pathToResourceDocker;
-  private String pathToStunDump;
   private String pathToDefaultSupporters;
   private boolean isLocalIceSuccessful = false;
   private boolean isRemoteIceSuccessful = false;
@@ -150,10 +143,6 @@ public class Rscc {
           REMOVE_FILE_IN_PATH.apply(
               getClass().getClassLoader().getResource(DOCKER_FOLDER_NAME).getFile()
           );
-      pathToStunDump =
-          REMOVE_FILE_IN_PATH.apply(
-              getClass().getClassLoader().getResource(STUN_DUMP_FILE_NAME).getFile()
-          );
       pathToDefaultSupporters =
           REMOVE_FILE_IN_PATH.apply(
               getClass().getClassLoader().getResource(DEFAULT_SUPPORTERS_FILE_NAME).getFile()
@@ -163,7 +152,6 @@ public class Rscc {
       pathToResources = userHome + "/" + RSCC_FOLDER_NAME;
       // set paths of the files
       pathToResourceDocker = pathToResources + "/" + DOCKER_FOLDER_NAME;
-      pathToStunDump = pathToResources + "/" + STUN_DUMP_FILE_NAME;
       pathToDefaultSupporters = pathToResources + "/" + DEFAULT_SUPPORTERS_FILE_NAME;
       // extract all resources out of the JAR file
       Arrays.stream(EXTRACTED_RESOURCES).forEach(resource ->
@@ -282,7 +270,7 @@ public class Rscc {
     setConnectionStatus("Requesting key from server...", 1);
 
     String command = systemCommander.commandStringGenerator(
-        pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()), pathToStunDump);
+        pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()));
 
     SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
 
