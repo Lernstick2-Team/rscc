@@ -18,6 +18,7 @@ public class ViewController extends StackPane {
   private final HashMap<String, ControlledPresenter> presenters = new HashMap<>();
 
   private String currentViewName;
+
   /**
    * Returns an already loaded presenter.
    *
