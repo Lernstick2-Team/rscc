@@ -195,6 +195,7 @@ public class RsccRequestView extends BorderPane {
     ColumnConstraints col3 = new ColumnConstraints();
     col3.setPercentWidth(50);
     keyGenerationInnerPane.getColumnConstraints().addAll(col1, col2, col3);
+    keyGenerationInnerPane.setGridLinesVisible(true);
 
     // special styling
     GridPane.setVgrow(statusBox, Priority.NEVER);

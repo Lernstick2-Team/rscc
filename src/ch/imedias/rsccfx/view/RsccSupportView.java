@@ -133,6 +133,9 @@ public class RsccSupportView extends BorderPane {
 
     setTop(headerView);
     setCenter(contentBox);
+
+
+
   }
 
   // TODO: Make layoutKeyInputPane same as Request View @martinfrancois @JenniferMue
@@ -165,21 +168,7 @@ public class RsccSupportView extends BorderPane {
     ColumnConstraints col3 = new ColumnConstraints();
     col3.setPercentWidth(50);
 
-    keyInputInnerPane.getColumnConstraints().addAll(col1, col2, col3);
-
-    RowConstraints row1 = new RowConstraints();
-    row1.setPercentHeight(25);
-    RowConstraints row2 = new RowConstraints();
-    row2.setPercentHeight(30);
-    RowConstraints row3 = new RowConstraints();
-    row3.setPercentHeight(35);
-    RowConstraints row4 = new RowConstraints();
-    row3.setPercentHeight(10);
-    keyInputInnerPane.getRowConstraints().addAll(row1, row2, row3, row4);
-
-
-
-
+    keyInputInnerPane.getColumnConstraints().addAll(col1);
 
     // special styling
     GridPane.setVgrow(statusBox, Priority.NEVER);
@@ -233,15 +222,6 @@ public class RsccSupportView extends BorderPane {
     col2.setPercentWidth(50);
     startServiceInnerPane.getColumnConstraints().addAll(col1, col2);
 
-    RowConstraints row1 = new RowConstraints();
-    row1.setPercentHeight(25);
-    RowConstraints row2 = new RowConstraints();
-    row2.setPercentHeight(30);
-    RowConstraints row3 = new RowConstraints();
-    row3.setPercentHeight(35);
-    RowConstraints row4 = new RowConstraints();
-    row3.setPercentHeight(10);
-    startServiceInnerPane.getRowConstraints().addAll(row1, row2, row3, row4);
 
     // special styling
     GridPane.setHalignment(startServiceTitleLbl, HPos.LEFT);
@@ -253,7 +233,7 @@ public class RsccSupportView extends BorderPane {
     GridPane.setValignment(statusBox, VPos.BOTTOM);
 
     GridPane.setMargin(titleLbl, new Insets(0));
-
+    startServiceInnerPane.setGridLinesVisible(true);
   }
 
   private void bindFieldsToModel() {

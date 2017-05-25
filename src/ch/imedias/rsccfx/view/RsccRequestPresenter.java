@@ -124,6 +124,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
     view.supporterDescriptionLbl.prefWidthProperty().bind(scene.widthProperty().divide(3));
     view.supporterInnerPane.prefWidthProperty().bind(scene.widthProperty().divide(3).multiply(2));
     view.reloadKeyBtn.prefHeightProperty().bind(view.generatedKeyFld.heightProperty());
+    view.generatedKeyFld.prefWidthProperty().bind(scene.widthProperty()
+        .subtract(100d));
 
   }
 
@@ -140,6 +142,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
         popOverHelper.helpPopOver.show(view.headerView.helpBtn));
     headerPresenter.setSettingsBtnAction(event ->
         popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
+
   }
 
   /**

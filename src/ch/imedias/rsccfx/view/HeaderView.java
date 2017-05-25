@@ -47,6 +47,7 @@ public class HeaderView extends GridPane {
     initFieldData();
     layoutForm();
     bindFieldsToModel();
+    this.setGridLinesVisible(true);
   }
 
   private void initFieldData() {
@@ -85,6 +86,7 @@ public class HeaderView extends GridPane {
     col3.setPercentWidth(10);
     col4.setPercentWidth(10);
 
+
     GridPane.setHalignment(backBtn, HPos.LEFT);
     GridPane.setHalignment(settingsBtn, HPos.RIGHT);
     GridPane.setHalignment(helpBtn, HPos.RIGHT);
@@ -121,6 +123,8 @@ public class HeaderView extends GridPane {
   private void bindFieldsToModel() {
     // make bindings to the model
   }
+
+
 
 
 }
