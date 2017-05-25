@@ -152,12 +152,9 @@ public class RsccRequestView extends BorderPane {
     ColumnConstraints col1 = new ColumnConstraints();
     ColumnConstraints col2 = new ColumnConstraints();
     ColumnConstraints col3 = new ColumnConstraints();
-
     supporterInnerPane.getColumnConstraints().addAll(col1, col2, col3);
-
     int amountOfColumns = supporterInnerPane.getColumnConstraints().size();
     int columnPercentWidth = 100 / amountOfColumns;
-
     col1.setPercentWidth(columnPercentWidth);
     col2.setPercentWidth(columnPercentWidth);
     col3.setPercentWidth(columnPercentWidth);

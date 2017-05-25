@@ -142,7 +142,6 @@ public class RsccSupportView extends BorderPane {
     GridPane.setConstraints(titleLbl, 2, 0);
     GridPane.setConstraints(descriptionLbl, 2, 1);
     GridPane.setConstraints(keyInputStatusBox, 0, 3);
-    keyInputInnerPane.setGridLinesVisible(true);
     GridPane.setColumnSpan(keyInputStatusBox, 3);
 
     keyInputInnerPane.getChildren().addAll(keyFld, validationImgView, connectBtn, titleLbl,
@@ -192,8 +191,6 @@ public class RsccSupportView extends BorderPane {
     GridPane.setConstraints(statusBox, 0, 3);
 
     GridPane.setColumnSpan(statusBox, 2);
-
-    startServiceInnerPane.setGridLinesVisible(true);
 
     startServiceInnerPane.getChildren().addAll(startServiceBtn,
         startServiceDescriptionLbl, startServiceTitleLbl, emptyPane, statusBox);

@@ -47,7 +47,6 @@ public class HeaderView extends GridPane {
     initFieldData();
     layoutForm();
     bindFieldsToModel();
-    this.setGridLinesVisible(true);
   }
 
   private void initFieldData() {
