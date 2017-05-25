@@ -11,7 +11,7 @@ import javafx.scene.web.WebView;
 
 
 /**
- * Class that created the help View.
+ * Represents the web page shown when pressing the help button in the header.
  */
 public class HeaderWebView extends VBox {
   private static final Logger LOGGER =
@@ -22,7 +22,7 @@ public class HeaderWebView extends VBox {
   final WebView browser = new WebView();
   final WebEngine webEngine = browser.getEngine();
   final Worker<Void> worker = webEngine.getLoadWorker();
-  static final int BROWSERWIDTH = 1000;
+  static final int BROWSER_WIDTH = 1000;
 
   public HeaderWebView() {
     initWebHelp();
@@ -36,14 +36,14 @@ public class HeaderWebView extends VBox {
     // Bind the progress property of ProgressBar
     // with progress property of Worker
     progressBar.progressProperty().bind(worker.progressProperty());
-    progressBar.setPrefWidth(BROWSERWIDTH);
+    progressBar.setPrefWidth(BROWSER_WIDTH);
 
     this.getChildren().addAll(browser, progressBar);
 
     try  {
-      String url1 = getClass().getClassLoader().getResource("helpPage.html").toExternalForm();
+      String url = getClass().getClassLoader().getResource("helpPage.html").toExternalForm();
       //If local Help Page should be shown
-      webEngine.load(url1);
+      webEngine.load(url);
     } catch (NullPointerException e) {
       LOGGER.log(Level.SEVERE, "File helpPage.html not found");
     }
