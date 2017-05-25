@@ -317,20 +317,19 @@ public class RunRudp extends Thread {
   }
 
   private void setupClosables() {
-    for(Field field : this.getClass().getDeclaredFields()) {
+    for (Field field : this.getClass().getDeclaredFields()) {
       Object fieldObject = null;
       try {
         fieldObject = field.get(this);
       } catch (IllegalAccessException e) {
         LOGGER.warning(e.getMessage());
       }
-      if(fieldObject != null && fieldObject instanceof Closeable) {
+      if (fieldObject != null && fieldObject instanceof Closeable) {
         LOGGER.info("Add to Closeables: " + fieldObject + "; Name: " + field.getName());
         closables.put(field.getName(), (Closeable) fieldObject);
       }
     }
   }
-
 }
 
 
