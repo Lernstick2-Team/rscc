@@ -204,3 +204,5 @@ fabric.properties
 
 ## These resources are created during execution of "port_share.sh" and therefore should not be committed
 p2p.log
+resources/docker-build_p2p/start_linuxvnc.sh
+resources/docker-build_p2p/stop.sh

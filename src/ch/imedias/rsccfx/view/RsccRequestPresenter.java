@@ -112,7 +112,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
     });
 
     model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
-          if (oldValue && !newValue) {
+          if (oldValue && !newValue && viewParent.getCurrentViewName().equals("requestHelp")) {
             model.refreshKey();
           }
         }

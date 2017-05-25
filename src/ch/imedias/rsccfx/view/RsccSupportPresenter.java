@@ -181,7 +181,7 @@ public class RsccSupportPresenter implements ControlledPresenter {
     });
 
     model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
-          if (oldValue && !newValue && viewParent.getCurrentViewName().equals("requestHelp")) {
+          if (oldValue && !newValue && viewParent.getCurrentViewName().equals("supporter")) {
             view.keyFld.clear();
           }
         }
