@@ -39,7 +39,8 @@ public class VncServerHandler {
    * @param vncViewerPort Port to connect to.
    * @return true when conneting did not fail.
    */
-  public boolean startVncServerReverse(String hostAddress, Integer vncViewerPort) {
+  public boolean startVncServerReverse(String hostAddress, Integer vncViewerPort,
+                                       boolean isEncrypted) {
     final BooleanProperty connectionSucceed = new SimpleBooleanProperty(true);
 
     Thread startServerProcessThread = new Thread() {
@@ -49,7 +50,11 @@ public class VncServerHandler {
           StringBuilder commandArray = new StringBuilder();
           commandArray.append(vncServerName);
           commandArray.append(" ").append("-connect");
-          commandArray.append(" ").append(hostAddress + ":" + vncViewerPort);;
+          commandArray.append(" ").append(hostAddress + ":" + vncViewerPort);
+          if (isEncrypted) {
+            commandArray.append(" ").append("-ssl");
+            commandArray.append(" ").append("TMP");
+          }
 
           LOGGER.info("Strating VNC-Server with command: " + commandArray.toString());
 
