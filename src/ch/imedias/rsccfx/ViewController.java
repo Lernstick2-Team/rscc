@@ -17,6 +17,7 @@ public class ViewController extends StackPane {
   private final HashMap<String, Node> views = new HashMap<>();
   private final HashMap<String, ControlledPresenter> presenters = new HashMap<>();
 
+  private String currentViewName;
   /**
    * Returns an already loaded presenter.
    *
@@ -69,6 +70,7 @@ public class ViewController extends StackPane {
         // No view is currently being displayed, so just add it
         getChildren().add(views.get(name));
       }
+      currentViewName = name;
       return true;
     } else {
       LOGGER.info("View " + name + " hasn't been loaded!");
@@ -92,4 +94,7 @@ public class ViewController extends StackPane {
     }
   }
 
+  public String getCurrentViewName() {
+    return currentViewName;
+  }
 }
