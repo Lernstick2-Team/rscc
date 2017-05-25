@@ -238,8 +238,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     MenuItem connectMenuItem = new MenuItem("Call");
     connectMenuItem.setOnAction(event -> {
-      //TODO start connection @pwigger @jpduloch
-    });
+     });
 
     MenuItem deleteMenuItem = new MenuItem("Delete");
     deleteMenuItem.setOnAction(event -> deleteSupporterBtn(button, supporter));

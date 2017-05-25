@@ -84,10 +84,6 @@ public class RsccSupportView extends BorderPane {
     startServiceDescriptionLbl.textProperty().set(strings.startServiceDescpriptionLbl);
     startServiceTitleLbl.textProperty().set(strings.startService);
 
-    // TODO: Tech Group - switch waiting and ready Label
-    //statusLbl.setText(strings.supportStatusLblReady);
-    statusLbl.setText(strings.supportStatusLblWaiting);
-
     keyInputTitledPane.setText(strings.supportKeyInputPane);
     startServiceTitledPane.setText(strings.supportAdressBookPane);
   }
