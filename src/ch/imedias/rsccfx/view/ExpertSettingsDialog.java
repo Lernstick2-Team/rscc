@@ -127,14 +127,13 @@ public class ExpertSettingsDialog extends DialogPane {
         new NumberStringConverter("#"));
     icePortFld.textProperty().bindBidirectional(model.icePortProperty(),
         new NumberStringConverter("#"));
-    // TODO: These properties were missing - please check if they are alright.
     udpPackageSizeFld.textProperty().bindBidirectional(model.udpPackageSizeProperty(),
         new NumberStringConverter("#"));
     proxyPortFld.textProperty().bindBidirectional(model.proxyPortProperty(),
         new NumberStringConverter("#"));
     stunServerPortFld.textProperty().bindBidirectional(model.stunServerPortProperty(),
         new NumberStringConverter("#"));
-    // TODO: Stunserver-List needs to be binded
+    // TODO: Stunserver-List needs to be binded @martinfrancois
   }
 
 }
