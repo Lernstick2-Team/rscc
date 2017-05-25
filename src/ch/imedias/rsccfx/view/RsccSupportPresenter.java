@@ -142,7 +142,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
       }
     });
 
-
     // change valid image depending on if the key is valid or not
     keyUtil.keyValidProperty().addListener(
         (observable, oldValue, newValue) -> {
@@ -191,19 +190,12 @@ public class RsccSupportPresenter implements ControlledPresenter {
             keyUtil.keyValidProperty().not())
     );
 
-    model.vncSessionRunningProperty().addListener((observableValue, aBoolean, t1) -> {
-      if (aBoolean && !t1) {
-        view.keyFld.clear();
-      }
-    }
+    model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
+          if (oldValue && !newValue) {
+            view.keyFld.clear();
+          }
+        }
     );
-
-    // FIXME no clue what this does? why is this new a web view?
-    /* view.validationImgView.imageProperty().bind(
-         Bindings.when(keyUtil.keyValidProperty())
-            .then(validImage)
-           .otherwise(invalidImage)
-     );*/
   }
 
   /**
