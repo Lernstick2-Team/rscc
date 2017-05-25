@@ -4,9 +4,13 @@ import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.connectionutils.rudp.src.ReliableServerSocket;
 import ch.imedias.rsccfx.model.connectionutils.rudp.src.ReliableSocket;
 import ch.imedias.rsccfx.model.connectionutils.rudp.src.ReliableSocketProfile;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -36,6 +40,7 @@ public class RunRudp extends Thread {
   private Socket tcpSocket;
   private ServerSocket tcpServerSocket;
 
+  private ListMultimap<String, Closeable> closables = ArrayListMultimap.create();
 
   /**
    * Constructor.
@@ -57,7 +62,6 @@ public class RunRudp extends Thread {
     try {
 
       String remoteAddressAsString = model.getRemoteClientIpAddress().getHostAddress();
-      ;
 
       model.setConnectionStatus("Trying to setup UDP proxy", 1);
 
@@ -294,77 +298,32 @@ public class RunRudp extends Thread {
   }
 
   private void closeAll() {
+    setupClosables();
+    closables.forEach(
+        (name, closeable) -> {
+          if (closeable != null) {
+            LOGGER.info(name + " is not null - close");
+            try {
+              closeable.close();
+            } catch (IOException e) {
+              LOGGER.warning(e.getMessage());
+            }
+          }
+        }
+    );
+  }
 
-    if (tcpInputStream != null) {
-      LOGGER.info("tcpInputStream is not null - close");
+  private void setupClosables() {
+    for(Field field : this.getClass().getDeclaredFields()) {
+      Object fieldObject = null;
       try {
-        tcpInputStream.close();
-      } catch (IOException e) {
-        e.printStackTrace();
+        fieldObject = field.get(this);
+      } catch (IllegalAccessException e) {
+        LOGGER.warning(e.getMessage());
       }
-    }
-    if (rudpInputStream != null) {
-      LOGGER.info("rudpInputStream is not null - close");
-      try {
-        rudpInputStream.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-    if (tcpOutputStream != null) {
-      LOGGER.info("tcpOutputStream is not null - close");
-      try {
-        tcpOutputStream.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-    if (rudpOutputStream != null) {
-      LOGGER.info("rudpOutputStream is not null - close");
-      try {
-        rudpOutputStream.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-    if (rudpSocket != null && !rudpSocket.isClosed()) {
-      LOGGER.info("rudpSocket is not null - close");
-      try {
-        rudpSocket.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-    if (rudpSocket2 != null && !rudpSocket2.isClosed()) {
-      LOGGER.info("rudpSocket2 is not null - close");
-      try {
-        rudpSocket2.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-    if (rudpServerSocket != null && !rudpServerSocket.isClosed()) {
-      LOGGER.info("rudpServerSocket is not null - close");
-      try {
-        rudpServerSocket.close();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-    if (tcpServerSocket != null && !tcpServerSocket.isClosed()) {
-      LOGGER.info("tcpServerSocket is not null - close");
-      try {
-        tcpServerSocket.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-    if (tcpSocket != null && !tcpSocket.isClosed()) {
-      LOGGER.info("tcpSocket is not null - close");
-      try {
-        tcpSocket.close();
-      } catch (IOException e) {
-        e.printStackTrace();
+      if(fieldObject != null && fieldObject instanceof Closeable) {
+        LOGGER.info("Add to Closeables: " + fieldObject + "; Name: " + field.getName());
+        closables.put(field.getName(), (Closeable) fieldObject);
       }
     }
   }
