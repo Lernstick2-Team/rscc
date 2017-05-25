@@ -460,7 +460,7 @@ public class Rscc {
 
   /**
    * Calls Supporter from addressbook (Starts VNC Server in Reverse mode).
-   *  @param address public reachable IP/Domain.
+   * @param address public reachable IP/Domain.
    * @param port    public reachable Port where vncViewer is listening.
    * @param isEncrypted sets if connection should be encrypted.
    */
