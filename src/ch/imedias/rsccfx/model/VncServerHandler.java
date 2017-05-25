@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -52,8 +53,7 @@ public class VncServerHandler {
 
           LOGGER.info("Strating VNC-Server with command: " + commandArray.toString());
 
-          process = Runtime.getRuntime().exec(commandArray.toString());
-
+          process = model.getSystemCommander().startProcess(commandArray.toString());
           model.setVncServerProcessRunning(true);
 
           InputStream errorStream = process.getErrorStream();
@@ -118,8 +118,7 @@ public class VncServerHandler {
 
           LOGGER.info("Strating VNC-Server with command: " + commandArray.toString());
 
-          process = Runtime.getRuntime().exec(commandArray.toString());
-
+          process = model.getSystemCommander().startProcess(commandArray.toString());
 
           InputStream errorStream = process.getErrorStream();
           BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));

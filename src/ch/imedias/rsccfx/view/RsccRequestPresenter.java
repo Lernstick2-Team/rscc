@@ -110,6 +110,13 @@ public class RsccRequestPresenter implements ControlledPresenter {
         view.statusLbl.textProperty().set(newValue);
       });
     });
+
+    model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
+          if (oldValue && !newValue) {
+            model.refreshKey();
+          }
+        }
+    );
   }
 
   /**
@@ -143,9 +150,9 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     model.vncServerProcessRunningProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue) {
-        headerPresenter.setSettingsBtnVisibility(false);
+        headerPresenter.setSettingsBtnDisabled(true);
       } else {
-        headerPresenter.setSettingsBtnVisibility(true);
+        headerPresenter.setSettingsBtnDisabled(false);
       }
     });
 
