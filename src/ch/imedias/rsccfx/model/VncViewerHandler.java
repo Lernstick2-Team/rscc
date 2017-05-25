@@ -85,7 +85,7 @@ public class VncViewerHandler {
           e.getStackTrace();
         }
 
-        LOGGER.info("Ending VNC Server Thread ");
+        LOGGER.info("Ending VNC Viewer Thread ");
       }
     };
 
@@ -128,7 +128,7 @@ public class VncViewerHandler {
             errorString = errorReader.readLine();
 
             if (errorString != null && errorString.contains("Connected to RFB server")) {
-              LOGGER.info("Server has connected");
+              LOGGER.info("Detected: Server has connected");
               model.setVncSessionRunning(true);
             }
           }
