@@ -29,7 +29,7 @@ public class HeaderWebView extends VBox {
   }
 
   /**
-   * initialize the web browswer.
+   * Initializes the web browser.
    */
   public void initWebHelp() {
 
