@@ -32,8 +32,6 @@ webserver="http://$p2p_server:$http_port"
 ### get the p2p port from the webserver
 p2p_port=$(wget $webserver/port -O- 2>$logfile)
 
-ssh-keygen -R [$p2p_server]:$p2p_port
-
 ### update ssh.rc
 sed -i ssh.rc \
     -e "/^p2p_server/c p2p_server=$p2p_server" \
