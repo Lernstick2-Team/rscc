@@ -3,47 +3,38 @@ package ch.imedias.rsccfx.view;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
-import java.io.InputStream;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.util.logging.Logger;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 
 
 /**
  * Defines all elements shown in the header.
  */
-public class HeaderView extends HBox {
+public class HeaderView extends GridPane {
   private static final Logger LOGGER =
       Logger.getLogger(Rscc.class.getName());
 
-  private static final double HEADER_HEIGHT = 250d;
-  private static final double BUTTON_SIZE = 50d;
-  private static final Insets BACK_BUTTON_INSETS = new Insets(0);
-  private static final Insets SETTINGS_BUTTON_INSETS = new Insets(0, 5, 0, 20);
+  private static final double ICON_SIZE = 40;
 
-  private static final Insets HELP_BUTTON_INSETS = new Insets(0, 10, 0, 20);
+  private static final DoubleProperty BUTTON_SIZE = new SimpleDoubleProperty(100);
+  private static final int BUTTON_MARGIN = 10;
 
-  final Pane spacer = new Pane();
-  private final Strings strings = new Strings();
-  private final Rscc model;
   final Button backBtn = new Button();
   final Button helpBtn = new Button();
   final Button settingsBtn = new Button();
-
-  Image backImg;
-  Image helpImg;
-  Image settingImg;
-
-  ImageView backImgView;
-  ImageView helpImgView;
-  ImageView settingImgView;
-
+  private final Strings strings = new Strings();
+  private final Rscc model;
 
   /**
    * Initializes all the GUI components needed in the Header.
@@ -60,69 +51,76 @@ public class HeaderView extends HBox {
 
   private void initFieldData() {
     // populate fields which require initial data
+    FontAwesomeIconView questionIcon = new FontAwesomeIconView(FontAwesomeIcon.QUESTION);
+    questionIcon.setGlyphSize(ICON_SIZE);
+    helpBtn.setGraphic(questionIcon);
+
+    FontAwesomeIconView settingsIcon = new FontAwesomeIconView(FontAwesomeIcon.GEAR);
+    settingsIcon.setGlyphSize(ICON_SIZE);
+    settingsBtn.setGraphic(settingsIcon);
+
+    FontAwesomeIconView backIcon = new FontAwesomeIconView(FontAwesomeIcon.CARET_LEFT);
+    backIcon.setGlyphSize(ICON_SIZE);
+    backBtn.setGraphic(backIcon);
   }
 
   private void layoutForm() {
     //setup layout (aka setup specific pane etc.)
+    GridPane.setConstraints(backBtn, 0, 0);
+    GridPane.setConstraints(settingsBtn, 2, 0);
+    GridPane.setConstraints(helpBtn, 3, 0);
 
-    HBox.setHgrow(spacer, Priority.ALWAYS);
-    HBox.setMargin(backBtn, BACK_BUTTON_INSETS);
-    HBox.setMargin(settingsBtn, SETTINGS_BUTTON_INSETS);
-    HBox.setMargin(helpBtn, HELP_BUTTON_INSETS);
+    RowConstraints row1 = new RowConstraints();
+    this.getRowConstraints().addAll(row1);
 
-    this.getChildren().addAll(backBtn, spacer, settingsBtn, helpBtn);
+    ColumnConstraints col1 = new ColumnConstraints();
+    ColumnConstraints col2 = new ColumnConstraints();
+    ColumnConstraints col3 = new ColumnConstraints();
+    ColumnConstraints col4 = new ColumnConstraints();
 
+    this.getColumnConstraints().addAll(col1, col2, col3, col4);
+
+    col1.setPercentWidth(10);
+    col2.setPercentWidth(70);
+    col3.setPercentWidth(10);
+    col4.setPercentWidth(10);
+
+    GridPane.setHalignment(backBtn, HPos.LEFT);
+    GridPane.setHalignment(settingsBtn, HPos.RIGHT);
+    GridPane.setHalignment(helpBtn, HPos.RIGHT);
+
+    this.getChildren().addAll(backBtn, settingsBtn, helpBtn);
+
+    // initial styling
+    this.getChildren().stream()
+        .forEach(node -> {
+          GridPane.setVgrow(node, Priority.ALWAYS);
+          GridPane.setHgrow(node, Priority.ALWAYS);
+          GridPane.setValignment(node, VPos.CENTER);
+          GridPane.setHalignment(node, HPos.CENTER);
+          GridPane.setMargin(node, new Insets(BUTTON_MARGIN));
+
+          Button button = (Button) node;
+          button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+        });
+
+    this.prefHeightProperty().bind(BUTTON_SIZE);
 
     this.setId("header");
 
-    InputStream backImagePath = getClass().getClassLoader()
-        .getResourceAsStream("images/back.svg");
-    backImg = new Image(backImagePath);
-    backImgView = new ImageView(backImg);
-    backImgView.fitWidthProperty().set(BUTTON_SIZE);
-    backImgView.fitHeightProperty().set(BUTTON_SIZE);
-    backImgView.setPreserveRatio(true);
-    backBtn.setGraphic(backImgView);
-    backBtn.setPrefWidth(BUTTON_SIZE);
-    backBtn.setPrefHeight(BUTTON_SIZE);
+    this.setPadding(new Insets(BUTTON_MARGIN, 0, BUTTON_MARGIN, 0));
+
     backBtn.setId("backBtn");
 
-    InputStream helpImagePath = getClass().getClassLoader()
-        .getResourceAsStream("images/question.svg");
-    helpImg = new Image(helpImagePath);
-    helpImgView = new ImageView(helpImg);
-    helpImgView.fitWidthProperty().set(BUTTON_SIZE);
-    helpImgView.fitHeightProperty().set(BUTTON_SIZE);
-    helpImgView.setPreserveRatio(true);
-    helpBtn.setGraphic(helpImgView);
-    helpBtn.setPrefWidth(BUTTON_SIZE);
-    helpBtn.setPrefHeight(BUTTON_SIZE);
-    helpBtn.setAlignment(Pos.BASELINE_RIGHT);
     helpBtn.setId("helpBtn");
 
-    InputStream settingImagePath = getClass().getClassLoader()
-        .getResourceAsStream("images/settings.svg");
-    settingImg = new Image(settingImagePath);
-    settingImgView = new ImageView(settingImg);
-    settingImgView.fitWidthProperty().set(BUTTON_SIZE);
-    settingImgView.fitHeightProperty().set(BUTTON_SIZE);
-    settingImgView.setPreserveRatio(true);
-    settingsBtn.setGraphic(settingImgView);
-    settingsBtn.setPrefWidth(BUTTON_SIZE);
-    settingsBtn.setPrefHeight(BUTTON_SIZE);
     settingsBtn.setId("settingsBtn");
-
-    this.setHeight(HEADER_HEIGHT);
-
-
-
   }
 
   private void bindFieldsToModel() {
     // make bindings to the model
   }
-
-
 
 
 }

@@ -1,31 +1,35 @@
 /***************************************************************************
  *                                                                         *
+ *                   only change this value for DPI                        *
+ *                                                                         *
+ **************************************************************************/
+.root {
+    -fx-font-family: Cantarell;
+}
+
+/***************************************************************************
+ *                                                                         *
  *                             HeaderView                                  *
  *                                                                         *
  **************************************************************************/
 
 #header {
     -fx-background-color: #eeeeee; /* macarena */
-    -fx-padding: 10;
+    /*-fx-padding: 10;*/
 }
 
-#headerText {
-    -fx-font-size: 20pt;
-    -fx-font-weight: bold;
-    -fx-font-family: Cantarell;
+#headerGrid{
 }
 
 #helpBtn, #backBtn, #settingsBtn{
-    -fx-padding: 5;
-    -fx-background-radius: 4px;
-    -fx-border-radius:4px;
+    /*-fx-padding: 5;*/
+    -fx-background-radius: 0.308em;
+    -fx-border-radius: 0.308em;
     -fx-border-color:#A7A7A7;
-    -fx-font-size: 0.9em;
-    -fx-font-family: "DejaVu Sans";
     -fx-background-color: #EAEAEA;
-    }
+}
 
-#helpBtn:hover, #backBtn:hover, #settingsBtn:hover{
+#helpBtn:hover, #backBtn:hover, #settingsBtn:hover, #reloadKeyBtn:hover{
     -fx-background-color: #f7f7f7;
     -fx-cursor: hand;
 }
@@ -37,12 +41,11 @@
  **************************************************************************/
 
 .HomeNavigationBtn{
-    -fx-font-size: 18pt;
     -fx-fit-to-width: true;
     -fx-content-display: left;
     -fx-border-color:#A7A7A7;
-    -fx-background-radius: 4px;
-    -fx-border-radius:4px;
+    -fx-background-radius: 0.308em;
+    -fx-border-radius: 0.308em;
     -fx-font-family: "DejaVu Sans";
     -fx-background-color: #EAEAEA;
 }
@@ -52,22 +55,20 @@
     -fx-cursor: hand;
 }
 
+.homeButtonBoxes {
+    -fx-spacing: 6.154em;
+}
+
 .BigFont{
-    -fx-font-size: 25pt;
+    -fx-font-size: 2.538em;
 }
 
 .SmallFont{
-     -fx-font-size: 18pt;
+    -fx-font-size: 1.846em;
 }
-/***************************************************************************
- *                                                                         *
- *                             HomePresenter                                    *
- *                                                                         *
- **************************************************************************/
+
 #contentBox {
-    -fx-padding: 25;
-    -fx-spacing: 20;
-    -fx-alignment: center;
+    -fx-spacing: 1.538em;
 }
 
 /***************************************************************************
@@ -77,34 +78,79 @@
  **************************************************************************/
 .descriptionLbl{
     -fx-wrap-text: true;
+    -fx-alignment: center-left;
+    -fx-font-size: 1.654em;
+    -fx-padding: 1.538em;
 }
 
 .titleLbl {
-    -fx-font-size: 25;
+    -fx-font-size: 2.256em;
+    -fx-wrap-text: true;
+    -fx-alignment: center-left;
+    -fx-padding: 1.538em;
+    -fx-font-weight: bold;
 }
 
 .statusBox{
+    -fx-alignment: center;
+    -fx-background-color: darkgray;
+    -fx-background-radius: 0.308em;
+    -fx-border-radius: 0.308em;
+}
+
+.statusBoxInitialize{
     -fx-background-color: rgb(240, 173, 78);
     -fx-alignment: center;
+    -fx-background-radius: 0.308em;
+    -fx-border-radius: 0.308em;
 }
 
-.statusBox:valid{
+.statusBoxSuccess{
     -fx-background-color: rgb(92, 184, 92);
+    -fx-alignment: center;
+    -fx-background-radius: 0.308em;
+    -fx-border-radius: 0.308em;
 }
 
-.statusBox:invalid{
+.statusBoxFail{
     -fx-background-color: rgb(217, 83, 79);
+    -fx-alignment: center;
 }
 
 .statusLbl{
     -fx-text-fill: white;
-    -fx-font-size: 16px;
+    -fx-font-size: 1.231em;
 }
 
 .descriptionBox {
-    -fx-alignment: center-left;
-    -fx-spacing: 50;
-    -fx-padding: 25;
+    /*-fx-alignment: center-left;*/
+    /*-fx-spacing: 50;*/
+    /*-fx-padding: 25;*/
+}
+
+.keyFld {
+    -fx-background-color: #e2e2e2;
+    -fx-font-family: Monospaced;
+    -fx-font-size: 3.077em;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-padding: 2em 0 2em 0;
+}
+
+.titled-pane {
+    -fx-font-size: 1.641em;
+}
+
+.titled-pane > .title {
+    /*-fx-pref-height: 36.0;*/
+    -fx-font-size: 1.641em;
+}
+
+#reloadKeyBtn {
+    -fx-background-radius: 0.308em;
+    -fx-border-radius: 0.308em;
+    -fx-border-color:#A7A7A7;
+    -fx-background-color: #EAEAEA;
 }
 
 /***************************************************************************
@@ -113,65 +159,41 @@
  *                                                                         *
  **************************************************************************/
 
-#descriptionTxt{
-    -fx-wrap-text: true;
-}
-
-#keyGenerationLbl{
-    -fx-font-family: Cantarell;
-    -fx-font-size: 30pt;
-    -fx-font-weight: bold;
-}
-
-#generatedKeyFld{
-    -fx-background-color: #e2e2e2;
-    -fx-font-family: Monospaced;
-    -fx-font-size: 30pt;
-}
-
-#additionalDescriptionTxt{
-    -fx-wrap-text: true;
-}
-
-#centerBox{
-    -fx-alignment: center;
-    -fx-padding: 10, 20, 10, 20;
-    -fx-spacing: 150;
+.contentRequest {
     -fx-background-image: url("../images/help_background.svg");
     -fx-background-size: 70%;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center top;
 }
 
-#bottomBox{
-    -fx-padding: 10 ,20 ,1 ,20;
-}
-
-#keyGeneratingBox{
-    -fx-alignment: center;
-    -fx-spacing: 25;
-    -fx-padding: 25;
-}
-
-#readyBtn{
-    -fx-alignment: bottom-right;
+#scrollPane {
+    -fx-background-color: transparent;
 }
 
 #reloadKeyBtn {
-    -fx-padding: 13;
-}
-
-.titled-pane > .title {
-    -fx-pref-height: 36.0;
-    -fx-font-size: 14pt;
+    /*-fx-padding: 13;*/
 }
 
 .supporterDescriptionLbl{
     -fx-wrap-text: true;
+    -fx-alignment: center-left;
+    -fx-font-size: 1.641em;
+    -fx-padding: 1.538em;
 }
 
 .supporterBtn {
+    -fx-font-size: 1.231em;
+    -fx-alignment: center;
+    -fx-border-radius: 0.385em;
+    -fx-background-color: white;
+    -fx-border-color: lightgrey;
 
+}
+
+.supporterBtn:hover{
+    -fx-cursor: hand;
+    -fx-background-color: lightgrey; /* Green */
+    -fx-border-color: lightgrey;
 }
 
 /***************************************************************************
@@ -180,62 +202,29 @@
  *                                                                         *
  **************************************************************************/
 
-#SupporterView {
-    -fx-padding: 5, 25, 5, 25;
-}
-
-#EnterTokenLbl {
-    -fx-font-size: 25;
-}
-
-#centerBoxSupport {
-    -fx-alignment: center;
-    -fx-padding: 10, 20, 10, 20;
-    -fx-spacing: 150;
+.contentSupport {
+    /*-fx-alignment: center;*/
+    /*-fx-padding: 10, 20, 10, 20;*/
+    /*-fx-spacing: 150;*/
     -fx-background-image: url("../images/supporter_background.svg");
+    -fx-background-size: 70%;
     -fx-background-repeat: no-repeat;
-    -fx-background-position: center top;
-
+    -fx-background-position: center;
 }
 
-#connectBtn {
-    -fx-alignment: bottom-right;
-    /*-fx-font-size: 30;*/
-}
-
-#keyValidationBox {
+#connectBtn, #startServiceBtn{
+    -fx-padding: 1.154em 3.077em 1.154em 3.077em;
     -fx-alignment: center;
-    -fx-spacing: 25;
-    -fx-padding: 25;
+    -fx-font-size: 1.231em;
+    -fx-background-radius: 0.308em;
+    -fx-border-radius: 0.308em;
+    -fx-border-color:#A7A7A7;
+    -fx-background-color: #EAEAEA;
 }
 
-#keyFld {
-    -fx-background-color: #e2e2e2;
-    -fx-font-family: Monospaced;
-    -fx-font-size: 30pt;
-}
-
-.supporterBtn {
-    -fx-border-radius: 5px;
-    -fx-background-color: white;
-    -fx-border-color: lightgrey;
-    -fx-fit-to-width: true;
-    -fx-pref-width: 240px;
-    -fx-pref-height: 100px;
-
-/*
-
-    -fx-font-size: 15pt;
-    -fx-fit-to-width: true;
-    -fx-content-display: top;
-    -fx-border-width: ;
-    -fx-padding: 15;
-    -fx-background-color: white;*/
-}
-
-.supporterBtn:hover {
-    -fx-background-color: lightgrey; /* Green */
-    -fx-border-color: lightgrey;
+#connectBtn:hover, #startServiceBtn:hover{
+    -fx-background-color: #f7f7f7;
+    -fx-cursor: hand;
 }
 
 /***************************************************************************
@@ -244,34 +233,111 @@
  *                                                                         *
  **************************************************************************/
 
-#settingsBox{
-    -fx-padding: 50;
+.settingsBoxes{
+    -fx-padding: 2.308em;
 }
 
 .slider .thumb {
-    -fx-pref-height: 25;
-    -fx-pref-width: 25;
+    -fx-pref-height: 2.308em;
+    -fx-pref-width: 2.308em;
+    -fx-background-radius: 2.308em;
+    -fx-border-radius: 2.308em;
+    -fx-border-color:#A7A7A7;
+    -fx-background-color: #EAEAEA;
 }
 
 .slider .thumb:hover {
- -fx-cursor: hand;
+    -fx-cursor: hand;
+    -fx-background-color: #f7f7f7;
+
 }
 
 .slider {
     -fx-border-color: white;
     -fx-border-style: dashed;
-    -fx-border-width: 2;
+    -fx-border-width: 0.154em;
 }
 
 .sliderTxts {
-    -fx-font-size: 200%;
-
+    -fx-font-size: 2em;
 }
 
-.sliderLbls {
- -fx-font-size: 150%;
+.toggles {
+    -fx-alignment: baseline-center;
+}
+
+.toggles .thumb-area {
+    -fx-background-color: #EAEAEA;
+    -fx-pref-width: 5.385em;
+    -fx-pref-height: 2.308em;
+    -fx-padding: 1.538em;
+}
+
+.toggles .thumb{
+    -fx-pref-width: 3.077em;
+    -fx-pref-height: 3.077em;
+    -fx-background-radius: 2.308em;
+    -fx-border-radius: 2.308em;
+    -fx-border-color:#A7A7A7;
+    -fx-background-color: #EAEAEA;
 }
 
 .toggles:selected .thumb-area {
     -fx-background-color: #A7A7A7;
+}
+
+.toggles .thumb:hover {
+    -fx-cursor: hand;
+
+}
+
+.toggles:hover{
+    -fx-cursor: hand;
+}
+
+.settingsLabels{
+    -fx-font-size: 1.231em;
+}
+
+/***************************************************************************
+ *                                                                         *
+ *                             Expert Settings                             *
+ *                                                                         *
+ **************************************************************************/
+
+.expertSettingsBtn{
+    -fx-padding: 1.538em 2.308em 1.538em 2.308em;
+    -fx-alignment: center;
+    -fx-font-size: 1.231em;
+    -fx-background-radius: 0.308em;
+    -fx-border-radius: 0.308em;
+    -fx-border-color:#A7A7A7;
+    -fx-background-color: #EAEAEA;
+}
+
+.expertSettingsBtn:hover{
+    -fx-background-color: #f7f7f7;
+    -fx-cursor: hand;
+}
+
+.settingsPane > .label {
+    -fx-font-size: 1.3em;
+}
+
+.settingsPane > .text-field{
+    -fx-font-size: 1.3em;
+}
+
+/***************************************************************************
+ *                                                                         *
+ *                             Dialog Supporter                            *
+ *                                                                         *
+ **************************************************************************/
+
+#dialogAttributePane > .label {
+    -fx-font-size: 1.3em;
+}
+
+#dialogAttributePane > .text-field {
+    -fx-font-size: 1.3em;
 }

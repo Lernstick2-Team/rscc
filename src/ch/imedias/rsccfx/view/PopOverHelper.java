@@ -4,15 +4,15 @@ import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.view.util.TextSlider;
-
 import java.util.logging.Logger;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -23,16 +23,8 @@ import org.controlsfx.control.ToggleSwitch;
  * Shows popover for settings and help buttons.
  */
 public class PopOverHelper {
-  // Get Screensize
-  Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-
   private static final Logger LOGGER =
       Logger.getLogger(PopOverHelper.class.getName());
-
-  private final Strings strings = new Strings();
-
-  //SettingsProperties
-  BooleanProperty viewOnly = new SimpleBooleanProperty(false);
 
   private static final int COMPRESSION_MIN = 0;
   private static final int COMPRESSION_MAX = 9;
@@ -41,30 +33,28 @@ public class PopOverHelper {
   private static final int QUALITY_MIN = 0;
   private static final int QUALITY_MAX = 9;
   private static final int QUALITY_VALUE = 6;
-
-  private final double overlayWidth = primaryScreenBounds.getWidth() / 9;
-
-  private final double sliderWidth = overlayWidth / 1.2;
-
-  private SimpleBooleanProperty switchedOn = new SimpleBooleanProperty(false);
-
+  private final Strings strings = new Strings();
   private final Rscc model;
+  // Get Screensize
+  Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+  private final double overlayWidth = primaryScreenBounds.getWidth() / 9;
+  private final double sliderWidth = overlayWidth / 1.2;
+  // SettingsProperties
+  BooleanProperty viewOnly = new SimpleBooleanProperty(false);
 
   ToggleSwitch supportBgr233Tgl = new ToggleSwitch();
   ToggleSwitch requestViewOnlyTgl = new ToggleSwitch();
 
   VBox homeHelpBox = new VBox();
-
   VBox supportSettingsBox = new VBox();
   VBox supportHelpBox = new VBox();
-
   VBox requestHelpBox = new VBox();
   VBox requestSettingsBox = new VBox();
-
   VBox supportCompressionSliderBox = new VBox();
   VBox supportQualitySliderBox = new VBox();
 
   HBox supportBgr233ToggleBox = new HBox();
+  HBox toggleBtnAndLblBox = new HBox();
 
   PopOver settingsPopOver = new PopOver();
   PopOver helpPopOver = new PopOver();
@@ -73,11 +63,14 @@ public class PopOverHelper {
   Label supportQualityLbl = new Label();
   Label supportBgr233Lbl = new Label();
   Label requestViewOnlyLbl = new Label();
-
   Label homeHelpLbl = new Label();
-
   Label requestHelpLbl = new Label();
   Label supportHelpLbl = new Label();
+  Label bgr233DescriptionLbl = new Label();
+
+  Separator qualitySliderSeparator = new Separator();
+  Separator compressionSliderSeparator = new Separator();
+  Separator expertSettingsSeparator = new Separator();
 
   TextSlider supportCompressionSldr;
   TextSlider supportQualitySldr;
@@ -85,8 +78,12 @@ public class PopOverHelper {
   Button expertSettingsBtn = new Button();
   Button helpBtn = new Button();
 
+  private SimpleBooleanProperty switchedOn = new SimpleBooleanProperty(false);
+
   /**
    * Initializes PopOver according to view.
+   * @param model is needed for correct resizing.
+   * @param viewName is required to change content in popover boxes.
    */
   public PopOverHelper(Rscc model, String viewName) {
     this.model = model;
@@ -103,6 +100,8 @@ public class PopOverHelper {
         helpPopOver.setContentNode(new HeaderWebView());
         settingsPopOver.setContentNode(supportSettingsBox);
         handleRequestSettings();
+        helpPopOver.setContentNode(requestHelpBox);
+        settingsPopOver.setContentNode(requestSettingsBox);
         requestSettingsBindings();
         invokeExpertSettings();
         invokeWebView();
@@ -132,6 +131,8 @@ public class PopOverHelper {
     supportBgr233Lbl.textProperty().set(strings.supportBgr233Lbl);
 
     expertSettingsBtn.textProperty().set(strings.expertSettingsBtn);
+
+    bgr233DescriptionLbl.textProperty().set(strings.bgr233DescriptionLbl);
   }
 
   private void layoutPopOver() {
@@ -141,6 +142,8 @@ public class PopOverHelper {
 
     helpPopOver.setArrowLocation(PopOver.ArrowLocation.TOP_RIGHT);
     helpPopOver.setDetachable(false);
+
+    settingsPopOver.setId("settingsPopOver");
   }
 
   private void layoutHome() {
@@ -158,15 +161,26 @@ public class PopOverHelper {
     // Settings
     requestViewOnlyTgl.getStyleClass().add("toggles");
 
-    requestViewOnlyLbl.setId("requestViewOnlyLbl");
+    expertSettingsSeparator.setOrientation(Orientation.HORIZONTAL);
 
-    requestSettingsBox.getChildren().addAll(requestViewOnlyTgl, requestViewOnlyLbl,
+    toggleBtnAndLblBox.getChildren().addAll(requestViewOnlyLbl, requestViewOnlyTgl);
+
+    requestViewOnlyLbl.getStyleClass().add("settingsLabels");
+    expertSettingsBtn.getStyleClass().add("expertSettingsBtn");
+
+    requestSettingsBox.setAlignment(Pos.CENTER);
+    requestSettingsBox.setSpacing(10);
+
+    requestSettingsBox.getChildren().addAll(toggleBtnAndLblBox, expertSettingsSeparator,
         expertSettingsBtn);
 
     // Help
     requestHelpLbl.setId("requestHelpLbl");
 
     requestHelpBox.getChildren().addAll(requestHelpLbl,helpBtn);
+
+    requestSettingsBox.getStyleClass().add("settingsBoxes");
+
   }
 
   private void layoutSupport() {
@@ -175,35 +189,46 @@ public class PopOverHelper {
     supportCompressionSldr.setPrefWidth(sliderWidth);
     supportCompressionSldr.getStyleClass().add("slider");
 
-    supportSettingsBox.setAlignment(Pos.CENTER);
+    compressionSliderSeparator.setOrientation(Orientation.HORIZONTAL);
+    qualitySliderSeparator.setOrientation(Orientation.HORIZONTAL);
+    expertSettingsSeparator.setOrientation(Orientation.HORIZONTAL);
 
-    supportCompressionLbl.getStyleClass().add("sliderLbls");
+    supportBgr233ToggleBox.setSpacing(100);
+
+    supportSettingsBox.setAlignment(Pos.CENTER);
+    supportSettingsBox.setSpacing(10);
+
+    supportCompressionLbl.getStyleClass().add("settingsLabels");
 
     supportQualitySldr = new TextSlider(QUALITY_MIN, QUALITY_MAX, QUALITY_VALUE);
     supportQualitySldr.setPrefWidth(sliderWidth);
 
-    supportQualityLbl.getStyleClass().add("sliderLbls");
+    supportQualityLbl.getStyleClass().add("settingsLabels");
 
     supportBgr233Tgl.getStyleClass().add("toggles");
 
-    supportBgr233Lbl.setId("supportBgr233Lbl");
+    supportBgr233Lbl.getStyleClass().add("settingsLabels");
+
+    supportSettingsBox.getStyleClass().add("settingsBoxes");
+
+    expertSettingsBtn.getStyleClass().add("expertSettingsBtn");
 
     supportCompressionSliderBox.getChildren().addAll(supportCompressionSldr, supportCompressionLbl);
     supportQualitySliderBox.getChildren().addAll(supportQualitySldr, supportQualityLbl);
-    supportBgr233ToggleBox.getChildren().addAll(supportBgr233Tgl, supportBgr233Lbl);
+    supportBgr233ToggleBox.getChildren().addAll(supportBgr233Lbl, supportBgr233Tgl);
 
     supportBgr233ToggleBox.setAlignment(Pos.CENTER);
     supportCompressionSliderBox.setAlignment(Pos.CENTER);
     supportQualitySliderBox.setAlignment(Pos.CENTER);
 
-    supportSettingsBox.setSpacing(10);
-
     supportSettingsBox.getChildren().add(supportCompressionSliderBox);
+    supportSettingsBox.getChildren().add(compressionSliderSeparator);
     supportSettingsBox.getChildren().add(supportQualitySliderBox);
+    supportSettingsBox.getChildren().add(qualitySliderSeparator);
     supportSettingsBox.getChildren().add(supportBgr233ToggleBox);
+    supportSettingsBox.getChildren().add(bgr233DescriptionLbl);
+    supportSettingsBox.getChildren().add(expertSettingsSeparator);
     supportSettingsBox.getChildren().add(expertSettingsBtn);
-
-
 
     // Help
     supportHelpLbl.setId("supportHelpLbl");
@@ -217,26 +242,12 @@ public class PopOverHelper {
   }
 
   private void supportSettingsBindings() {
-    model.vncQualitySliderValueProperty().bindBidirectional(supportQualitySldr
+    model.vncQualityProperty().bindBidirectional(supportQualitySldr
         .sliderValueProperty());
   }
 
-  /**
-   * Kills the VncServer if settings Popover is showing.
-   * Starts the VncServer after popover is closed.
-   */
-  private void handleRequestSettings() {
-    settingsPopOver.showingProperty().addListener((observableValue, oldValue, newValue) -> {
-      if (newValue) {
-        model.stopVncServer();
-      } else {
-        model.startVncServer();
-      }
-    });
-  }
-
   private void invokeExpertSettings() {
-    expertSettingsBtn.setOnAction(actionEvent -> new ExpertSettingsDialog());
+    expertSettingsBtn.setOnAction(actionEvent -> new ExpertSettingsDialog(model));
   }
 
   private void invokeWebView() {
@@ -247,12 +258,12 @@ public class PopOverHelper {
     return viewOnly.get();
   }
 
-  public BooleanProperty viewOnlyProperty() {
-    return viewOnly;
-  }
-
   public void setViewOnly(boolean viewOnly) {
     this.viewOnly.set(viewOnly);
+  }
+
+  public BooleanProperty viewOnlyProperty() {
+    return viewOnly;
   }
 }
 

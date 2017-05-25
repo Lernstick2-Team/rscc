@@ -19,12 +19,11 @@ public class KeyUtil {
 
   private static final Logger LOGGER =
       Logger.getLogger(KeyUtil.class.getName());
-
-  private static final String KEY_DELIMITER = " ";
   public static final int KEY_DELIMITER_EVERY = 3;
   public static final int KEY_MAXIMUM_DIGITS = 9;
   public static final int KEY_AMOUNT_SPACES =
       (KEY_MAXIMUM_DIGITS - KEY_DELIMITER_EVERY) / KEY_DELIMITER_EVERY;
+  private static final String KEY_DELIMITER = " ";
 
   /**
    * Represents the key, which is a number with 9 digits.
@@ -105,6 +104,10 @@ public class KeyUtil {
     return key != null && key.matches("\\d{9}");
   }
 
+  public String getKey() {
+    return key.get();
+  }
+
   /**
    * Sets the key deformatted.
    *
@@ -113,10 +116,6 @@ public class KeyUtil {
   public void setKey(String key) {
     this.key.set(deformatKey(key));
     LOGGER.fine("Key was set to: " + getKey() + " and " + getFormattedKey());
-  }
-
-  public String getKey() {
-    return key.get();
   }
 
   public ReadOnlyStringProperty keyProperty() {

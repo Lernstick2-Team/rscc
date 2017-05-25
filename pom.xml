@@ -1,6 +1,9 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
     <groupId>ch.fhnw</groupId>
     <artifactId>rscc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -29,11 +32,32 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <!-- For FontAwesomeFX -->
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-jerady-maven</id>
+            <name>bintray</name>
+            <url>http://dl.bintray.com/jerady/maven</url>
+        </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-jerady-maven</id>
+            <name>bintray-plugins</name>
+            <url>http://dl.bintray.com/jerady/maven</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <sourceDirectory>${custom.src.path}</sourceDirectory>
         <testSourceDirectory>${custom.test.path}</testSourceDirectory>
+        <finalName>rsccfx</finalName>
         <resources>
             <resource>
                 <directory>${custom.resources.path}</directory>
@@ -41,13 +65,15 @@
             <!-- this adds files like *.properties to the compilation -->
             <resource>
                 <directory>${custom.source}</directory>
-                <excludes><exclude>*.java</exclude></excludes>
+                <excludes>
+                    <exclude>*.java</exclude>
+                </excludes>
             </resource>
         </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.6.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -57,7 +83,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>1.6.0</version>
                 <executions>
                     <execution>
                         <id>create-strings</id>
@@ -85,7 +111,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>7.6</version>
+                        <version>7.7</version>
                     </dependency>
                 </dependencies>
                 <configuration>
@@ -113,7 +139,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.12</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>add-resource</id>
@@ -149,7 +175,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -200,6 +226,8 @@
                         <exclude>ch/imedias/rscc/**/*.class</exclude>
                         <!-- exclude View and Presenter classes, since views and presenter are not tested -->
                         <exclude>ch/imedias/rsccfx/view/**/*.class</exclude>
+                        <!-- exclude Rudp, sice those classes are not tested -->
+                        <exclude>ch/imedias/rsccfx/model/connectionutils/rudp/**/*.class</exclude>
                         <!-- exclude RsccApp and Strings class, since those are not tested either -->
                         <exclude>/**/*RsccApp*.class</exclude>
                         <exclude>/**/*Strings*.class</exclude>
@@ -222,6 +250,34 @@
                 </executions>
             </plugin>
 
+            <!-- Package as Debian Package (deb) -->
+            <plugin>
+                <artifactId>jdeb</artifactId>
+                <groupId>org.vafer</groupId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jdeb</goal>
+                        </goals>
+                        <configuration>
+                            <deb>${project.build.directory}/rsccfx.deb</deb>
+                            <dataSet>
+                                <data>
+                                    <src>${project.build.directory}/${project.build.finalName}.jar</src>
+                                    <type>file</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>/usr/bin</prefix>
+                                    </mapper>
+                                </data>
+                            </dataSet>
+                            <controlDir>debianfx</controlDir>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
         </plugins>
     </build>
@@ -251,6 +307,10 @@
                 <configuration>
                     <charset>UTF-8</charset>
                     <sourcepath>${basedir}/src/ch/imedias/rsccfx</sourcepath>
+                    <sourceFileExcludes>
+                        <sourceFileExclude>**/rudp/**/*.java</sourceFileExclude>
+                    </sourceFileExcludes>
+
                 </configuration>
                 <reportSets>
                     <reportSet>
@@ -272,6 +332,8 @@
                         <exclude>ch/imedias/rscc/**/*.class</exclude>
                         <!-- exclude View and Presenter classes, since views and presenter are not tested -->
                         <exclude>ch/imedias/rsccfx/view/**/*.class</exclude>
+                        <!-- exclude Rudp, sice those classes are not tested -->
+                        <exclude>ch/imedias/rsccfx/model/connectionutils/rudp/**/*.class</exclude>
                         <!-- exclude RsccApp and Strings class, since those are not tested either -->
                         <exclude>/**/*RsccApp*.class</exclude>
                         <exclude>/**/*Strings*.class</exclude>
@@ -378,6 +440,23 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>21.0</version>
+        </dependency>
+
+        <!-- FontAwesomeFX -->
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx-commons</artifactId>
+            <version>8.15</version>
+        </dependency>
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx-controls</artifactId>
+            <version>8.15</version>
+        </dependency>
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx-fontawesome</artifactId>
+            <version>4.7.0-5</version>
         </dependency>
 
     </dependencies>

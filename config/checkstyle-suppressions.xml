@@ -8,4 +8,6 @@
 <suppressions>
     <suppress files="Strings.java" checks="[a-zA-Z0-9]*"/>
     <suppress checks="." files="[\\/]src[\\/]ch[\\/]imedias[\\/]rscc[\\/]"/>
+    <suppress checks="." files="[\\/]src[\\/]ch[\\/]imedias[\\/]rsccfx[\\/]model[\\/]connectionutils[\\/]rudp[\\/]src[\\/]"/>
+
 </suppressions>

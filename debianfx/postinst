@@ -1,0 +1,12 @@
+#!/bin/sh
+echo "[Desktop Entry]
+Categories=System;
+Exec=sudo java -jar /usr/bin/rsccfx.jar
+Icon=rscc
+Name=Remote Support
+Name[de]=Fernwartung (JavaFX)
+Name[en]=Remote Support (JavaFX)
+Name[it]=Assistenza Remota (JavaFX)
+Name[fr]=Contrôle à distance (JavaFX)
+StartupNotify=true
+Type=Application" > /usr/share/applications/ch-imedias-rsccfx.desktop

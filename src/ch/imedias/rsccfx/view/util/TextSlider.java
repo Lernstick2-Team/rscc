@@ -14,18 +14,19 @@ import javafx.scene.text.Text;
  */
 public class TextSlider extends StackPane {
 
-  Slider slider;
-  Text valueText = new Text();
+  private final Slider slider;
+  private final Text valueText = new Text();
 
   /**
    * Initializes a new slider with the value as a text on top of the thumb.
-   * @param min minimum value of the slider.
-   * @param max maximum value of the slider.
+   *
+   * @param min   minimum value of the slider.
+   * @param max   maximum value of the slider.
    * @param value standard value of the slider.
    */
   public TextSlider(int min, int max, int value) {
     this.setAlignment(Pos.CENTER);
-    this.setPadding(new Insets(50,0,0,0));
+    this.setPadding(new Insets(40, 0, 0, 0));
 
     slider = new Slider(min, max, value) {
       @Override

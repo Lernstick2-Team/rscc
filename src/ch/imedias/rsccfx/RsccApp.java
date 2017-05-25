@@ -15,7 +15,6 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
@@ -29,13 +28,37 @@ public class RsccApp extends Application {
       Logger.getLogger(RsccApp.class.getName());
 
   public static final String APP_NAME = "Remote Support";
-
   /**
    * Declares views for use with ViewController.
    */
   public static final String HOME_VIEW = "home";
   public static final String REQUEST_VIEW = "requestHelp";
+
   public static final String SUPPORT_VIEW = "supporter";
+
+  private static final double resolution4k = 2560 * 1440;
+  private static final double resolutionFullHd = 1920 * 1080;
+  private static final double resolutionLow = 1440 * 900;
+
+  private static final double borderToFullHd = (resolutionLow + resolutionFullHd) / 2;
+  private static final double borderTo4k = (resolutionFullHd + resolution4k) / 2;
+
+  private static final double ROOT_TEXT_SIZE_4K = 13;
+  private static final double ROOT_TEXT_SIZE_FULL_HD = 11;
+  private static final double ROOT_TEXT_SIZE_LOW = 9;
+
+  public static double rootTextSize;
+
+  /**
+   * Defines the scaling based on the DPI of the screen in relation to a 4K resolution display.
+   * Must be used in all views to scale all displayed values that cannot be set in the CSS.
+   */
+  public static double scalingFactor;
+
+  /**
+   * Defines the stylesheet that is being used.
+   */
+  public static String styleSheet;
 
   private Rscc model;
 
@@ -47,12 +70,53 @@ public class RsccApp extends Application {
   public void start(Stage stage) {
     setLogLevel(Level.INFO);
 
-    model = new Rscc(new SystemCommander(), new KeyUtil());
+    // Get Screensize
+    Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
+    double screenHeight = primaryScreenBounds.getHeight();
+    double screenWidth = primaryScreenBounds.getWidth();
+
+    // set Stage boundaries to visible bounds of the main screen
+    stage.setWidth(screenWidth / 1.8);
+    stage.setHeight(screenHeight / 1.5);
+    stage.setX(screenWidth / 2 - stage.getWidth() / 2);
+    stage.setY(screenHeight / 2 - stage.getHeight() / 2);
+
+    stage.setMinWidth((screenWidth / 1.8) / 1.2);
+    stage.setMinHeight((screenHeight / 1.5) / 1.3);
+
+    // Initialize stylesheets
+    // Choose CSS depending on the resolution and set scaling factor
+    double resolution = screenHeight * screenWidth;
+
+    if (resolution > borderTo4k) {
+      // 4K resolution
+      rootTextSize = ROOT_TEXT_SIZE_4K;
+      LOGGER.info("4K Resolution, Text Size: " + rootTextSize);
+    } else if (resolution < borderToFullHd) {
+      // low resolution (below Full HD)
+      rootTextSize = ROOT_TEXT_SIZE_LOW;
+      LOGGER.info("Low Resolution, Text Size: " + rootTextSize);
+    } else {
+      // Full HD resolution
+      rootTextSize = ROOT_TEXT_SIZE_FULL_HD;
+      LOGGER.info("Full HD Resolution, Text Size: " + rootTextSize);
+    }
+
+    scalingFactor = rootTextSize / ROOT_TEXT_SIZE_4K;
+
+    styleSheet = getClass().getClassLoader()
+        .getResource("css/styles.css").toExternalForm();
+
+    SystemCommander systemCommander = new SystemCommander();
+    model = new Rscc(systemCommander, new KeyUtil());
+    systemCommander.setModel(model);
     ViewController mainView = new ViewController();
 
-    Group root = new Group();
-    root.getChildren().addAll(mainView);
-    final Scene scene = new Scene(root);
+    // Set root font size, everything adapts to it afterwards
+    mainView.setStyle("-fx-font-size: " + rootTextSize + "px;");
+
+    final Scene scene = new Scene(mainView);
 
     // Initialize the views and load them into ViewController
     // HomeView
@@ -73,18 +137,6 @@ public class RsccApp extends Application {
     // Set initial screen
     mainView.setView(RsccApp.HOME_VIEW);
 
-    // Get Screensize
-    Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-
-    //set Stage boundaries to visible bounds of the main screen
-    stage.setWidth(primaryScreenBounds.getWidth() / 1.8);
-    stage.setHeight(primaryScreenBounds.getHeight() / 1.5);
-    stage.setX(primaryScreenBounds.getWidth() / 2 - stage.getWidth() / 2);
-    stage.setY(primaryScreenBounds.getHeight() / 2 - stage.getHeight() / 2);
-
-    stage.setMinWidth((primaryScreenBounds.getWidth() / 1.8) / 1.2);
-    stage.setMinHeight((primaryScreenBounds.getHeight() / 1.5) / 1.3);
-
     stage.setScene(scene);
     stage.setTitle(APP_NAME);
     stage.show();
@@ -93,10 +145,6 @@ public class RsccApp extends Application {
     ((RsccHomePresenter) mainView.getPresenter(HOME_VIEW)).initSize(scene);
     ((RsccRequestPresenter) mainView.getPresenter(REQUEST_VIEW)).initSize(scene);
     ((RsccSupportPresenter) mainView.getPresenter(SUPPORT_VIEW)).initSize(scene);
-
-    // Initialize stylesheets
-    String styleSheet = getClass().getClassLoader()
-        .getResource("css/styles.css").toExternalForm();
 
     scene.getStylesheets().add(styleSheet);
 

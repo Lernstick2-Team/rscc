@@ -21,32 +21,28 @@ import javafx.scene.layout.VBox;
 public class RsccHomeView extends BorderPane {
   private static final Logger LOGGER =
       Logger.getLogger(RsccHomeView.class.getName());
-
-  private final Rscc model;
-  private final Strings strings = new Strings();
+  private static final Insets BOX_INSETS = new Insets(10, 25, 10, 40);
   final HeaderView headerView;
-
   final Button requestViewBtn = new Button();
   final Button supportViewBtn = new Button();
 
   final VBox contentBox = new VBox();
-
-  Image requestImg;
-  Image supportImg;
-
-  ImageView requestImgView;
-  ImageView supportImgView;
-
   final HBox requestBox = new HBox();
   final VBox requestBoxLabels = new VBox();
   final HBox supportBox = new HBox();
   final VBox supportBoxLabels = new VBox();
 
+  private final Rscc model;
+  private final Strings strings = new Strings();
+
+  Image requestImg;
+  Image supportImg;
+  ImageView requestImgView;
+  ImageView supportImgView;
   Label requestBigLbl = new Label();
   Label requestSmallLbl = new Label();
   Label supportBigLbl = new Label();
   Label supportSmallLbl = new Label();
-
 
   /**
    * Initializes all the GUI components needed on the start page.
@@ -82,10 +78,14 @@ public class RsccHomeView extends BorderPane {
     requestImgView.setPreserveRatio(true);
     requestBoxLabels.getChildren().addAll(requestBigLbl, requestSmallLbl);
     requestBoxLabels.setAlignment(Pos.CENTER_LEFT);
+    requestBoxLabels.getStyleClass().add("boxLabels");
+
     requestBox.getChildren().addAll(requestImgView, requestBoxLabels);
+    requestBox.getStyleClass().add("homeButtonBoxes");
+    requestBox.setPadding(BOX_INSETS);
+
     requestViewBtn.setGraphic(requestBox);
     requestViewBtn.getStyleClass().add("HomeNavigationBtn");
-
     supportBigLbl.getStyleClass().add("BigFont");
     supportSmallLbl.getStyleClass().add("SmallFont");
 
@@ -96,15 +96,17 @@ public class RsccHomeView extends BorderPane {
     supportImgView.setPreserveRatio(true);
     supportBoxLabels.getChildren().addAll(supportBigLbl, supportSmallLbl);
     supportBoxLabels.setAlignment(Pos.CENTER_LEFT);
+    supportBoxLabels.getStyleClass().add("boxLabels");
+
     supportBox.getChildren().addAll(supportImgView, supportBoxLabels);
+    supportBox.getStyleClass().add("homeButtonBoxes");
+    supportBox.setPadding(BOX_INSETS);
+
     supportViewBtn.setGraphic(supportBox);
     supportViewBtn.getStyleClass().add("HomeNavigationBtn");
 
-    supportBoxLabels.setPadding(new Insets(0,20,0,20));
-    requestBoxLabels.setPadding(new Insets(0,20,0,20));
-
     contentBox.setId("contentBox");
-
+    contentBox.setAlignment(Pos.CENTER);
     contentBox.getChildren().addAll(requestViewBtn, supportViewBtn);
 
     this.setTop(headerView);
