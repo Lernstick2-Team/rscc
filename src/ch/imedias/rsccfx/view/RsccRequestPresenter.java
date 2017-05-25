@@ -119,8 +119,9 @@ public class RsccRequestPresenter implements ControlledPresenter {
    */
   public void initSize(Scene scene) {
     // initialize view
+    view.supporterDescriptionLbl.prefWidthProperty().bind(scene.widthProperty().divide(3));
+    view.supporterInnerPane.prefWidthProperty().bind(scene.widthProperty().divide(3).multiply(2));
     view.reloadKeyBtn.prefHeightProperty().bind(view.generatedKeyFld.heightProperty());
-
   }
 
   /**
