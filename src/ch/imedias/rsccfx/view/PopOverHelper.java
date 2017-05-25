@@ -236,6 +236,18 @@ public class PopOverHelper {
   private void supportSettingsBindings() {
     model.vncQualityProperty().bindBidirectional(supportQualitySldr
         .sliderValueProperty());
+
+    model.vncCompressionProperty().bindBidirectional(supportCompressionSldr
+        .sliderValueProperty());
+
+    model.vncBgr233Property().bindBidirectional(supportBgr233Tgl.selectedProperty());
+  }
+
+  /**
+   * Kills the VncServer if settings Popover is showing.
+   * Starts the VncServer after popover is closed.
+   */
+  private void handleRequestSettings() {
   }
 
   private void invokeExpertSettings() {

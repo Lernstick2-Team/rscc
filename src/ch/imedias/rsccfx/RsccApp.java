@@ -116,7 +116,6 @@ public class RsccApp extends Application {
 
     SystemCommander systemCommander = new SystemCommander();
     model = new Rscc(systemCommander, new KeyUtil());
-    systemCommander.setModel(model);
     ViewController mainView = new ViewController();
 
     // Set root font size, everything adapts to it afterwards
@@ -157,11 +156,9 @@ public class RsccApp extends Application {
 
   @Override
   public void stop() throws Exception {
-    String key = model.getKeyUtil().getKey();
-    if (key != null) {
-      model.killConnection();
-    }
+    model.killConnection();
     super.stop();
+    System.exit(0);
   }
 
   private void setLogLevel(Level logLevel) {

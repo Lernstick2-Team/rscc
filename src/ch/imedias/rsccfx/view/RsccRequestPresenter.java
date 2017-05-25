@@ -54,8 +54,10 @@ public class RsccRequestPresenter implements ControlledPresenter {
     initHeader();
     initSupporterList();
     attachEvents();
+    setupBindings();
     popOverHelper = new PopOverHelper(model, RsccApp.REQUEST_VIEW);
   }
+
 
   /**
    * Defines the ViewController to allow changing views.
@@ -108,6 +110,14 @@ public class RsccRequestPresenter implements ControlledPresenter {
         view.statusLbl.textProperty().set(newValue);
       });
     });
+
+    model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
+          if (oldValue && !newValue
+              && RsccApp.REQUEST_VIEW.equals(viewParent.getCurrentViewName())) {
+            model.refreshKey();
+          }
+        }
+    );
   }
 
   /**
@@ -139,7 +149,16 @@ public class RsccRequestPresenter implements ControlledPresenter {
         popOverHelper.helpPopOver.show(view.headerView.helpBtn));
     headerPresenter.setSettingsBtnAction(event ->
         popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
+
   }
+
+  /**
+   * Setup bindings.
+   */
+  private void setupBindings() {
+    headerPresenter.getSettingsBtnDisableProperty().bind(model.vncServerProcessRunningProperty());
+  }
+
 
   /**
    * Calls createSupporterList() and creates a button for every supporter found.
@@ -237,7 +256,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     MenuItem connectMenuItem = new MenuItem("Call");
     connectMenuItem.setOnAction(event -> {
-
+      model.callSupporterDirect(supporter.getAddress(), supporter.getPort());
     });
 
     MenuItem deleteMenuItem = new MenuItem("Delete");
