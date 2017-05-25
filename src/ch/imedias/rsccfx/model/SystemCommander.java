@@ -23,14 +23,16 @@ public class SystemCommander {
    * @param command terminal command to be executed.
    * @return String trimmed output of the terminal without whitespaces at beginning / end.
    */
-  public String executeTerminalCommand(String command) {
+  public SystemCommanderReturnValues executeTerminalCommand(String command) {
     Process process;
-    String outputString = ""; // standard return value
+    SystemCommanderReturnValues response = new SystemCommanderReturnValues();
     try {
       StringBuilder output = new StringBuilder();
+      StringBuilder error = new StringBuilder();
       // Execute Command
       process = Runtime.getRuntime().exec(command);
-      process.waitFor();
+      int exitCode = process.waitFor();
+      response.setExitCode(exitCode);
       // read the output from the command
       BufferedReader outputReader = new BufferedReader(new
           InputStreamReader(process.getInputStream()));
@@ -41,18 +43,20 @@ public class SystemCommander {
         output.append(line).append("\n");
       }
       while ((line = errorReader.readLine()) != null) {
-        output.append(line).append("\n");
+        error.append(line).append("\n");
       }
       outputReader.close();
       errorReader.close();
-      outputString = output.toString().trim();
+      response.setOutputString(output.toString().trim());
+      response.setErrorString(output.toString().trim());
     } catch (Exception exception) {
       LOGGER.severe("Exception thrown when running the command: "
           + command
           + "\n Exception Message: " + exception.getMessage());
       throw new IllegalArgumentException();
     }
-    return outputString;
+
+    return response;
   }
 
 

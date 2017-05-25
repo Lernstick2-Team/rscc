@@ -228,7 +228,12 @@ public class Rscc {
   private void keyServerSetup() {
     String command = systemCommander.commandStringGenerator(
         pathToResourceDocker, "use.sh", getKeyServerIp(), getKeyServerHttpPort());
-    systemCommander.executeTerminalCommand(command);
+    SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
+
+    if (returnValues.getExitCode() != 0) {
+      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+      return;
+    }
     isSshRunning.setValue(true);
   }
 
@@ -277,10 +282,16 @@ public class Rscc {
     setConnectionStatus("Requesting key from server...", 1);
 
     String command = systemCommander.commandStringGenerator(
-        pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()), pathToStunDumpFile);
-    String key = systemCommander.executeTerminalCommand(command);
+        pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()), pathToStunDump);
 
-    keyUtil.setKey(key); // update key in model
+    SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
+
+    if (returnValues.getExitCode() != 0) {
+      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+      return;
+    }
+
+    keyUtil.setKey(returnValues.getOutputString()); // update key in model
     rscccfp = new Rscccfp(this, true);
     rscccfp.setDaemon(true);
     rscccfp.start();
@@ -358,7 +369,14 @@ public class Rscc {
 
     setConnectionStatus("Connected to keyserver.", 1);
 
-    systemCommander.executeTerminalCommand(command);
+    SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
+
+    if (returnValues.getExitCode() != 0) {
+      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+      setConnectionStatus(
+          "Key " + getKeyUtil().getKey() + " could not be verified by the server.", 3);
+      return;
+    }
 
     rscccfp = new Rscccfp(this, false);
     rscccfp.setDaemon(true);
