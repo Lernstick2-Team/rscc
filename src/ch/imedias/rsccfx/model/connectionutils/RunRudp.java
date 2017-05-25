@@ -64,7 +64,6 @@ public class RunRudp extends Thread {
             + ":" + model.getRemoteClientPort());
 
         //possibly it can be run on any port? should at least.
-        // -> TODO try out to remove null and iceport
         rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
             model.getRemoteClientPort(), null, model.getIcePort());
 
@@ -170,7 +169,6 @@ public class RunRudp extends Thread {
             + ":" + model.getRemoteClientPort());
 
         //possibly it can be run on any port? should at least.
-        // -> TODO try out to remove null and iceport
         rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
             model.getRemoteClientPort(), null, model.getIcePort());
 
