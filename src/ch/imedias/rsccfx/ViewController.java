@@ -2,6 +2,8 @@ package ch.imedias.rsccfx;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
@@ -16,6 +18,8 @@ public class ViewController extends StackPane {
 
   private final HashMap<String, Node> views = new HashMap<>();
   private final HashMap<String, ControlledPresenter> presenters = new HashMap<>();
+
+  private StringProperty currentViewName = new SimpleStringProperty("");
 
   /**
    * Returns an already loaded presenter.
@@ -69,6 +73,7 @@ public class ViewController extends StackPane {
         // No view is currently being displayed, so just add it
         getChildren().add(views.get(name));
       }
+      currentViewName.setValue(name);
       return true;
     } else {
       LOGGER.info("View " + name + " hasn't been loaded!");
@@ -92,4 +97,7 @@ public class ViewController extends StackPane {
     }
   }
 
+  public String getCurrentViewName() {
+    return currentViewName.getValue();
+  }
 }

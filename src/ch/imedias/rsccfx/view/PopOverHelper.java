@@ -33,15 +33,12 @@ public class PopOverHelper {
   private static final int QUALITY_MIN = 0;
   private static final int QUALITY_MAX = 9;
   private static final int QUALITY_VALUE = 6;
-
   private final Strings strings = new Strings();
   private final Rscc model;
-
   // Get Screensize
   Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
   private final double overlayWidth = primaryScreenBounds.getWidth() / 9;
   private final double sliderWidth = overlayWidth / 1.2;
-
   // SettingsProperties
   BooleanProperty viewOnly = new SimpleBooleanProperty(false);
 
@@ -79,11 +76,14 @@ public class PopOverHelper {
   TextSlider supportQualitySldr;
 
   Button expertSettingsBtn = new Button();
+  Button helpBtn = new Button();
 
   private SimpleBooleanProperty switchedOn = new SimpleBooleanProperty(false);
 
   /**
    * Initializes PopOver according to view.
+   * @param model is needed for correct resizing.
+   * @param viewName is required to change content in popover boxes.
    */
   public PopOverHelper(Rscc model, String viewName) {
     this.model = model;
@@ -92,23 +92,26 @@ public class PopOverHelper {
     switch (viewName) {
       case RsccApp.HOME_VIEW:
         layoutHome();
-        helpPopOver.setContentNode(homeHelpBox);
-        settingsPopOver.setContentNode(null);
+        helpPopOver.setContentNode(new HeaderWebView());
+        settingsPopOver.setContentNode(supportSettingsBox);
         break;
       case RsccApp.REQUEST_VIEW:
         layoutRequest();
+        helpPopOver.setContentNode(new HeaderWebView());
+        settingsPopOver.setContentNode(supportSettingsBox);
         helpPopOver.setContentNode(requestHelpBox);
         settingsPopOver.setContentNode(requestSettingsBox);
-        handleRequestSettings();
         requestSettingsBindings();
         invokeExpertSettings();
+        invokeWebView();
         break;
       case RsccApp.SUPPORT_VIEW:
         layoutSupport();
-        helpPopOver.setContentNode(supportHelpBox);
+        helpPopOver.setContentNode(new HeaderWebView());
         settingsPopOver.setContentNode(supportSettingsBox);
         supportSettingsBindings();
         invokeExpertSettings();
+        invokeWebView();
         break;
       default:
         LOGGER.info("PopOver couldn't find view: " + viewName);
@@ -150,6 +153,7 @@ public class PopOverHelper {
     homeHelpLbl.setId("homeHelpLbl");
 
     homeHelpBox.getChildren().add(new HBox(homeHelpLbl));
+
   }
 
   private void layoutRequest() {
@@ -172,7 +176,7 @@ public class PopOverHelper {
     // Help
     requestHelpLbl.setId("requestHelpLbl");
 
-    requestHelpBox.getChildren().addAll(requestHelpLbl);
+    requestHelpBox.getChildren().addAll(requestHelpLbl,helpBtn);
 
     requestSettingsBox.getStyleClass().add("settingsBoxes");
 
@@ -228,7 +232,8 @@ public class PopOverHelper {
     // Help
     supportHelpLbl.setId("supportHelpLbl");
 
-    supportHelpBox.getChildren().addAll(supportHelpLbl);
+    supportHelpBox.getChildren().addAll(supportHelpLbl,helpBtn);
+    helpBtn.setOnAction(actionEvent -> new HeaderWebView());
   }
 
   private void requestSettingsBindings() {
@@ -238,6 +243,11 @@ public class PopOverHelper {
   private void supportSettingsBindings() {
     model.vncQualityProperty().bindBidirectional(supportQualitySldr
         .sliderValueProperty());
+
+    model.vncCompressionProperty().bindBidirectional(supportCompressionSldr
+        .sliderValueProperty());
+
+    model.vncBgr233Property().bindBidirectional(supportBgr233Tgl.selectedProperty());
   }
 
   /**
@@ -245,17 +255,14 @@ public class PopOverHelper {
    * Starts the VncServer after popover is closed.
    */
   private void handleRequestSettings() {
-    settingsPopOver.showingProperty().addListener((observableValue, oldValue, newValue) -> {
-      if (newValue) {
-        model.getVncServer().killVncServer();
-      } else {
-        model.getVncServer().start();
-      }
-    });
   }
 
   private void invokeExpertSettings() {
-    expertSettingsBtn.setOnAction(actionEvent -> new ExpertSettingsDialog());
+    expertSettingsBtn.setOnAction(actionEvent -> new ExpertSettingsDialog(model));
+  }
+
+  private void invokeWebView() {
+    helpBtn.setOnAction(actionEvent -> new HeaderWebView());
   }
 
   public boolean isViewOnly() {

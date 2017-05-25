@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -51,8 +53,10 @@ public class RsccRequestPresenter implements ControlledPresenter {
     initHeader();
     initSupporterList();
     attachEvents();
+    setupBindings();
     popOverHelper = new PopOverHelper(model, RsccApp.REQUEST_VIEW);
   }
+
 
   /**
    * Defines the ViewController to allow changing views.
@@ -105,6 +109,14 @@ public class RsccRequestPresenter implements ControlledPresenter {
         view.statusLbl.textProperty().set(newValue);
       });
     });
+
+    model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
+          if (oldValue && !newValue
+              && RsccApp.REQUEST_VIEW.equals(viewParent.getCurrentViewName())) {
+            model.refreshKey();
+          }
+        }
+    );
   }
 
   /**
@@ -119,7 +131,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
     view.supporterDescriptionLbl.prefWidthProperty().bind(scene.widthProperty().divide(3));
     view.supporterInnerPane.prefWidthProperty().bind(scene.widthProperty().divide(3).multiply(2));
     view.reloadKeyBtn.prefHeightProperty().bind(view.generatedKeyFld.heightProperty());
-
+    view.generatedKeyFld.prefWidthProperty().bind(scene.widthProperty()
+        .subtract(100d));
   }
 
   /**
@@ -135,7 +148,16 @@ public class RsccRequestPresenter implements ControlledPresenter {
         popOverHelper.helpPopOver.show(view.headerView.helpBtn));
     headerPresenter.setSettingsBtnAction(event ->
         popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
+
   }
+
+  /**
+   * Setup bindings.
+   */
+  private void setupBindings() {
+    headerPresenter.getSettingsBtnDisableProperty().bind(model.vncServerProcessRunningProperty());
+  }
+
 
   /**
    * Calls createSupporterList() and creates a button for every supporter found.
@@ -154,6 +176,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
   /**
    * Creates new SupporterButton and adds it to the GridPane.
+   * @param supporter the supporter which a button should be created for.
    */
   public void createNewSupporterBtn(Supporter supporter) {
     supporters.add(supporter);
@@ -164,15 +187,19 @@ public class RsccRequestPresenter implements ControlledPresenter {
     attachContextMenu(supporterBtn, supporter);
 
     supporterBtn.setOnAction(event -> {
-      // if create new button (last button) was pressed
-      if (supporters.get(supporters.size() - 1) == supporter) {
-        createNewSupporterBtn(new Supporter());
-      }
       // Open Dialog to modify data
-      new SupporterAttributesDialog(supporter);
-      // Update data in button name and save to preferences
-      supporterBtn.setText(supporter.toString());
-      supporterHelper.saveSupporters(supporters);
+      SupporterAttributesDialog supporterAttributesDialog =
+          new SupporterAttributesDialog(supporter);
+      boolean supporterSaved = supporterAttributesDialog.show();
+      Supporter lastSupporter = supporters.get(supporters.size() - 1);
+      if (supporterSaved) {
+        if (lastSupporter == supporter) {
+          createNewSupporterBtn(new Supporter());
+        }
+        // Update data in button name and save to preferences
+        supporterBtn.setText(supporter.toString());
+        supporterHelper.saveSupporters(supporters);
+      }
     });
 
     int row = buttonSize / GRID_MAXIMUM_COLUMNS;
@@ -181,25 +208,69 @@ public class RsccRequestPresenter implements ControlledPresenter {
     buttonSize++;
   }
 
+  /**
+   * Deletes a SupporterButton.
+   */
+  public void deleteSupporterBtn(Button button, Supporter supporter) {
+    ObservableList<Node> buttonList = view.supporterInnerPane.getChildren();
+    int buttonIndex = buttonList.indexOf(button);
+    int row = GridPane.getRowIndex(button);
+    int column = GridPane.getColumnIndex(button);
+    view.supporterInnerPane.getChildren().remove(button);
+    for (int i = buttonIndex; i < buttonList.size(); i++) {
+      Button nextButton = (Button) buttonList.get(i);
+      // copy positions from next button
+      final int nextButtonRow = GridPane.getRowIndex(nextButton);
+      final int nextButtonCol = GridPane.getColumnIndex(nextButton);
+      // set button at new position
+      GridPane.setRowIndex(nextButton, row);
+      GridPane.setColumnIndex(nextButton, column);
+      row = nextButtonRow;
+      column = nextButtonCol;
+    }
+    buttonSize--;
+
+    // remove the supporter and save list.
+    supporters.remove(supporter);
+    supporterHelper.saveSupporters(supporters);
+  }
+
   private void attachContextMenu(Button button, Supporter supporter) {
     // Create ContextMenu
-    ContextMenu contextMenu = new ContextMenu();
+    final ContextMenu contextMenu = new ContextMenu();
 
     MenuItem editMenuItem = new MenuItem("Edit");
 
-    editMenuItem.setOnAction(event -> new SupporterAttributesDialog(supporter));
+    editMenuItem.setOnAction(event -> {
+      // Open Dialog to modify data
+      SupporterAttributesDialog supporterAttributesDialog =
+          new SupporterAttributesDialog(supporter);
+      boolean supporterSaved = supporterAttributesDialog.show();
+      if (supporterSaved) {
+        // Update data in button name and save to preferences
+        button.setText(supporter.toString());
+        supporterHelper.saveSupporters(supporters);
+      }
+    });
 
     MenuItem connectMenuItem = new MenuItem("Call");
     connectMenuItem.setOnAction(event -> {
-      /*TODO start connection*/
+      model.callSupporterDirect(supporter.getAddress(), supporter.getPort());
     });
 
+    MenuItem deleteMenuItem = new MenuItem("Delete");
+    deleteMenuItem.setOnAction(event -> deleteSupporterBtn(button, supporter));
+
     // Add MenuItem to ContextMenu
-    contextMenu.getItems().addAll(editMenuItem, connectMenuItem);
+    contextMenu.getItems().addAll(editMenuItem, connectMenuItem, deleteMenuItem);
 
     // When user right-click on Supporterbutton
-    button.setOnContextMenuRequested(event -> contextMenu.show(button, event.getScreenX(),
-        event.getScreenY()));
+    button.setOnContextMenuRequested(event -> {
+      if (supporters.get(supporters.size() - 1) != supporter) {
+        contextMenu.show(button, event.getScreenX(),
+            event.getScreenY());
+      }
+    });
   }
 
   private void initButtonSize(Button button) {
