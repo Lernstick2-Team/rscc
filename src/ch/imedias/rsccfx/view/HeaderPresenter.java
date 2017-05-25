@@ -2,6 +2,7 @@ package ch.imedias.rsccfx.view;
 
 import ch.imedias.rsccfx.model.Rscc;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -76,7 +77,8 @@ public class HeaderPresenter {
     view.settingsBtn.setVisible(isVisible);
   }
 
-  public void setSettingsBtnDisabled(Boolean isDisabled) {
-    view.settingsBtn.setDisable(isDisabled);
+  public BooleanProperty getSettingsBtnDisableProperty() {
+    return view.settingsBtn.disableProperty();
   }
+
 }

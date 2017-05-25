@@ -112,7 +112,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
     });
 
     model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
-          if (oldValue && !newValue && viewParent.getCurrentViewName().equals("requestHelp")) {
+          if (oldValue && !newValue
+              && RsccApp.REQUEST_VIEW.equals(viewParent.getCurrentViewName())) {
             model.refreshKey();
           }
         }
@@ -148,13 +149,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
     headerPresenter.setSettingsBtnAction(event ->
         popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
 
-    model.vncServerProcessRunningProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue) {
-        headerPresenter.setSettingsBtnDisabled(true);
-      } else {
-        headerPresenter.setSettingsBtnDisabled(false);
-      }
-    });
+
+    headerPresenter.getSettingsBtnDisableProperty().bind(model.vncServerProcessRunningProperty());
 
   }
 
