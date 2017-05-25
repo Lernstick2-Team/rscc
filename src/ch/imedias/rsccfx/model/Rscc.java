@@ -47,11 +47,6 @@ public class Rscc {
    */
   private static final String DOCKER_FOLDER_NAME = "docker-build_p2p";
   private static final String DEFAULT_SUPPORTERS_FILE_NAME = "rscc-defaults-lernstick.xml";
-  private String pathToResources;
-  private String pathToResourceDocker;
-  private String pathToDefaultSupporters;
-  private static final String[] EXTRACTED_RESOURCES =
-      {DOCKER_FOLDER_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
 
   /**
    * sh files can not be executed in the JAR file and therefore must be extracted.
