@@ -3,6 +3,7 @@ package ch.imedias.rsccfx.view;
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
+import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -18,6 +19,9 @@ import org.controlsfx.control.ToggleSwitch;
  * Creates the DialogPane for the expert settings.
  */
 public class ExpertSettingsDialog extends DialogPane {
+
+  private static final Logger LOGGER =
+      Logger.getLogger(ExpertSettingsDialog.class.getName());
 
   final Label keyserverIpLbl = new Label();
   final Label forceConnectOverServerLbl = new Label();

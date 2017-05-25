@@ -152,6 +152,7 @@ public class RsccApp extends Application {
     ((RsccSupportPresenter) mainView.getPresenter(SUPPORT_VIEW)).initSize(scene);
 
     scene.getStylesheets().add(styleSheet);
+
   }
 
   @Override

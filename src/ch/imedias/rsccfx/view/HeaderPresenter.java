@@ -44,6 +44,7 @@ public class HeaderPresenter {
    */
   public void setHelpBtnAction(EventHandler<ActionEvent> action) {
     view.helpBtn.setOnAction(action);
+    //view.createWebHelp();
   }
 
   /**
