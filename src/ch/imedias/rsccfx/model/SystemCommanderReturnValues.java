@@ -9,13 +9,13 @@ public class SystemCommanderReturnValues {
   private int exitCode;
 
   /**
-   * Parameterless Constructor.
+   * Initializes an empty return object for {@link SystemCommander}.
    */
   public SystemCommanderReturnValues() {
   }
 
   /**
-   * Constructor.
+   * Initializes an return object for {@link SystemCommander} with the given parameters.
    * @param outputString String read from command on InputStream.
    * @param errorString String read from command on ErrorStream.
    * @param exitCode ExitCode from the command.
