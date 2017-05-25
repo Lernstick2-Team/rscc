@@ -57,6 +57,26 @@ public class SystemCommander {
 
 
   /**
+   * Starts and returns a Process based on a conmmand.
+   * @param command A String to be executed.
+   * @return A Process-Object.
+   */
+  public Process startProcess(String command) {
+    Process process;
+    try {
+      process = Runtime.getRuntime().exec(command);
+    } catch (Exception exception) {
+      LOGGER.severe("Exception thrown when running the command: "
+          + command
+          + "\n Exception Message: " + exception.getMessage());
+      throw new IllegalArgumentException();
+    }
+    return process;
+  }
+
+
+
+  /**
    * Generates String to run command.
    *
    * @param pathToScript path to the script that should be run.
