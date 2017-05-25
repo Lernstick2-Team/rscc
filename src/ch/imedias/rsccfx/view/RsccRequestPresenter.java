@@ -56,8 +56,10 @@ public class RsccRequestPresenter implements ControlledPresenter {
     initHeader();
     initSupporterList();
     attachEvents();
+    setupBindings();
     popOverHelper = new PopOverHelper(model, RsccApp.REQUEST_VIEW);
   }
+
 
   /**
    * Defines the ViewController to allow changing views.
@@ -149,10 +151,15 @@ public class RsccRequestPresenter implements ControlledPresenter {
     headerPresenter.setSettingsBtnAction(event ->
         popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
 
-
-    headerPresenter.getSettingsBtnDisableProperty().bind(model.vncServerProcessRunningProperty());
-
   }
+
+  /**
+   * Setup bindings.
+   */
+  private void setupBindings() {
+    headerPresenter.getSettingsBtnDisableProperty().bind(model.vncServerProcessRunningProperty());
+  }
+
 
   /**
    * Calls createSupporterList() and creates a button for every supporter found.
