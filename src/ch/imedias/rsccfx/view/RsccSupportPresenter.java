@@ -11,6 +11,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 
@@ -187,6 +189,13 @@ public class RsccSupportPresenter implements ControlledPresenter {
         Bindings.or(
             model.connectionEstablishmentRunningProperty(),
             keyUtil.keyValidProperty().not())
+    );
+
+    model.vncSessionRunningProperty().addListener((observableValue, aBoolean, t1) -> {
+      if (aBoolean && !t1) {
+        view.keyFld.clear();
+      }
+    }
     );
 
     // FIXME no clue what this does? why is this new a web view?
