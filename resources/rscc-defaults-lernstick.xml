@@ -10,7 +10,7 @@
     <supporter>
         <description>imedias (encrypted)</description>
         <address>agora.imedias.ch</address>
-        <port></port>
+        <port>50000</port>
         <encrypted>true</encrypted>
         <chargeable>false</chargeable>
     </supporter>

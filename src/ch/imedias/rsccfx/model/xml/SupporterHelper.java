@@ -21,7 +21,7 @@ public class SupporterHelper {
 
   private static final Logger LOGGER =
       Logger.getLogger(SupporterHelper.class.getName());
-  private static final String SUPPORT_ADDRESSES = "supportAddresses";
+  private static final String SUPPORTER_PREFERENCES = "supporter";
   private final Preferences preferences = Preferences.userNodeForPackage(RsccApp.class);
   private Rscc model;
 
@@ -138,15 +138,23 @@ public class SupporterHelper {
     }
   }
 
-  private String getSupportersXmlFromPreferences() {
-    return preferences.get(SUPPORT_ADDRESSES, null);
+  /**
+   * TODO
+   * @return
+   */
+  public String getSupportersXmlFromPreferences() {
+    return preferences.get(SUPPORTER_PREFERENCES, null);
   }
 
-  private void setSupportersInPreferences(String supportersXmlString) {
+  /**
+   * TODO
+   * @param supportersXmlString
+   */
+  public void setSupportersInPreferences(String supportersXmlString) {
     if (supportersXmlString != null) {
-      preferences.put(SUPPORT_ADDRESSES, supportersXmlString);
+      preferences.put(SUPPORTER_PREFERENCES, supportersXmlString);
     } else {
-      preferences.remove(SUPPORT_ADDRESSES);
+      preferences.remove(SUPPORTER_PREFERENCES);
     }
   }
 
