@@ -3,6 +3,7 @@ package ch.imedias.rsccfx;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.SystemCommander;
 import ch.imedias.rsccfx.model.util.KeyUtil;
+import ch.imedias.rsccfx.view.HeaderPresenter;
 import ch.imedias.rsccfx.view.RsccHomePresenter;
 import ch.imedias.rsccfx.view.RsccHomeView;
 import ch.imedias.rsccfx.view.RsccRequestPresenter;
@@ -45,7 +46,7 @@ public class RsccApp extends Application {
 
   private static final double ROOT_TEXT_SIZE_4K = 13;
   private static final double ROOT_TEXT_SIZE_FULL_HD = 11;
-  private static final double ROOT_TEXT_SIZE_LOW = 9;
+  private static final double ROOT_TEXT_SIZE_LOW = 10;
 
   public static double rootTextSize;
 
@@ -81,9 +82,10 @@ public class RsccApp extends Application {
     stage.setHeight(screenHeight / 1.5);
     stage.setX(screenWidth / 2 - stage.getWidth() / 2);
     stage.setY(screenHeight / 2 - stage.getHeight() / 2);
-
     stage.setMinWidth((screenWidth / 1.8) / 1.2);
     stage.setMinHeight((screenHeight / 1.5) / 1.3);
+
+
 
     // Initialize stylesheets
     // Choose CSS depending on the resolution and set scaling factor
@@ -93,14 +95,22 @@ public class RsccApp extends Application {
       // 4K resolution
       rootTextSize = ROOT_TEXT_SIZE_4K;
       LOGGER.info("4K Resolution, Text Size: " + rootTextSize);
+
     } else if (resolution < borderToFullHd) {
       // low resolution (below Full HD)
       rootTextSize = ROOT_TEXT_SIZE_LOW;
       LOGGER.info("Low Resolution, Text Size: " + rootTextSize);
+      stage.setMinWidth((screenWidth / 1.5));
+      stage.setMinHeight((screenHeight / 1.5));
+      stage.setWidth(screenWidth / 1.2);
+      stage.setHeight(screenHeight / 1.2);
+      stage.setX(screenWidth / 2 - stage.getWidth() / 2);
+      stage.setY(screenHeight / 2 - stage.getHeight() / 2);
     } else {
       // Full HD resolution
       rootTextSize = ROOT_TEXT_SIZE_FULL_HD;
       LOGGER.info("Full HD Resolution, Text Size: " + rootTextSize);
+
     }
 
     scalingFactor = rootTextSize / ROOT_TEXT_SIZE_4K;

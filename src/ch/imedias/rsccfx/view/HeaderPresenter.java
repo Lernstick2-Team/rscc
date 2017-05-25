@@ -4,6 +4,7 @@ import ch.imedias.rsccfx.model.Rscc;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 
 /**
  * Defines the behaviour of interaction and initializes the size of the GUI components.
@@ -75,4 +76,5 @@ public class HeaderPresenter {
   public void setSettingsBtnVisibility(Boolean isVisible) {
     view.settingsBtn.setVisible(isVisible);
   }
+
 }

@@ -167,7 +167,7 @@
 }
 
 #scrollPane {
-    -fx-background-color: transparent;
+    -fx-background: none;
 }
 
 #reloadKeyBtn {

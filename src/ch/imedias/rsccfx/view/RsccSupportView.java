@@ -228,7 +228,6 @@ public class RsccSupportView extends BorderPane {
     GridPane.setValignment(statusBox, VPos.BOTTOM);
 
     GridPane.setMargin(titleLbl, new Insets(0));
-
   }
 
   private void bindFieldsToModel() {
