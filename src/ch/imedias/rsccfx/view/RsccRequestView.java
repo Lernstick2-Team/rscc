@@ -64,6 +64,7 @@ public class RsccRequestView extends BorderPane {
   private final KeyUtil keyUtil;
 
   Button reloadKeyBtn = new Button();
+  final Button disconnectBtn = new Button();
 
   private Pane emptyPane = new Pane();
 
@@ -85,6 +86,7 @@ public class RsccRequestView extends BorderPane {
 
   private void initFieldData() {
     // populate fields which require initial data
+    disconnectBtn.setText(strings.requestDisconnectBtn);
     titleLbl.setText(strings.requestTitleLbl);
     descriptionLbl.setText(strings.requestDescriptionLbl);
     generatedKeyFld.setText(strings.requestGeneratedKeyFld);
@@ -122,6 +124,9 @@ public class RsccRequestView extends BorderPane {
 
     reloadKeyBtn.setPadding(new Insets(BUTTON_PADDING));
     reloadKeyBtn.setId("reloadKeyBtn");
+
+    disconnectBtn.setId("connectBtn");
+    disconnectBtn.setDisable(true);
 
     contentBox.getChildren().addAll(keyGenerationTitledPane, keyGenerationInnerPane,
         supporterTitledPane);
@@ -167,10 +172,10 @@ public class RsccRequestView extends BorderPane {
     GridPane.setConstraints(descriptionLbl, 2, 1);
     GridPane.setConstraints(emptyPane, 0, 2);
     GridPane.setConstraints(statusBox, 0, 3);
-
+    GridPane.setConstraints(disconnectBtn, 0, 2);
     GridPane.setColumnSpan(statusBox, 3);
 
-    keyGenerationInnerPane.getChildren().addAll(generatedKeyFld, reloadKeyBtn, titleLbl,
+    keyGenerationInnerPane.getChildren().addAll(generatedKeyFld, disconnectBtn,  reloadKeyBtn, titleLbl,
         descriptionLbl, statusBox, emptyPane);
 
     // initial styling
@@ -200,8 +205,10 @@ public class RsccRequestView extends BorderPane {
     GridPane.setValignment(titleLbl, VPos.BOTTOM);
     GridPane.setHalignment(descriptionLbl, HPos.LEFT);
     GridPane.setValignment(reloadKeyBtn, VPos.CENTER);
+    GridPane.setValignment(disconnectBtn, VPos.TOP);
     GridPane.setMargin(titleLbl, new Insets(0));
     GridPane.setMargin(descriptionLbl, new Insets(0));
+    GridPane.setMargin(disconnectBtn, new Insets(0));
     keyGenerationInnerPane.setPadding(new Insets(10 * scalingFactor));
 
   }

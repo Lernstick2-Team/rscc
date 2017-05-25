@@ -9,9 +9,7 @@ import ch.imedias.rsccfx.model.xml.SupporterHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -67,6 +65,9 @@ public class RsccRequestPresenter implements ControlledPresenter {
   }
 
   private void attachEvents() {
+    //TODO event
+    view.disconnectBtn.setOnAction(event -> model.connectToUser());
+
     view.reloadKeyBtn.setOnAction(
         event -> {
           Thread thread = new Thread(model::refreshKey);
@@ -140,6 +141,11 @@ public class RsccRequestPresenter implements ControlledPresenter {
         popOverHelper.helpPopOver.show(view.headerView.helpBtn));
     headerPresenter.setSettingsBtnAction(event ->
         popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
+  }
+
+  private void initBindings() {
+    // disable disconnect button if no session is started
+    view.disconnectBtn.disableProperty().bind(model.isVncSessionRunningProperty().not());
   }
 
   /**
