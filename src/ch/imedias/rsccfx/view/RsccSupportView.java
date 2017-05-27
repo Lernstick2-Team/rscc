@@ -87,11 +87,14 @@ public class RsccSupportView extends BorderPane {
 
     statusLbl.textProperty().set(strings.supportStatusLblWaiting);
 
+    keyInputStatusLbl.textProperty().set(strings.supportStatusLblWaiting);
+
     keyInputTitledPane.setText(strings.supportKeyInputPane);
     startServiceTitledPane.setText(strings.supportAdressBookPane);
   }
 
   private void layoutForm() {
+
     keyInputTitledPane.setExpanded(true);
     keyInputTitledPane.setId("keyInputTitledPane");
 
@@ -108,9 +111,7 @@ public class RsccSupportView extends BorderPane {
     statusLbl.getStyleClass().add("statusLbl");
     keyInputStatusLbl.getStyleClass().add("statusLbl");
     statusBox.getChildren().add(statusLbl);
-    statusBox.getStyleClass().add("statusBox");
     keyInputStatusBox.getChildren().add(keyInputStatusLbl);
-    keyInputStatusBox.getStyleClass().add("statusBox");
 
     keyFld.getStyleClass().add("keyFld");
 
