@@ -5,6 +5,7 @@ import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.xml.Supporter;
 import ch.imedias.rsccfx.view.util.NumberTextField;
 import java.util.Optional;
+import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
@@ -23,9 +24,10 @@ import javafx.scene.layout.Priority;
  */
 public class SupporterAttributesDialog extends DialogPane {
 
+  private static final Logger LOGGER =
+      Logger.getLogger(SupporterAttributesDialog.class.getName());
+
   private static final int DEFAULT_PORT = 5500;
-  // TODO: add correct default encrypted port
-  private static final int DEFAULT_ENCRYPTED_PORT = DEFAULT_PORT;
 
   final Dialog dialog = new Dialog();
   final GridPane attributePane = new GridPane();
@@ -55,7 +57,6 @@ public class SupporterAttributesDialog extends DialogPane {
    * @param supporter the supporter for the dialog.
    */
   public SupporterAttributesDialog(Supporter supporter) {
-    // TODO: 4K usw.?
     this.getStylesheets().add(RsccApp.styleSheet);
     this.supporter = supporter;
     initFieldData();
@@ -92,8 +93,7 @@ public class SupporterAttributesDialog extends DialogPane {
     supporter.setDescription(nameFld.getText());
     supporter.setAddress(addressFld.getText());
     if (isEmpty(portFld.getText())) {
-      int defaultPort = encryptedCBox.isSelected() ? DEFAULT_ENCRYPTED_PORT : DEFAULT_PORT;
-      portFld.setText(String.valueOf(defaultPort));
+      portFld.setText(String.valueOf(DEFAULT_PORT));
     }
     supporter.setPort(portFld.getText());
     supporter.setEncrypted(encryptedCBox.isSelected());

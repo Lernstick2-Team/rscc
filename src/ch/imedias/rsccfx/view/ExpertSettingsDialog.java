@@ -3,6 +3,7 @@ package ch.imedias.rsccfx.view;
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
+import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -18,6 +19,9 @@ import org.controlsfx.control.ToggleSwitch;
  * Creates the DialogPane for the expert settings.
  */
 public class ExpertSettingsDialog extends DialogPane {
+
+  private static final Logger LOGGER =
+      Logger.getLogger(ExpertSettingsDialog.class.getName());
 
   final Label keyserverIpLbl = new Label();
   final Label forceConnectOverServerLbl = new Label();
@@ -120,21 +124,20 @@ public class ExpertSettingsDialog extends DialogPane {
   private void bindFieldsToModel() {
     // make bindings to the model
     forceConnectOverServerTgl.selectedProperty().bindBidirectional(
-        model.isForcingServerModeProperty());
+        model.forcingServerModeProperty());
     keyServerIpFld.textProperty().bindBidirectional(model.keyServerIpProperty());
     keyServerHttpPortFld.textProperty().bindBidirectional(model.keyServerHttpPortProperty());
     vncPortFld.textProperty().bindBidirectional(model.vncPortProperty(),
         new NumberStringConverter("#"));
     icePortFld.textProperty().bindBidirectional(model.icePortProperty(),
         new NumberStringConverter("#"));
-    // TODO: These properties were missing - please check if they are alright.
     udpPackageSizeFld.textProperty().bindBidirectional(model.udpPackageSizeProperty(),
         new NumberStringConverter("#"));
     proxyPortFld.textProperty().bindBidirectional(model.proxyPortProperty(),
         new NumberStringConverter("#"));
     stunServerPortFld.textProperty().bindBidirectional(model.stunServerPortProperty(),
         new NumberStringConverter("#"));
-    // TODO: Stunserver-List needs to be binded
+    // TODO: Stunserver-List needs to be binded @martinfrancois
   }
 
 }

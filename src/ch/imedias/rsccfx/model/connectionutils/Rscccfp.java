@@ -88,32 +88,43 @@ public class Rscccfp extends Thread {
     //Wait for connection
     LOGGER.info("RSCCCFP: wait for client");
 
-    connectionSocket = serverSocket.accept();
-    inputStream = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-    outputStream = new DataOutputStream(connectionSocket.getOutputStream());
-    LOGGER.info("RSCCCFP: Client connected");
+    try {
+      connectionSocket = serverSocket.accept();
+      model.setRscccfpHasTalkedToOtherClient(true);
+      inputStream = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+      outputStream = new DataOutputStream(connectionSocket.getOutputStream());
+      LOGGER.info("RSCCCFP: Client connected");
 
-    runIceMagic();
+      runIceMagic();
+
+
+    } catch (SocketException e) {
+      LOGGER.info("ServerSocket closed while accepting connections");
+    }
   }
 
   /**
    * Starts the TCP-Client.
    *
    * @param host Host address to connect to.
-   * @throws Throwable When connection is not possible.
    */
-  public void startRscccfpClient(String host) throws Throwable {
-
+  public void startRscccfpClient(String host) {
     //connect to server
     LOGGER.info("start client");
-    connectionSocket = new Socket(host, model.getVncPort());
-    connectionSocket.setTcpNoDelay(false);
-    LOGGER.info("RSCCCFP: Connected to server");
-    outputStream = new DataOutputStream(connectionSocket.getOutputStream());
-    inputStream = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+    try {
+      connectionSocket = new Socket(host, model.getVncPort());
+      model.setRscccfpHasTalkedToOtherClient(true);
+      connectionSocket.setTcpNoDelay(false);
+      LOGGER.info("RSCCCFP: Connected to server");
+      outputStream = new DataOutputStream(connectionSocket.getOutputStream());
+      inputStream = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 
-    runIceMagic();
-
+      runIceMagic();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (Throwable throwable) {
+      throwable.printStackTrace();
+    }
   }
 
 
@@ -127,19 +138,19 @@ public class Rscccfp extends Thread {
     model.setConnectionStatus("Trying to establish a direct connection (ICE).", 1);
 
     LOGGER.info("RSCCCFP: Handling ServerMode");
-    outputStream.writeBoolean(model.getIsForcingServerMode());
+    outputStream.writeBoolean(model.isForcingServerMode());
 
     try {
       int remoteForcesServerMode = inputStream.read();
       if (remoteForcesServerMode == 1) {
         LOGGER.info("RSCCCFP: Remote forces ServerMode");
-        model.setIsForcingServerMode(true);
+        model.setForcingServerMode(true);
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    if (model.getIsForcingServerMode()) {
+    if (model.isForcingServerMode()) {
       model.setRemoteIceSuccessful(false);
       model.setLocalIceSuccessful(false);
       agent.free();
@@ -299,11 +310,9 @@ public class Rscccfp extends Thread {
   public void closeConnection() {
     try {
       if (serverSocket != null && !serverSocket.isClosed()) {
-        try {
-          serverSocket.close();
-        } catch (SocketException e) {
-          LOGGER.info("RSCCCFP: Server Socket closed");
-        }
+
+        serverSocket.close();
+
       }
       if (connectionSocket != null && !connectionSocket.isClosed()) {
         connectionSocket.close();

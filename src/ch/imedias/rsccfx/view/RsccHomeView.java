@@ -21,6 +21,7 @@ import javafx.scene.layout.VBox;
 public class RsccHomeView extends BorderPane {
   private static final Logger LOGGER =
       Logger.getLogger(RsccHomeView.class.getName());
+  private static final Insets BOX_INSETS = new Insets(10, 25, 10, 40);
   final HeaderView headerView;
   final Button requestViewBtn = new Button();
   final Button supportViewBtn = new Button();
@@ -81,8 +82,7 @@ public class RsccHomeView extends BorderPane {
 
     requestBox.getChildren().addAll(requestImgView, requestBoxLabels);
     requestBox.getStyleClass().add("homeButtonBoxes");
-    // TODO: make Insets a constant
-    requestBox.setPadding(new Insets(10, 25, 10, 40));
+    requestBox.setPadding(BOX_INSETS);
 
     requestViewBtn.setGraphic(requestBox);
     requestViewBtn.getStyleClass().add("HomeNavigationBtn");
@@ -100,9 +100,7 @@ public class RsccHomeView extends BorderPane {
 
     supportBox.getChildren().addAll(supportImgView, supportBoxLabels);
     supportBox.getStyleClass().add("homeButtonBoxes");
-    // TODO: make Insets a constant
-    supportBox.setPadding(new Insets(10, 25, 10, 40));
-
+    supportBox.setPadding(BOX_INSETS);
 
     supportViewBtn.setGraphic(supportBox);
     supportViewBtn.getStyleClass().add("HomeNavigationBtn");

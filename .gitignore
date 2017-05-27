@@ -204,9 +204,3 @@ fabric.properties
 
 ## These resources are created during execution of "port_share.sh" and therefore should not be committed
 p2p.log
-
-## Strings.java is being generated
-Strings.java
-!/src/ch/imedias/rsccfx/view/RsccRequestPresenter.java
-!/test/ch/imedias/rsccfx/model/SystemCommanderTest.java
-!/src/ch/imedias/rsccfx/view/RsccRequestView.java

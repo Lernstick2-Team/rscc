@@ -42,8 +42,9 @@ public class SystemCommanderTest {
   public void testExecuteTerminalCommand() throws Exception {
     String testTerminalCommand = "testExecuteTerminalCommand";
     StringBuilder command = new StringBuilder("echo ").append(testTerminalCommand);
-    String output = systemCommander.executeTerminalCommand(command.toString());
-    assertEquals(testTerminalCommand, output);
+    SystemCommanderReturnValues returnValues = systemCommander
+        .executeTerminalCommand(command.toString());
+    assertEquals(testTerminalCommand, returnValues.getOutputString());
   }
 
   /**
