@@ -65,7 +65,6 @@ public class RsccRequestView extends BorderPane {
   Button reloadKeyBtn = new Button();
   final Button disconnectBtn = new Button();
 
-  private Pane emptyPane = new Pane();
 
   /**
    * Initializes all the GUI components needed to generate the key the supporter needs.

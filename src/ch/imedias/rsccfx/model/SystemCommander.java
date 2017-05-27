@@ -2,14 +2,9 @@ package ch.imedias.rsccfx.model;
 
 import com.google.common.base.CharMatcher;
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.logging.Logger;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.LongProperty;
 
 public class SystemCommander {
   private static final Logger LOGGER =

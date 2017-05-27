@@ -1,10 +1,10 @@
 package ch.imedias.rsccfx.model;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.fail;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Tests the SystemCommander class.

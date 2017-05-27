@@ -1,13 +1,12 @@
 package ch.imedias.rsccfx.localization;
 
 /**
- *  Code generated at 11:22:30 25.05.2017
+ *  Code generated at 10:14:06 27.05.2017
  *  by generateStringsClass.py version 0.3.4
  *  based on properties file with hash:
- *  7c6da6a924411999ca90c08b3fd171621c3250057a8981a121711c097f7c133a
+ *  1c957b243d54b6655cd0ab5dbf157162786c22cca4630e3d3f1a2fccd883c905
  */
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Strings {
@@ -54,6 +53,7 @@ public class Strings {
   public String homeSupportSmallLbl;
   public String requestTitleLbl;
   public String requestDescriptionLbl;
+  public String requestDisconnectBtn;
   public String requestKeyGeneratorPane;
   public String requestGeneratedKeyFld;
   public String requestPredefinedAdressessPane;
@@ -144,6 +144,7 @@ public class Strings {
     homeSupportSmallLbl = rscBndl.getString("homeSupportSmallLbl");
     requestTitleLbl = rscBndl.getString("requestTitleLbl");
     requestDescriptionLbl = rscBndl.getString("requestDescriptionLbl");
+    requestDisconnectBtn = rscBndl.getString("requestDisconnectBtn");
     requestKeyGeneratorPane = rscBndl.getString("requestKeyGeneratorPane");
     requestGeneratedKeyFld = rscBndl.getString("requestGeneratedKeyFld");
     requestPredefinedAdressessPane = rscBndl.getString("requestPredefinedAdressessPane");

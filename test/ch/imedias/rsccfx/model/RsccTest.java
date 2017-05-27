@@ -1,5 +1,10 @@
 package ch.imedias.rsccfx.model;
 
+import ch.imedias.rsccfx.model.util.KeyUtil;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,11 +13,6 @@ import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import ch.imedias.rsccfx.model.util.KeyUtil;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  * Tests the rscc model class.
