@@ -371,6 +371,8 @@ public class Rscc {
     rscccfp = new Rscccfp(this, false);
     rscccfp.setDaemon(true);
     rscccfp.start();
+    setConnectionStatus("connected to User", 2);
+
 
     try {
       rscccfp.join();
@@ -392,6 +394,8 @@ public class Rscc {
       setConnectionStatus("Starting direct VNC connection.", 1);
 
       rudp.start();
+      setConnectionStatus("connected to User", 2);
+
     }
 
     LOGGER.info("RSCC: Starting VNCViewer");

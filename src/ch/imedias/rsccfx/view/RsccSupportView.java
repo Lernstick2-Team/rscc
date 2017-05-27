@@ -86,7 +86,6 @@ public class RsccSupportView extends BorderPane {
     startServiceTitleLbl.textProperty().set(strings.startService);
 
     statusLbl.textProperty().set(strings.supportStatusLblWaiting);
-    keyInputStatusLbl.textProperty().set(strings.requestStatusLblWaiting);
 
     keyInputTitledPane.setText(strings.supportKeyInputPane);
     startServiceTitledPane.setText(strings.supportAdressBookPane);
