@@ -266,7 +266,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     MenuItem connectMenuItem = new MenuItem("Call");
     connectMenuItem.setOnAction(event -> {
-      model.callSupporterDirect(supporter.getAddress(), supporter.getPort());
+      model.callSupporterDirect(supporter.getAddress(), supporter.getPort(),
+          supporter.isEncrypted());
     });
 
     MenuItem deleteMenuItem = new MenuItem("Delete");

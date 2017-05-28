@@ -458,21 +458,20 @@ public class Rscc {
 
   /**
    * Calls Supporter from addressbook (Starts VNC Server in Reverse mode).
-   *
-   * @param address public reachable IP/Domain
-   * @param port    public reachable Port where vncViewer is listening
+   * @param address public reachable IP/Domain.
+   * @param port    public reachable Port where vncViewer is listening.
+   * @param isEncrypted sets if connection should be encrypted.
    */
-  public void callSupporterDirect(String address, String port) {
+  public void callSupporterDirect(String address, String port, boolean isEncrypted) {
     setConnectionEstablishmentRunning(true);
     setConnectionStatus("Connecting to " + address + ":" + port, 1);
     int portValue = -1;
     if (!port.equals("")) {
       portValue = Integer.valueOf(port);
-
     }
     vncServer = new VncServerHandler(this);
     boolean connectionSuccess = vncServer
-        .startVncServerReverse(address, portValue > 0 ? portValue : 5500);
+        .startVncServerReverse(address, portValue > 0 ? portValue : 5500, isEncrypted);
     if (connectionSuccess) {
       setConnectionStatus("Connected", 2);
     } else {
