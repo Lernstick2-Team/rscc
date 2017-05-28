@@ -20,7 +20,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -64,8 +63,8 @@ public class RsccRequestView extends BorderPane {
   private final KeyUtil keyUtil;
 
   Button reloadKeyBtn = new Button();
+  final Button disconnectBtn = new Button();
 
-  private Pane emptyPane = new Pane();
 
   /**
    * Initializes all the GUI components needed to generate the key the supporter needs.
@@ -85,6 +84,7 @@ public class RsccRequestView extends BorderPane {
 
   private void initFieldData() {
     // populate fields which require initial data
+    disconnectBtn.setText(strings.requestDisconnectBtn);
     titleLbl.setText(strings.requestTitleLbl);
     descriptionLbl.setText(strings.requestDescriptionLbl);
     generatedKeyFld.setText(strings.requestGeneratedKeyFld);
@@ -126,6 +126,9 @@ public class RsccRequestView extends BorderPane {
     reloadKeyBtn.setPadding(new Insets(BUTTON_PADDING));
     reloadKeyBtn.setId("reloadKeyBtn");
 
+    disconnectBtn.setId("connectBtn");
+    disconnectBtn.setDisable(true);
+
     contentBox.getChildren().addAll(keyGenerationTitledPane, keyGenerationInnerPane,
         supporterTitledPane);
     contentBox.getStyleClass().add("contentBox");
@@ -152,9 +155,12 @@ public class RsccRequestView extends BorderPane {
     ColumnConstraints col1 = new ColumnConstraints();
     ColumnConstraints col2 = new ColumnConstraints();
     ColumnConstraints col3 = new ColumnConstraints();
+
     supporterInnerPane.getColumnConstraints().addAll(col1, col2, col3);
+
     int amountOfColumns = supporterInnerPane.getColumnConstraints().size();
     int columnPercentWidth = 100 / amountOfColumns;
+
     col1.setPercentWidth(columnPercentWidth);
     col2.setPercentWidth(columnPercentWidth);
     col3.setPercentWidth(columnPercentWidth);
@@ -166,13 +172,15 @@ public class RsccRequestView extends BorderPane {
     GridPane.setConstraints(reloadKeyBtn, 1, 1);
     GridPane.setConstraints(titleLbl, 2, 0);
     GridPane.setConstraints(descriptionLbl, 2, 1);
-    GridPane.setConstraints(emptyPane, 0, 2);
     GridPane.setConstraints(statusBox, 0, 3);
+    GridPane.setConstraints(disconnectBtn, 0, 2);
     GridPane.setColumnSpan(statusBox, 3);
 
-    keyGenerationInnerPane.getChildren().addAll(generatedKeyFld, reloadKeyBtn, titleLbl,
-        descriptionLbl, statusBox, emptyPane);
     keyGenerationInnerPane.setAlignment(Pos.CENTER);
+
+    keyGenerationInnerPane.getChildren().addAll(generatedKeyFld, disconnectBtn,  reloadKeyBtn,
+        titleLbl, descriptionLbl, statusBox);
+
     // initial styling
     keyGenerationInnerPane.getChildren().stream()
         .forEach(node -> {
@@ -196,9 +204,11 @@ public class RsccRequestView extends BorderPane {
     GridPane.setValignment(titleLbl, VPos.BOTTOM);
     GridPane.setHalignment(descriptionLbl, HPos.LEFT);
     GridPane.setValignment(reloadKeyBtn, VPos.CENTER);
+    GridPane.setValignment(disconnectBtn, VPos.TOP);
     GridPane.setMargin(titleLbl, new Insets(0));
     GridPane.setMargin(generatedKeyFld, new Insets(0, 0, 10, 0));
     GridPane.setMargin(descriptionLbl, new Insets(0));
+    GridPane.setMargin(disconnectBtn, new Insets(0));
     keyGenerationInnerPane.setPadding(new Insets(10 * scalingFactor));
 
   }

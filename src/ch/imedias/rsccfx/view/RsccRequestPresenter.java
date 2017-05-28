@@ -51,6 +51,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
     headerPresenter = new HeaderPresenter(model, view.headerView);
     supporterHelper = new SupporterHelper(model);
     initHeader();
+    initBindings();
     initSupporterList();
     attachEvents();
     setupBindings();
@@ -66,6 +67,12 @@ public class RsccRequestPresenter implements ControlledPresenter {
   }
 
   private void attachEvents() {
+    //Disconnects session on button click
+    view.disconnectBtn.setOnAction(event -> {
+      model.killConnection();
+      view.disconnectBtn.setDisable(true);
+    });
+
     view.reloadKeyBtn.setOnAction(
         event -> {
           Thread thread = new Thread(model::refreshKey);
@@ -131,8 +138,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
     view.supporterDescriptionLbl.prefWidthProperty().bind(scene.widthProperty().divide(3));
     view.supporterInnerPane.prefWidthProperty().bind(scene.widthProperty().divide(3).multiply(2));
     view.reloadKeyBtn.prefHeightProperty().bind(view.generatedKeyFld.heightProperty());
-    view.generatedKeyFld.prefWidthProperty().bind(scene.widthProperty()
-        .subtract(100d));
   }
 
   /**
@@ -158,6 +163,12 @@ public class RsccRequestPresenter implements ControlledPresenter {
     headerPresenter.getSettingsBtnDisableProperty().bind(model.vncServerProcessRunningProperty());
   }
 
+
+  private void initBindings() {
+    // disable disconnect button if no session is started
+    view.disconnectBtn.disableProperty().bind(model.vncSessionRunningProperty().not());
+
+  }
 
   /**
    * Calls createSupporterList() and creates a button for every supporter found.
@@ -282,7 +293,5 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     button.setPadding(new Insets(20));
-
   }
-
 }
