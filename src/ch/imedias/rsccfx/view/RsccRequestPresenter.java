@@ -39,7 +39,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
   private PopOverHelper popOverHelper;
   private int buttonSize = 0;
 
-
   /**
    * Initializes a new RsccRequestPresenter with the matching view.
    *
@@ -139,7 +138,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
     view.supporterDescriptionLbl.prefWidthProperty().bind(scene.widthProperty().divide(3));
     view.supporterInnerPane.prefWidthProperty().bind(scene.widthProperty().divide(3).multiply(2));
     view.reloadKeyBtn.prefHeightProperty().bind(view.generatedKeyFld.heightProperty());
-
   }
 
   /**
@@ -295,7 +293,5 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     button.setPadding(new Insets(20));
-
   }
-
 }
