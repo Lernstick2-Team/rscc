@@ -1,10 +1,5 @@
 package ch.imedias.rsccfx.model;
 
-import ch.imedias.rsccfx.model.util.KeyUtil;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,6 +8,11 @@ import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import ch.imedias.rsccfx.model.util.KeyUtil;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * Tests the rscc model class.
@@ -49,7 +49,7 @@ public class RsccTest {
   }
 
   /**
-   * Test for Constructor {@link Rscc#Rscc(SystemCommander,KeyUtil)}.
+   * Test for Constructor {@link Rscc#Rscc(SystemCommander, KeyUtil)}.
    */
   @Test
   public void testRsccConstructorIllegalArguments() {
@@ -76,12 +76,12 @@ public class RsccTest {
   }
 
   /**
-   * Test for Constructor {@link Rscc#Rscc(SystemCommander,KeyUtil)}.
+   * Test for Constructor {@link Rscc#Rscc(SystemCommander, KeyUtil)}.
    */
   @Test
   public void testRsccConstructor() {
     try {
-      new Rscc(mockSystemCommander,mockKeyUtil);
+      new Rscc(mockSystemCommander, mockKeyUtil);
     } catch (Exception e) {
       fail(e.getMessage());
     }
@@ -200,15 +200,15 @@ public class RsccTest {
   public void testSetConnectionStatus() {
     int styleIndexToTest = 0;
     String statusText = "test";
-    model.setConnectionStatus(statusText,styleIndexToTest);
+    model.setConnectionStatus(statusText, styleIndexToTest);
     String currentStatus = model.getConnectionStatusStyle();
-    assertEquals(model.getConnectionStatusStyles(styleIndexToTest),currentStatus);
+    assertEquals(model.getConnectionStatusStyles(styleIndexToTest), currentStatus);
     assertEquals(model.getConnectionStatusText(), statusText);
 
     styleIndexToTest = 1;
-    model.setConnectionStatus(statusText,styleIndexToTest);
+    model.setConnectionStatus(statusText, styleIndexToTest);
     currentStatus = model.getConnectionStatusStyle();
-    assertEquals(model.getConnectionStatusStyles(styleIndexToTest),currentStatus);
+    assertEquals(model.getConnectionStatusStyles(styleIndexToTest), currentStatus);
     assertEquals(model.getConnectionStatusText(), statusText);
   }
 
@@ -220,7 +220,7 @@ public class RsccTest {
     try {
       int styleIndexToTest = -1;
       String statusText = "test";
-      model.setConnectionStatus(statusText,styleIndexToTest);
+      model.setConnectionStatus(statusText, styleIndexToTest);
     } catch (IllegalArgumentException e) {
       // expected behavior
     }
@@ -228,7 +228,7 @@ public class RsccTest {
     try {
       int styleIndexToTest = 52;
       String statusText = "test";
-      model.setConnectionStatus(statusText,styleIndexToTest);
+      model.setConnectionStatus(statusText, styleIndexToTest);
     } catch (IllegalArgumentException e) {
       // expected behavior
     }
@@ -236,7 +236,7 @@ public class RsccTest {
     try {
       int styleIndexToTest = 0;
       String statusText = null;
-      model.setConnectionStatus(statusText,styleIndexToTest);
+      model.setConnectionStatus(statusText, styleIndexToTest);
     } catch (IllegalArgumentException e) {
       // expected behavior
     }

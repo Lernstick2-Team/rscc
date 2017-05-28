@@ -176,11 +176,10 @@ public class RsccRequestView extends BorderPane {
     GridPane.setConstraints(disconnectBtn, 0, 2);
     GridPane.setColumnSpan(statusBox, 3);
 
-
     keyGenerationInnerPane.setAlignment(Pos.CENTER);
 
-    keyGenerationInnerPane.getChildren().addAll(generatedKeyFld, disconnectBtn,  reloadKeyBtn, titleLbl,
-        descriptionLbl, statusBox);
+    keyGenerationInnerPane.getChildren().addAll(generatedKeyFld, disconnectBtn,  reloadKeyBtn,
+        titleLbl, descriptionLbl, statusBox);
 
     // initial styling
     keyGenerationInnerPane.getChildren().stream()
