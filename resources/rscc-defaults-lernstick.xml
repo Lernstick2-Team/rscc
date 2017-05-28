@@ -3,42 +3,42 @@
     <supporter>
         <description>imedias</description>
         <address>agora.imedias.ch</address>
-        <port></port>
+        <port>5500</port>
         <encrypted>false</encrypted>
         <chargeable>false</chargeable>
     </supporter>
     <supporter>
         <description>imedias (encrypted)</description>
         <address>agora.imedias.ch</address>
-        <port></port>
+        <port>50000</port>
         <encrypted>true</encrypted>
         <chargeable>false</chargeable>
     </supporter>
     <supporter>
         <description>IFE Informatik AG</description>
         <address>46.14.169.243</address>
-        <port></port>
+        <port>5500</port>
         <encrypted>false</encrypted>
         <chargeable>false</chargeable>
     </supporter>
     <supporter>
         <description>Edelmanns Informatik GmbH</description>
         <address>lernstick.edelmanns.ch</address>
-        <port></port>
+        <port>5500</port>
         <encrypted>false</encrypted>
         <chargeable>false</chargeable>
     </supporter>
     <supporter>
         <description>Ronny Standtke</description>
         <address>standtke.nsupdate.info</address>
-        <port></port>
+        <port>5500</port>
         <encrypted>false</encrypted>
         <chargeable>false</chargeable>
     </supporter>
     <supporter>
         <description>dindan solutions GmbH</description>
         <address>dindan.dyndns.info</address>
-        <port></port>
+        <port>5500</port>
         <encrypted>false</encrypted>
         <chargeable>false</chargeable>
     </supporter>
