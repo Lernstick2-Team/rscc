@@ -20,7 +20,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -64,8 +63,8 @@ public class RsccRequestView extends BorderPane {
   private final KeyUtil keyUtil;
 
   Button reloadKeyBtn = new Button();
+  final Button disconnectBtn = new Button();
 
-  private Pane emptyPane = new Pane();
 
   /**
    * Initializes all the GUI components needed to generate the key the supporter needs.
@@ -85,6 +84,7 @@ public class RsccRequestView extends BorderPane {
 
   private void initFieldData() {
     // populate fields which require initial data
+    disconnectBtn.setText(strings.requestDisconnectBtn);
     titleLbl.setText(strings.requestTitleLbl);
     descriptionLbl.setText(strings.requestDescriptionLbl);
     generatedKeyFld.setText(strings.requestGeneratedKeyFld);
@@ -104,12 +104,15 @@ public class RsccRequestView extends BorderPane {
     keyGenerationTitledPane.setExpanded(true);
     keyGenerationTitledPane.setId("keyGenerationTitledPane");
 
+    descriptionLbl.getStyleClass().add("descriptionLbl");
+    supporterDescriptionLbl.getStyleClass().add("descriptionLbl");
+
     supporterTitledPane.setExpanded(false);
     supporterTitledPane.setId("supporterTitledPane");
 
     titleLbl.getStyleClass().add("titleLbl");
 
-    descriptionLbl.getStyleClass().add("descriptionLbl"); // TODO: Styling
+    descriptionLbl.getStyleClass().add("nameLbl");
 
     supporterDescriptionLbl.getStyleClass().add("supporterDescriptionLbl");
 
@@ -123,9 +126,13 @@ public class RsccRequestView extends BorderPane {
     reloadKeyBtn.setPadding(new Insets(BUTTON_PADDING));
     reloadKeyBtn.setId("reloadKeyBtn");
 
+    disconnectBtn.setId("connectBtn");
+    disconnectBtn.setDisable(true);
+
     contentBox.getChildren().addAll(keyGenerationTitledPane, keyGenerationInnerPane,
         supporterTitledPane);
-    descriptionLbl.getStyleClass().add("descriptionLbl"); // TODO: Styling
+    contentBox.getStyleClass().add("contentBox");
+    descriptionLbl.getStyleClass().add("nameLbl");
 
     VBox.setVgrow(keyGenerationInnerPane, Priority.ALWAYS);
     keyGenerationInnerPane.getStyleClass().add("contentRequest");
@@ -165,13 +172,14 @@ public class RsccRequestView extends BorderPane {
     GridPane.setConstraints(reloadKeyBtn, 1, 1);
     GridPane.setConstraints(titleLbl, 2, 0);
     GridPane.setConstraints(descriptionLbl, 2, 1);
-    GridPane.setConstraints(emptyPane, 0, 2);
     GridPane.setConstraints(statusBox, 0, 3);
-
+    GridPane.setConstraints(disconnectBtn, 0, 2);
     GridPane.setColumnSpan(statusBox, 3);
 
-    keyGenerationInnerPane.getChildren().addAll(generatedKeyFld, reloadKeyBtn, titleLbl,
-        descriptionLbl, statusBox, emptyPane);
+    keyGenerationInnerPane.setAlignment(Pos.CENTER);
+
+    keyGenerationInnerPane.getChildren().addAll(generatedKeyFld, disconnectBtn,  reloadKeyBtn,
+        titleLbl, descriptionLbl, statusBox);
 
     // initial styling
     keyGenerationInnerPane.getChildren().stream()
@@ -186,12 +194,8 @@ public class RsccRequestView extends BorderPane {
 
     // column division
     ColumnConstraints col1 = new ColumnConstraints();
-    col1.setPercentWidth(40);
-    ColumnConstraints col2 = new ColumnConstraints();
-    col2.setPercentWidth(10);
-    ColumnConstraints col3 = new ColumnConstraints();
-    col3.setPercentWidth(50);
-    keyGenerationInnerPane.getColumnConstraints().addAll(col1, col2, col3);
+    col1.setPercentWidth(45);
+    keyGenerationInnerPane.getColumnConstraints().addAll(col1);
 
     // special styling
     GridPane.setVgrow(statusBox, Priority.NEVER);
@@ -200,8 +204,11 @@ public class RsccRequestView extends BorderPane {
     GridPane.setValignment(titleLbl, VPos.BOTTOM);
     GridPane.setHalignment(descriptionLbl, HPos.LEFT);
     GridPane.setValignment(reloadKeyBtn, VPos.CENTER);
+    GridPane.setValignment(disconnectBtn, VPos.TOP);
     GridPane.setMargin(titleLbl, new Insets(0));
+    GridPane.setMargin(generatedKeyFld, new Insets(0, 0, 10, 0));
     GridPane.setMargin(descriptionLbl, new Insets(0));
+    GridPane.setMargin(disconnectBtn, new Insets(0));
     keyGenerationInnerPane.setPadding(new Insets(10 * scalingFactor));
 
   }

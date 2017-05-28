@@ -21,12 +21,13 @@ public class SupporterHelper {
 
   private static final Logger LOGGER =
       Logger.getLogger(SupporterHelper.class.getName());
-  private Rscc model;
-  private static final String SUPPORT_ADDRESSES = "supportAddresses";
+  private static final String SUPPORTER_PREFERENCES = "supporter";
   private final Preferences preferences = Preferences.userNodeForPackage(RsccApp.class);
+  private Rscc model;
 
   /**
    * Initializes a new SupporterHelper object.
+   *
    * @param model Rscc model.
    */
   public SupporterHelper(Rscc model) {
@@ -36,6 +37,7 @@ public class SupporterHelper {
   /**
    * Gets the supporter list from the preferences file.
    * If no preferences are found the default list is generated.
+   * @return list of supporter.
    */
   public List<Supporter> loadSupporters() {
     // load preferences
@@ -50,6 +52,7 @@ public class SupporterHelper {
 
   /**
    * Saves supporters from a list to the preferences file.
+   * @param supporters the list which should be in the xml.
    */
   public void saveSupporters(List<Supporter> supporters) {
     String supportersXml = supportersToXml(supporters);
@@ -58,6 +61,7 @@ public class SupporterHelper {
 
   /**
    * Returns a default list of supporters.
+   * @return list object of default supporters.
    */
   public List<Supporter> getDefaultSupporters() {
     LOGGER.info("Loading default supporter list");
@@ -138,14 +142,14 @@ public class SupporterHelper {
   }
 
   private String getSupportersXmlFromPreferences() {
-    return preferences.get(SUPPORT_ADDRESSES, null);
+    return preferences.get(SUPPORTER_PREFERENCES, null);
   }
 
   private void setSupportersInPreferences(String supportersXmlString) {
     if (supportersXmlString != null) {
-      preferences.put(SUPPORT_ADDRESSES, supportersXmlString);
+      preferences.put(SUPPORTER_PREFERENCES, supportersXmlString);
     } else {
-      preferences.remove(SUPPORT_ADDRESSES);
+      preferences.remove(SUPPORTER_PREFERENCES);
     }
   }
 

@@ -1,19 +1,16 @@
 package ch.imedias.rsccfx.view;
 
-import ch.imedias.rscc.ProcessExecutor;
 import ch.imedias.rsccfx.ControlledPresenter;
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.ViewController;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.util.KeyUtil;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 
@@ -27,19 +24,15 @@ public class RsccSupportPresenter implements ControlledPresenter {
       Logger.getLogger(RsccSupportPresenter.class.getName());
 
   private static final double WIDTH_SUBTRACTION_ENTERKEY = 100d;
-
-  private String validImage =
-      getClass().getClassLoader().getResource("images/valid.svg").toExternalForm();
-  private String invalidImage =
-      getClass().getClassLoader().getResource("images/invalid.svg").toExternalForm();
-
   private final Rscc model;
   private final RsccSupportView view;
   private final HeaderPresenter headerPresenter;
   private final KeyUtil keyUtil;
   private final BooleanProperty serviceRunning = new SimpleBooleanProperty(false);
-  Task startServiceTask;
-  ProcessExecutor offerProcessExecutor = new ProcessExecutor();
+  private String validImage =
+      getClass().getClassLoader().getResource("images/valid.svg").toExternalForm();
+  private String invalidImage =
+      getClass().getClassLoader().getResource("images/invalid.svg").toExternalForm();
   private ViewController viewParent;
   private PopOverHelper popOverHelper;
 
@@ -59,7 +52,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
     initHeader();
     initBindings();
     popOverHelper = new PopOverHelper(model, RsccApp.SUPPORT_VIEW);
-    startServiceTask = createService();
   }
 
   private void initImages() {
@@ -148,9 +140,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
       }
     });
 
-    // initial start of service
-    view.startServiceBtn.setOnAction(event -> new Thread(createService()).start());
-
     // change valid image depending on if the key is valid or not
     keyUtil.keyValidProperty().addListener(
         (observable, oldValue, newValue) -> {
@@ -165,36 +154,48 @@ public class RsccSupportPresenter implements ControlledPresenter {
     );
 
     // when the service is running, disable all interactions
-    view.keyInputTitledPane.disableProperty().bind(serviceRunningProperty());
-    view.startServiceTitledPane.disableProperty().bind(serviceRunningProperty());
-    view.headerView.backBtn.disableProperty().bind(serviceRunningProperty());
-    view.headerView.settingsBtn.disableProperty().bind(serviceRunningProperty());
-    view.headerView.helpBtn.disableProperty().bind(serviceRunningProperty());
+    view.headerView.settingsBtn.disableProperty().bind(model.vncViewerProcessRunningProperty());
+    view.headerView.backBtn.disableProperty().bind(model.vncViewerProcessRunningProperty());
 
-    // react if the service is running or is being stopped
-    serviceRunningProperty().addListener((observable, oldValue, newValue) -> {
-          if (oldValue != newValue) {
-            if (newValue) {
-              // change layout to running state
-              view.startServiceBtn.setOnAction(event2 -> startServiceTask.cancel());
-              view.startServiceBtn.setText(view.strings.stopService);
-              model.setConnectionStatus(view.strings.statusBoxServiceStarted, 2);
-            } else {
-              endService();
-              // prepare to offer again
-              startServiceTask = createService();
-              view.startServiceBtn.setOnAction(event2 -> new Thread(startServiceTask).start());
-              view.startServiceBtn.setText(view.strings.startService);
-              model.setConnectionStatus(view.strings.statusBoxServiceStopped, 3);
-            }
+    view.startServiceBtn.disableProperty().bind(model.connectionEstablishmentRunningProperty());
+
+    view.startServiceBtn.setOnAction(event -> {
+      if (model.isVncViewerProcessRunning()) {
+        view.startServiceBtn.setText(view.strings.startService);
+        model.stopVncViewerAsService();
+      } else {
+        model.startVncViewerAsService();
+        view.startServiceBtn.setText(view.strings.stopService);
+      }
+    });
+
+    model.vncSessionRunningProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue) {
+        model.setConnectionStatus("Connection established", 2);
+      } else {
+        model.setConnectionStatus("Waiting for incomming connections", 1);
+      }
+
+    });
+
+    model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
+          if (oldValue && !newValue
+              && RsccApp.SUPPORT_VIEW.equals(viewParent.getCurrentViewName())) {
+            model.killConnection();
+            view.keyFld.clear();
           }
         }
     );
+
   }
 
   private void initBindings() {
     // disable connect button if key is NOT valid
-    view.connectBtn.disableProperty().bind(keyUtil.keyValidProperty().not());
+    view.connectBtn.disableProperty().bind(
+        Bindings.or(
+            model.connectionEstablishmentRunningProperty(),
+            keyUtil.keyValidProperty().not())
+    );
   }
 
   /**
@@ -207,51 +208,5 @@ public class RsccSupportPresenter implements ControlledPresenter {
         popOverHelper.helpPopOver.show(view.headerView.helpBtn));
     headerPresenter.setSettingsBtnAction(event ->
         popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
-    // TODO: Set actions on buttons (Help, Settings)
-  }
-
-  private Task createService() {
-    Task task = new Task<Void>() {
-      @Override
-      public Void call() {
-        Number compression = model.getVncCompression();
-        Number quality = model.getVncQuality();
-        List<String> commandList = new ArrayList<>();
-        commandList.add("xtightvncviewer");
-        commandList.add("-listen");
-        commandList.add("-compresslevel");
-        commandList.add(compression.toString());
-        commandList.add("-quality");
-        commandList.add(quality.toString());
-        if (model.getVncBgr233()) {
-          commandList.add("-bgr233");
-        }
-        offerProcessExecutor.executeProcess(commandList.toArray(
-            new String[commandList.size()]));
-        return null;
-      }
-    };
-    task.setOnRunning(event -> setServiceRunning(true));
-    task.setOnCancelled(event -> setServiceRunning(false));
-    return task;
-  }
-
-  private void endService() {
-    // end the offering process
-    offerProcessExecutor.destroy();
-    ProcessExecutor processExecutor = new ProcessExecutor();
-    processExecutor.executeProcess("killall", "-9", "stunnel4");
-  }
-
-  public boolean isServiceRunning() {
-    return serviceRunning.get();
-  }
-
-  public void setServiceRunning(boolean serviceRunning) {
-    this.serviceRunning.set(serviceRunning);
-  }
-
-  public BooleanProperty serviceRunningProperty() {
-    return serviceRunning;
   }
 }

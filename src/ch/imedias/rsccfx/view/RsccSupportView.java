@@ -18,7 +18,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -35,10 +34,12 @@ public class RsccSupportView extends BorderPane {
   final Label titleLbl = new Label();
   final Label descriptionLbl = new Label();
   final Label statusLbl = new Label();
+  final Label keyInputStatusLbl = new Label();
   final Label startServiceDescriptionLbl = new Label();
   final Label startServiceTitleLbl = new Label();
 
   final HBox statusBox = new HBox();
+  final HBox keyInputStatusBox = new HBox();
 
   final KeyTextField keyFld = new KeyTextField();
 
@@ -52,11 +53,9 @@ public class RsccSupportView extends BorderPane {
 
   final Button connectBtn = new Button();
   final Button startServiceBtn = new Button();
-
-  private final Rscc model;
   final Strings strings = new Strings();
-
-  private final WebView validationImgView = new WebView();
+  final Rscc model;
+  final WebView validationImgView = new WebView();
   final WebEngine validationImg = validationImgView.getEngine();
 
   private Pane emptyPane = new Pane();
@@ -86,9 +85,8 @@ public class RsccSupportView extends BorderPane {
     startServiceDescriptionLbl.textProperty().set(strings.startServiceDescpriptionLbl);
     startServiceTitleLbl.textProperty().set(strings.startService);
 
-    // TODO: Tech Group - switch waiting and ready Label
-    //statusLbl.setText(strings.supportStatusLblReady);
-    statusLbl.setText(strings.supportStatusLblWaiting);
+    statusLbl.textProperty().set(strings.supportStatusLblWaiting);
+    keyInputStatusLbl.textProperty().set(strings.requestStatusLblWaiting);
 
     keyInputTitledPane.setText(strings.supportKeyInputPane);
     startServiceTitledPane.setText(strings.supportAdressBookPane);
@@ -98,16 +96,22 @@ public class RsccSupportView extends BorderPane {
     keyInputTitledPane.setExpanded(true);
     keyInputTitledPane.setId("keyInputTitledPane");
 
+    descriptionLbl.getStyleClass().add("descriptionLbl");
+    startServiceDescriptionLbl.getStyleClass().add("descriptionLbl");
+
     startServiceTitledPane.setExpanded(false);
     startServiceTitledPane.setId("startServiceTitledPane");
 
     titleLbl.getStyleClass().add("titleLbl");
 
-    descriptionLbl.getStyleClass().add("descriptionLbl");
+    descriptionLbl.getStyleClass().add("nameLbl");
 
     statusLbl.getStyleClass().add("statusLbl");
+    keyInputStatusLbl.getStyleClass().add("statusLbl");
     statusBox.getChildren().add(statusLbl);
     statusBox.getStyleClass().add("statusBox");
+    keyInputStatusBox.getChildren().add(keyInputStatusLbl);
+    keyInputStatusBox.getStyleClass().add("statusBox");
 
     keyFld.getStyleClass().add("keyFld");
 
@@ -116,7 +120,7 @@ public class RsccSupportView extends BorderPane {
 
     startServiceBtn.setId("startServiceBtn");
     startServiceTitleLbl.getStyleClass().add("titleLbl");
-    startServiceDescriptionLbl.getStyleClass().add("descriptionLbl");
+    startServiceDescriptionLbl.getStyleClass().add("nameLbl");
 
     contentBox.getChildren().addAll(keyInputTitledPane, keyInputInnerPane, startServiceTitledPane);
     VBox.setVgrow(keyInputInnerPane, Priority.ALWAYS);
@@ -130,18 +134,18 @@ public class RsccSupportView extends BorderPane {
     setCenter(contentBox);
   }
 
+  // TODO: Make layoutKeyInputPane same as Request View @martinfrancois @JenniferMue
   private void layoutKeyInputPane() {
     GridPane.setConstraints(keyFld, 0, 1);
     GridPane.setConstraints(validationImgView, 1, 1);
     GridPane.setConstraints(connectBtn, 0, 2);
     GridPane.setConstraints(titleLbl, 2, 0);
     GridPane.setConstraints(descriptionLbl, 2, 1);
-    GridPane.setConstraints(statusBox, 0, 3);
-
-    GridPane.setColumnSpan(statusBox, 3);
+    GridPane.setConstraints(keyInputStatusBox, 0, 3);
+    GridPane.setColumnSpan(keyInputStatusBox, 3);
 
     keyInputInnerPane.getChildren().addAll(keyFld, validationImgView, connectBtn, titleLbl,
-        descriptionLbl, statusBox);
+        descriptionLbl, keyInputStatusBox);
     keyInputInnerPane.setAlignment(Pos.CENTER);
     keyInputInnerPane.getChildren().stream().forEach(node -> {
       GridPane.setVgrow(node, Priority.ALWAYS);
@@ -153,11 +157,12 @@ public class RsccSupportView extends BorderPane {
 
     // column division
     ColumnConstraints col1 = new ColumnConstraints();
-    col1.setPercentWidth(40);
+    col1.setPercentWidth(45);
     ColumnConstraints col2 = new ColumnConstraints();
     col2.setPercentWidth(5);
     ColumnConstraints col3 = new ColumnConstraints();
     col3.setPercentWidth(50);
+
     keyInputInnerPane.getColumnConstraints().addAll(col1, col2, col3);
 
     // special styling
@@ -197,7 +202,9 @@ public class RsccSupportView extends BorderPane {
           GridPane.setValignment(node, VPos.CENTER);
           GridPane.setHalignment(node, HPos.CENTER);
           GridPane.setMargin(node, new Insets(10));
-          startServiceInnerPane.setAlignment(Pos.CENTER);
+      startServiceInnerPane.setAlignment(Pos.CENTER);
+      GridPane.setVgrow(keyInputStatusBox, Priority.NEVER);
+      GridPane.setValignment(keyInputStatusBox, VPos.BOTTOM);
         }
     );
 
@@ -207,16 +214,6 @@ public class RsccSupportView extends BorderPane {
     ColumnConstraints col2 = new ColumnConstraints();
     col2.setPercentWidth(50);
     startServiceInnerPane.getColumnConstraints().addAll(col1, col2);
-
-    RowConstraints row1 = new RowConstraints();
-    row1.setPercentHeight(25);
-    RowConstraints row2 = new RowConstraints();
-    row2.setPercentHeight(30);
-    RowConstraints row3 = new RowConstraints();
-    row3.setPercentHeight(35);
-    RowConstraints row4 = new RowConstraints();
-    row3.setPercentHeight(10);
-    startServiceInnerPane.getRowConstraints().addAll(row1, row2, row3, row4);
 
     // special styling
     GridPane.setHalignment(startServiceTitleLbl, HPos.LEFT);
@@ -228,11 +225,10 @@ public class RsccSupportView extends BorderPane {
     GridPane.setValignment(statusBox, VPos.BOTTOM);
 
     GridPane.setMargin(titleLbl, new Insets(0));
-
   }
 
   private void bindFieldsToModel() {
-    // make bindings to the model
+    startServiceBtn.setOnAction(e -> model.startViewerReverse());
 
   }
 
