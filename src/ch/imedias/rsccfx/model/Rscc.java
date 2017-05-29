@@ -281,6 +281,7 @@ public class Rscc {
     rscccfp = new Rscccfp(this, true);
     rscccfp.setDaemon(true);
     rscccfp.start();
+    setConnectionStatus("Key successful generated", 2);
 
     try {
       rscccfp.join();
@@ -311,6 +312,7 @@ public class Rscc {
           LOGGER.info("RSCC: Starting rudp");
 
           rudp.start();
+          setConnectionStatus("Key successful generated", 2);
         }
 
         setConnectionStatus("VNC-Server waits for incoming connection", 2);
@@ -367,6 +369,8 @@ public class Rscc {
     rscccfp = new Rscccfp(this, false);
     rscccfp.setDaemon(true);
     rscccfp.start();
+    setConnectionStatus("connected to User", 2);
+
 
     try {
       rscccfp.join();
@@ -388,6 +392,7 @@ public class Rscc {
       setConnectionStatus("Starting direct VNC connection.", 1);
 
       rudp.start();
+      setConnectionStatus("connected to User", 2);
 
     }
 

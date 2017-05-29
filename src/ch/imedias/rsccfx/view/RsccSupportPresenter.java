@@ -126,10 +126,14 @@ public class RsccSupportPresenter implements ControlledPresenter {
     model.connectionStatusStyleProperty().addListener((observable, oldValue, newValue) -> {
       view.statusBox.getStyleClass().clear();
       view.statusBox.getStyleClass().add(newValue);
+      view.keyInputStatusBox.getStyleClass().clear();
+      view.keyInputStatusBox.getStyleClass().add(newValue);
     });
+
     model.connectionStatusTextProperty().addListener((observable, oldValue, newValue) -> {
       Platform.runLater(() -> {
         view.statusLbl.textProperty().set(newValue);
+        view.keyInputStatusLbl.textProperty().set(newValue);
       });
     });
 
@@ -167,15 +171,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
         model.startVncViewerAsService();
         view.startServiceBtn.setText(view.strings.stopService);
       }
-    });
-
-    model.vncSessionRunningProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue) {
-        model.setConnectionStatus("Connection established", 2);
-      } else {
-        model.setConnectionStatus("Waiting for incomming connections", 1);
-      }
-
     });
 
     model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
