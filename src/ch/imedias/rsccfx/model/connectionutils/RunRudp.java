@@ -322,16 +322,77 @@ public class RunRudp extends Thread {
   }
 
   private void setupClosables() {
-    for (Field field : this.getClass().getDeclaredFields()) {
-      Object fieldObject = null;
+
+    if (tcpInputStream != null) {
+      LOGGER.info("tcpInputStream is not null - close");
       try {
-        fieldObject = field.get(this);
-      } catch (IllegalAccessException e) {
-        LOGGER.warning(e.getMessage());
+        tcpInputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
       }
-      if (fieldObject != null && fieldObject instanceof Closeable) {
-        LOGGER.info("Add to Closeables: " + fieldObject + "; Name: " + field.getName());
-        closables.put(field.getName(), (Closeable) fieldObject);
+    }
+    if (rudpInputStream != null) {
+      LOGGER.info("rudpInputStream is not null - close");
+      try {
+        rudpInputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (tcpOutputStream != null) {
+      LOGGER.info("tcpOutputStream is not null - close");
+      try {
+        tcpOutputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (rudpOutputStream != null) {
+      LOGGER.info("rudpOutputStream is not null - close");
+      try {
+        rudpOutputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (rudpSocket != null && !rudpSocket.isClosed()) {
+      LOGGER.info("rudpSocket is not null - close");
+      try {
+        rudpSocket.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (rudpSocket2 != null && !rudpSocket2.isClosed()) {
+      LOGGER.info("rudpSocket2 is not null - close");
+      try {
+        rudpSocket2.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (rudpServerSocket != null && !rudpServerSocket.isClosed()) {
+      LOGGER.info("rudpServerSocket is not null - close");
+      try {
+        rudpServerSocket.close();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    if (tcpServerSocket != null && !tcpServerSocket.isClosed()) {
+      LOGGER.info("tcpServerSocket is not null - close");
+      try {
+        tcpServerSocket.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (tcpSocket != null && !tcpSocket.isClosed()) {
+      LOGGER.info("tcpSocket is not null - close");
+      try {
+        tcpSocket.close();
+      } catch (IOException e) {
+        e.printStackTrace();
       }
     }
   }
