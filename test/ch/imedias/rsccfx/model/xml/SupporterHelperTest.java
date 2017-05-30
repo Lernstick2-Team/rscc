@@ -15,11 +15,13 @@ import org.junit.Test;
  */
 public class SupporterHelperTest {
 
+  public static final int DEFAULT_SUPPORTER_SIZE = 7;
   SupporterHelper supporterHelper;
   Rscc mockModel;
   String supportersXml;
   Supporter supporter1;
   Supporter supporter2;
+  Supporter supporterLast;
   List<Supporter> expectedSupporters;
 
   /**
@@ -61,6 +63,7 @@ public class SupporterHelperTest {
     expectedSupporters = new ArrayList<>();
     expectedSupporters.add(supporter1);
     expectedSupporters.add(supporter2);
+    supporterLast = new Supporter();
   }
 
   /**
@@ -94,6 +97,11 @@ public class SupporterHelperTest {
    */
   @Test
   public void testGetDefaultSupporters() throws Exception {
+    List<Supporter> actualSupporters = supporterHelper.getDefaultSupporters();
+    assertEquals(DEFAULT_SUPPORTER_SIZE, actualSupporters.size());
+    assertEquals(supporter1, actualSupporters.get(0));
+    assertEquals(supporter2, actualSupporters.get(1));
+    assertEquals(supporterLast, actualSupporters.get(DEFAULT_SUPPORTER_SIZE - 1));
   }
 
 }
