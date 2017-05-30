@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import ch.imedias.rsccfx.model.Rscc;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,7 @@ public class SupporterHelperTest {
   String supportersXml;
   Supporter supporter1;
   Supporter supporter2;
+  List<Supporter> expectedSupporters;
 
   /**
    * Initializes test fixture before each test.
@@ -54,6 +56,9 @@ public class SupporterHelperTest {
 
     supporter1 = new Supporter("imedias", "agora.imedias.ch", "5500", false, false);
     supporter2 = new Supporter("imedias (encrypted)", "agora.imedias.ch", "50000", true, false);
+    expectedSupporters = new ArrayList<>();
+    expectedSupporters.add(supporter1);
+    expectedSupporters.add(supporter2);
   }
 
   /**
@@ -72,10 +77,16 @@ public class SupporterHelperTest {
     assertEquals(supporter2, actualSupporters.get(1));
   }
 
+  /**
+   * Test for {@link SupporterHelper#saveSupporters(List)}.
+   */
   @Test
   public void testSaveSupporters() throws Exception {
   }
 
+  /**
+   * Test for {@link SupporterHelper#getDefaultSupporters()}.
+   */
   @Test
   public void testGetDefaultSupporters() throws Exception {
   }
