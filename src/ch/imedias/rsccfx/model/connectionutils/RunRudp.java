@@ -76,8 +76,11 @@ public class RunRudp extends Thread {
         //Could be an issue in a p2p session behind NAT, works locally.
         //    rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
         // model.getRemoteClientPort(), null, model.getIcePort());
+       // rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
+         //   model.getRemoteClientPort());
+
         rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
-            model.getRemoteClientPort());
+            model.getRemoteClientPort(), null, model.getIcePort());
 
         rudpInputStream = rudpSocket.getInputStream();
         rudpOutputStream = rudpSocket.getOutputStream();
@@ -184,8 +187,10 @@ public class RunRudp extends Thread {
         //model.getRemoteClientPort(), null, model.getIcePort()); alternative for starting Ice
         //on a fixed port (Could be an issue on p2p connection over NAT)
 
+       // rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
+         //   model.getRemoteClientPort());
         rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
-            model.getRemoteClientPort());
+            model.getRemoteClientPort(), null, model.getIcePort());
 
         rudpInputStream = rudpSocket.getInputStream();
         rudpOutputStream = rudpSocket.getOutputStream();
