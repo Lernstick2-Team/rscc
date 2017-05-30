@@ -38,20 +38,20 @@ public class SupporterHelperTest {
     supportersXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
         "<supporters>\n" +
         "    <supporter>\n" +
-        "        <description>imedias</description>\n" +
         "        <address>agora.imedias.ch</address>\n" +
-        "        <port>5500</port>\n" +
-        "        <encrypted>false</encrypted>\n" +
         "        <chargeable>false</chargeable>\n" +
+        "        <description>imedias</description>\n" +
+        "        <encrypted>false</encrypted>\n" +
+        "        <port>5500</port>\n" +
         "    </supporter>\n" +
         "    <supporter>\n" +
-        "        <description>imedias (encrypted)</description>\n" +
         "        <address>agora.imedias.ch</address>\n" +
-        "        <port>50000</port>\n" +
-        "        <encrypted>true</encrypted>\n" +
         "        <chargeable>false</chargeable>\n" +
+        "        <description>imedias (encrypted)</description>\n" +
+        "        <encrypted>true</encrypted>\n" +
+        "        <port>50000</port>\n" +
         "    </supporter>\n" +
-        "</supporters>";
+        "</supporters>\n";
 
 
     supporter1 = new Supporter("imedias", "agora.imedias.ch", "5500", false, false);
@@ -82,6 +82,9 @@ public class SupporterHelperTest {
    */
   @Test
   public void testSaveSupporters() throws Exception {
+    supporterHelper.setSupportersInPreferences(null);
+    supporterHelper.saveSupporters(expectedSupporters);
+    assertEquals(supportersXml, supporterHelper.getSupportersXmlFromPreferences());
   }
 
   /**
