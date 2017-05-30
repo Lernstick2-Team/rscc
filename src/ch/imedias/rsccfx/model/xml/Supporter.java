@@ -177,11 +177,11 @@ public class Supporter implements Serializable {
       return false;
     }
     Supporter supporter = (Supporter) o;
-    return encrypted == supporter.encrypted &&
-        chargeable == supporter.chargeable &&
-        Objects.equals(description, supporter.description) &&
-        Objects.equals(address, supporter.address) &&
-        Objects.equals(port, supporter.port);
+    return encrypted == supporter.encrypted
+        && chargeable == supporter.chargeable
+        && Objects.equals(description, supporter.description)
+        && Objects.equals(address, supporter.address)
+        && Objects.equals(port, supporter.port);
   }
 
   /**

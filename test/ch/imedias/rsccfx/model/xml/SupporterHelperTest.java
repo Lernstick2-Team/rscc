@@ -54,8 +54,10 @@ public class SupporterHelperTest {
         "</supporters>\n";
 
 
-    supporter1 = new Supporter("imedias", "agora.imedias.ch", "5500", false, false);
-    supporter2 = new Supporter("imedias (encrypted)", "agora.imedias.ch", "50000", true, false);
+    supporter1 = new Supporter("imedias", "agora.imedias.ch", "5500",
+        false, false);
+    supporter2 = new Supporter("imedias (encrypted)", "agora.imedias.ch", "50000",
+        true, false);
     expectedSupporters = new ArrayList<>();
     expectedSupporters.add(supporter1);
     expectedSupporters.add(supporter2);
