@@ -1,9 +1,11 @@
 package ch.imedias.rsccfx.model.xml;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import ch.imedias.rsccfx.model.Rscc;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,12 +17,14 @@ public class SupporterHelperTest {
   SupporterHelper supporterHelper;
   Rscc mockModel;
   String supportersXml;
+  Supporter supporter1;
+  Supporter supporter2;
 
   /**
    * Initializes test fixture before each test.
    */
   @Before
-  public void setUp(){
+  public void setUp() {
     mockModel = mock(Rscc.class);
     supporterHelper = new SupporterHelper(mockModel);
 
@@ -28,7 +32,28 @@ public class SupporterHelperTest {
         getClass().getClassLoader().getResource(Rscc.DEFAULT_SUPPORTERS_FILE_NAME).getFile()
     );
     when(mockModel.getPathToDefaultSupporters()).thenReturn(pathToDefaultSupporters);
-   // supportersXml = ""
+
+    supportersXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+        "<supporters>\n" +
+        "    <supporter>\n" +
+        "        <description>imedias</description>\n" +
+        "        <address>agora.imedias.ch</address>\n" +
+        "        <port>5500</port>\n" +
+        "        <encrypted>false</encrypted>\n" +
+        "        <chargeable>false</chargeable>\n" +
+        "    </supporter>\n" +
+        "    <supporter>\n" +
+        "        <description>imedias (encrypted)</description>\n" +
+        "        <address>agora.imedias.ch</address>\n" +
+        "        <port>50000</port>\n" +
+        "        <encrypted>true</encrypted>\n" +
+        "        <chargeable>false</chargeable>\n" +
+        "    </supporter>\n" +
+        "</supporters>";
+
+
+    supporter1 = new Supporter("imedias", "agora.imedias.ch", "5500", false, false);
+    supporter2 = new Supporter("imedias (encrypted)", "agora.imedias.ch", "50000", true, false);
   }
 
   /**
@@ -36,7 +61,15 @@ public class SupporterHelperTest {
    */
   @Test
   public void testLoadSupporters() throws Exception {
-
+    // test if preferences are null
+    supporterHelper.setSupportersInPreferences(null);
+    testGetDefaultSupporters();
+    // testif preferenes are not null
+    supporterHelper.setSupportersInPreferences(supportersXml);
+    List<Supporter> actualSupporters = supporterHelper.loadSupporters();
+    assertEquals(2, actualSupporters.size());
+    assertEquals(supporter1, actualSupporters.get(0));
+    assertEquals(supporter2, actualSupporters.get(1));
   }
 
   @Test

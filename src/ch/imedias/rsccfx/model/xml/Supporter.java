@@ -1,6 +1,7 @@
 package ch.imedias.rsccfx.model.xml;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -160,5 +161,35 @@ public class Supporter implements Serializable {
       string = description;
     }
     return string;
+  }
+
+  /**
+   * Tests for equality on a Supporter object.
+   * @param o the other object
+   * @return true if both objects are equal by their parameters
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Supporter supporter = (Supporter) o;
+    return encrypted == supporter.encrypted &&
+        chargeable == supporter.chargeable &&
+        Objects.equals(description, supporter.description) &&
+        Objects.equals(address, supporter.address) &&
+        Objects.equals(port, supporter.port);
+  }
+
+  /**
+   * Calculates the hashcode of this object.
+   * @return the hashcode of this object
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(description, address, port, encrypted, chargeable);
   }
 }
