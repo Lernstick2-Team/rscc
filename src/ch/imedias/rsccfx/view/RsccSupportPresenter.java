@@ -55,7 +55,8 @@ public class RsccSupportPresenter implements ControlledPresenter {
   }
 
   private void initImages() {
-    view.validationImg.load(invalidImage);
+    String validationImage = keyUtil.isKeyValid() ? validImage : invalidImage;
+    Platform.runLater(() -> view.validationImg.load(validationImage));
   }
 
   /**
