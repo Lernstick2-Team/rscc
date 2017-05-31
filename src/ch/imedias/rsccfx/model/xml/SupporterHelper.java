@@ -139,16 +139,16 @@ public class SupporterHelper {
   }
 
   /**
-   * TODO
-   * @return
+   * Gets the supporters from the saved preferences.
+   * @return saved preferences
    */
   public String getSupportersXmlFromPreferences() {
     return preferences.get(SUPPORTER_PREFERENCES, null);
   }
 
   /**
-   * TODO
-   * @param supportersXmlString
+   * saves the preferences.
+   * @param supportersXmlString supporters which need to be saved
    */
   public void setSupportersInPreferences(String supportersXmlString) {
     if (supportersXmlString != null) {

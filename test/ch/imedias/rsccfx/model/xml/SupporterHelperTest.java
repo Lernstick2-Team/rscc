@@ -37,23 +37,23 @@ public class SupporterHelperTest {
     );
     when(mockModel.getPathToDefaultSupporters()).thenReturn(pathToDefaultSupporters);
 
-    supportersXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-        "<supporters>\n" +
-        "    <supporter>\n" +
-        "        <address>agora.imedias.ch</address>\n" +
-        "        <chargeable>false</chargeable>\n" +
-        "        <description>imedias</description>\n" +
-        "        <encrypted>false</encrypted>\n" +
-        "        <port>5500</port>\n" +
-        "    </supporter>\n" +
-        "    <supporter>\n" +
-        "        <address>agora.imedias.ch</address>\n" +
-        "        <chargeable>false</chargeable>\n" +
-        "        <description>imedias (encrypted)</description>\n" +
-        "        <encrypted>true</encrypted>\n" +
-        "        <port>50000</port>\n" +
-        "    </supporter>\n" +
-        "</supporters>\n";
+    supportersXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+        + "<supporters>\n"
+        + "    <supporter>\n"
+        + "        <address>agora.imedias.ch</address>\n"
+        + "        <chargeable>false</chargeable>\n"
+        + "        <description>imedias</description>\n"
+        + "        <encrypted>false</encrypted>\n"
+        + "        <port>5500</port>\n"
+        + "    </supporter>\n"
+        + "    <supporter>\n"
+        + "        <address>agora.imedias.ch</address>\n"
+        + "        <chargeable>false</chargeable>\n"
+        + "        <description>imedias (encrypted)</description>\n"
+        + "        <encrypted>true</encrypted>\n"
+        + "        <port>50000</port>\n"
+        + "    </supporter>\n"
+        + "</supporters>\n";
 
 
     supporter1 = new Supporter("imedias", "agora.imedias.ch", "5500",
