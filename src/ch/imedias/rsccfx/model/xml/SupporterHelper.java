@@ -147,7 +147,7 @@ public class SupporterHelper {
   }
 
   /**
-   * saves the preferences.
+   * Saves the preferences.
    * @param supportersXmlString supporters which need to be saved
    */
   public void setSupportersInPreferences(String supportersXmlString) {
