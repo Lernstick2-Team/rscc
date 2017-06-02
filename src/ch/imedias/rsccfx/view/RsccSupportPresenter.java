@@ -55,7 +55,8 @@ public class RsccSupportPresenter implements ControlledPresenter {
   }
 
   private void initImages() {
-    view.validationImg.load(invalidImage);
+    String validationImage = keyUtil.isKeyValid() ? validImage : invalidImage;
+    Platform.runLater(() -> view.validationImg.load(validationImage));
   }
 
   /**
@@ -80,9 +81,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
 
   }
 
-  /**
-   * Updates the validation image after every key pressed.
-   */
   private void attachEvents() {
     view.connectBtn.setOnAction(event -> model.connectToUser());
 
