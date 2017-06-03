@@ -1,52 +1,71 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<supporters>
-    <supporter>
-        <description>imedias</description>
-        <address>agora.imedias.ch</address>
-        <port>5500</port>
-        <encrypted>false</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-    <supporter>
-        <description>imedias (encrypted)</description>
-        <address>agora.imedias.ch</address>
-        <port>50000</port>
-        <encrypted>true</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-    <supporter>
-        <description>IFE Informatik AG</description>
-        <address>46.14.169.243</address>
-        <port>5500</port>
-        <encrypted>false</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-    <supporter>
-        <description>Edelmanns Informatik GmbH</description>
-        <address>lernstick.edelmanns.ch</address>
-        <port>5500</port>
-        <encrypted>false</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-    <supporter>
-        <description>Ronny Standtke</description>
-        <address>standtke.nsupdate.info</address>
-        <port>5500</port>
-        <encrypted>false</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-    <supporter>
-        <description>dindan solutions GmbH</description>
-        <address>dindan.dyndns.info</address>
-        <port>5500</port>
-        <encrypted>false</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-    <supporter>
-        <description></description>
-        <address></address>
-        <port></port>
-        <encrypted>false</encrypted>
-        <chargeable>false</chargeable>
-    </supporter>
-</supporters>
+<settings>
+    <supporters>
+        <supporter>
+            <description>imedias</description>
+            <address>agora.imedias.ch</address>
+            <port>5500</port>
+            <encrypted>false</encrypted>
+            <chargeable>false</chargeable>
+        </supporter>
+        <supporter>
+            <description>imedias (encrypted)</description>
+            <address>agora.imedias.ch</address>
+            <port>50000</port>
+            <encrypted>true</encrypted>
+            <chargeable>false</chargeable>
+        </supporter>
+        <supporter>
+            <description>IFE Informatik AG</description>
+            <address>46.14.169.243</address>
+            <port>5500</port>
+            <encrypted>false</encrypted>
+            <chargeable>false</chargeable>
+        </supporter>
+        <supporter>
+            <description>Edelmanns Informatik GmbH</description>
+            <address>lernstick.edelmanns.ch</address>
+            <port>5500</port>
+            <encrypted>false</encrypted>
+            <chargeable>false</chargeable>
+        </supporter>
+        <supporter>
+            <description>Ronny Standtke</description>
+            <address>standtke.nsupdate.info</address>
+            <port>5500</port>
+            <encrypted>false</encrypted>
+            <chargeable>false</chargeable>
+        </supporter>
+        <supporter>
+            <description>dindan solutions GmbH</description>
+            <address>dindan.dyndns.info</address>
+            <port>5500</port>
+            <encrypted>false</encrypted>
+            <chargeable>false</chargeable>
+        </supporter>
+        <supporter>
+            <description></description>
+            <address></address>
+            <port></port>
+            <encrypted>false</encrypted>
+            <chargeable>false</chargeable>
+        </supporter>
+    </supporters>
+
+   <!-- <expertsettings>
+        <keyserver>86.119.39.89</keyserver>
+        <forceServer>false</forceServer>
+        <keyserverhttpport>800</keyserverhttpport>
+        <vncport>5900</vncport>
+        <iceport>5050</iceport>
+        <udppacksize>10000</udppacksize>
+        <proxyport>2601</proxyport>
+        <stunserverport>3478</stunserverport>
+        <stunservers>
+            <server>numb.viagenie.ca</server>
+            <server>stun.ekiga.net</server>
+            <server>stun.gmx.net</server>
+            <server>stun.1und1.de</server>
+        </stunservers>
+    </expertsettings>-->
+</settings>

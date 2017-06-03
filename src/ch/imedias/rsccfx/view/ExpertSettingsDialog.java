@@ -3,6 +3,7 @@ package ch.imedias.rsccfx.view;
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
+import java.util.Optional;
 import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;
@@ -11,8 +12,8 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
-import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.ToggleSwitch;
 
 /**
@@ -42,11 +43,10 @@ public class ExpertSettingsDialog extends DialogPane {
   final TextField udpPackageSizeFld = new TextField();
   final TextField proxyPortFld = new TextField();
   final TextField stunServerPortFld = new TextField();
-
+  final ButtonType defaults = new ButtonType("Defaults");
   final ListView stunServersList = new ListView();
 
   final Dialog dialog = new Dialog();
-
   final GridPane settingsPane = new GridPane();
 
   private final Strings strings = new Strings();
@@ -55,6 +55,7 @@ public class ExpertSettingsDialog extends DialogPane {
 
   /**
    * Initializes all the GUI components needed in the DialogPane.
+   *
    * @param model The model is needed in the constructor.
    */
   public ExpertSettingsDialog(Rscc model) {
@@ -62,9 +63,21 @@ public class ExpertSettingsDialog extends DialogPane {
     this.getStylesheets().add(RsccApp.styleSheet);
     initFieldData();
     layoutForm();
-    bindFieldsToModel();
-    dialog.show();
+
+    Optional<ButtonType> result = dialog.showAndWait();
+    if (result.isPresent()) {
+      if (result.get() == ButtonType.APPLY) {
+        save();
+      }
+      if (result.get() == defaults) {
+        model.defaultExpertSettings();
+
+      }
+    }
+
+
   }
+
 
   private void initFieldData() {
     // populate fields which require initial data
@@ -77,6 +90,21 @@ public class ExpertSettingsDialog extends DialogPane {
     proxyPortLbl.textProperty().set(strings.expertProxyPortLbl);
     stunServersLbl.textProperty().set(strings.expertStunserverLbl);
     stunServerPortLbl.textProperty().set(strings.expertStunServerPortLbl);
+
+    forceConnectOverServerTgl.selectedProperty().setValue(model.isForcingServerMode());
+    keyServerIpFld.textProperty().setValue(model.getKeyServerIp());
+    keyServerHttpPortFld.textProperty().setValue(model.getKeyServerHttpPort());
+    vncPortFld.textProperty().setValue(Integer.toString(model.getVncPort()));
+    icePortFld.textProperty().setValue(Integer.toString(model.getIcePort()));
+    udpPackageSizeFld.textProperty().setValue(Integer.toString(model.getUdpPackageSize()));
+    proxyPortFld.textProperty().setValue(Integer.toString(model.getProxyPort()));
+    stunServerPortFld.textProperty().setValue(Integer.toString(model.getStunServerPort()));
+    for (String server : model.getStunServers()) {
+      stunServersList.getItems().add(server);
+    }
+    stunServersList.setEditable(true);
+    stunServersList.setCellFactory(TextFieldListCell.forListView());
+
   }
 
   private void layoutForm() {
@@ -112,33 +140,30 @@ public class ExpertSettingsDialog extends DialogPane {
     settingsPane.add(stunServersLbl, 0, 9);
     settingsPane.add(stunServersList, 1, 9);
 
-    this.getButtonTypes().add(ButtonType.APPLY);
-    this.getButtonTypes().add(ButtonType.CLOSE);
-    this.getButtonTypes().add(ButtonType.PREVIOUS);
 
+    this.getButtonTypes().add(ButtonType.APPLY);
+    this.getButtonTypes().add(ButtonType.CANCEL);
+    this.getButtonTypes().add(defaults);
 
     this.setContent(settingsPane);
     dialog.setDialogPane(this);
   }
 
-  private void bindFieldsToModel() {
-    // make bindings to the model
-    forceConnectOverServerTgl.selectedProperty().bindBidirectional(
-        model.forcingServerModeProperty());
-    keyServerIpFld.textProperty().bindBidirectional(model.keyServerIpProperty());
-    keyServerHttpPortFld.textProperty().bindBidirectional(model.keyServerHttpPortProperty());
-    vncPortFld.textProperty().bindBidirectional(model.vncPortProperty(),
-        new NumberStringConverter("#"));
-    icePortFld.textProperty().bindBidirectional(model.icePortProperty(),
-        new NumberStringConverter("#"));
-    udpPackageSizeFld.textProperty().bindBidirectional(model.udpPackageSizeProperty(),
-        new NumberStringConverter("#"));
-    proxyPortFld.textProperty().bindBidirectional(model.proxyPortProperty(),
-        new NumberStringConverter("#"));
-    stunServerPortFld.textProperty().bindBidirectional(model.stunServerPortProperty(),
-        new NumberStringConverter("#"));
-    // TODO: Stunserver-List needs to be binded @martinfrancois
+
+  private void save() {
+    model.forcingServerModeProperty().setValue(forceConnectOverServerTgl
+        .selectedProperty().getValue());
+    model.keyServerIpProperty().setValue(keyServerIpFld.textProperty().get());
+    model.keyServerHttpPortProperty().setValue(keyServerHttpPortFld.textProperty().get());
+    model.vncPortProperty().setValue(Integer.parseInt(vncPortFld.getText()));
+    model.icePortProperty().setValue(Integer.parseInt(icePortFld.getText()));
+    model.udpPackageSizeProperty().setValue(Integer.parseInt(udpPackageSizeFld.getText()));
+    model.proxyPortProperty().setValue(Integer.parseInt(proxyPortFld.getText()));
+    model.stunServerPortProperty().setValue(Integer.parseInt(stunServerPortFld.getText()));
+    String[] stunServers = (String[]) stunServersList.getItems().stream().toArray(String[]::new);
+    model.setStunServers(stunServers);
   }
+
 
 }
 

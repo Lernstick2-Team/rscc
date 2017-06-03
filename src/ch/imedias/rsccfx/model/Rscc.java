@@ -13,6 +13,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
@@ -36,6 +37,8 @@ import javafx.beans.property.StringProperty;
  */
 public class Rscc {
 
+  private static String[] STUN_SERVERS = {
+      "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
   private static final int PACKAGE_SIZE = 10000; // needed, since a static method access it.
   private static final Logger LOGGER =
       Logger.getLogger(Rscc.class.getName());
@@ -51,8 +54,6 @@ public class Rscc {
    * ".rscc" is a hidden folder in the user's home directory (e.g. /home/user)
    */
   private static final String RSCC_FOLDER_NAME = ".rscc";
-  private static final String[] STUN_SERVERS = {
-      "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
   private static final String[] EXTRACTED_RESOURCES =
       {DOCKER_FOLDER_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
   private static final UnaryOperator<String> REMOVE_FILE_IN_PATH =
@@ -463,8 +464,9 @@ public class Rscc {
 
   /**
    * Calls Supporter from addressbook (Starts VNC Server in Reverse mode).
-   * @param address public reachable IP/Domain.
-   * @param port    public reachable Port where vncViewer is listening.
+   *
+   * @param address     public reachable IP/Domain.
+   * @param port        public reachable Port where vncViewer is listening.
    * @param isEncrypted sets if connection should be encrypted.
    */
   public void callSupporterDirect(String address, String port, boolean isEncrypted) {
@@ -507,6 +509,24 @@ public class Rscc {
     setConnectionStatus("VNC Viewer service is stopped", 1);
 
     setConnectionEstablishmentRunning(false);
+  }
+
+  /**
+   * Sets Expert settings to default values.
+   * TODO: needs to be imported from an xml and exported to an xml to preserve userValues.
+   */
+  public void defaultExpertSettings() {
+
+    keyServerIp.setValue("86.119.39.89");
+    keyServerHttpPort.setValue("800");
+    vncPort.setValue(5900);
+    icePort.setValue(5050);
+    vncViewOnly.setValue(false);
+    udpPackageSize.setValue(10000);
+    proxyPort.setValue(2601);
+    stunServerPort.setValue(3478);
+    STUN_SERVERS = new String[] {
+        "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
   }
 
 
@@ -658,6 +678,10 @@ public class Rscc {
     return STUN_SERVERS;
   }
 
+  public void setStunServers(String[] servers) {
+    STUN_SERVERS = servers;
+  }
+
   public boolean isLocalIceSuccessful() {
     return isLocalIceSuccessful;
   }
@@ -718,48 +742,48 @@ public class Rscc {
     return vncServerProcessRunning.get();
   }
 
-  public BooleanProperty vncServerProcessRunningProperty() {
-    return vncServerProcessRunning;
-  }
-
   public void setVncServerProcessRunning(boolean vncServerProcessRunning) {
     this.vncServerProcessRunning.set(vncServerProcessRunning);
+  }
+
+  public BooleanProperty vncServerProcessRunningProperty() {
+    return vncServerProcessRunning;
   }
 
   public boolean isVncViewerProcessRunning() {
     return vncViewerProcessRunning.get();
   }
 
-  public BooleanProperty vncViewerProcessRunningProperty() {
-    return vncViewerProcessRunning;
-  }
-
   public void setVncViewerProcessRunning(boolean vncViewerProcessRunning) {
     this.vncViewerProcessRunning.set(vncViewerProcessRunning);
+  }
+
+  public BooleanProperty vncViewerProcessRunningProperty() {
+    return vncViewerProcessRunning;
   }
 
   public boolean isConnectionEstablishmentRunning() {
     return connectionEstablishmentRunning.get();
   }
 
-  public BooleanProperty connectionEstablishmentRunningProperty() {
-    return connectionEstablishmentRunning;
-  }
-
   public void setConnectionEstablishmentRunning(boolean connectionEstablishmentRunning) {
     this.connectionEstablishmentRunning.set(connectionEstablishmentRunning);
+  }
+
+  public BooleanProperty connectionEstablishmentRunningProperty() {
+    return connectionEstablishmentRunning;
   }
 
   public boolean getRscccfpHasTalkedToOtherClient() {
     return rscccfpHasTalkedToOtherClient.get();
   }
 
-  public BooleanProperty rscccfpHasTalkedToOtherClientProperty() {
-    return rscccfpHasTalkedToOtherClient;
-  }
-
   public void setRscccfpHasTalkedToOtherClient(boolean rscccfpHasTalkedToOtherClient) {
     this.rscccfpHasTalkedToOtherClient.set(rscccfpHasTalkedToOtherClient);
+  }
+
+  public BooleanProperty rscccfpHasTalkedToOtherClientProperty() {
+    return rscccfpHasTalkedToOtherClient;
   }
 
   public int getUdpPackageSize() {
