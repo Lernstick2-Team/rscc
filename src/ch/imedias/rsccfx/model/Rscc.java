@@ -50,7 +50,7 @@ public class Rscc {
    * sh files can not be executed in the JAR file and therefore must be extracted.
    * ".rscc" is a hidden folder in the user's home directory (e.g. /home/user)
    */
-  private static final String RSCC_FOLDER_NAME = ".rscc";
+  private static final String RSCC_FOLDER_NAME = ".config/rscc";
   private static final String[] STUN_SERVERS = {
       "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
   private static final String[] EXTRACTED_RESOURCES =
