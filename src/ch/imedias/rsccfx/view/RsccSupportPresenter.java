@@ -196,7 +196,11 @@ public class RsccSupportPresenter implements ControlledPresenter {
    */
   private void initHeader() {
     // Set all the actions regarding buttons in this method.
-    headerPresenter.setBackBtnAction(event -> viewParent.setView("home"));
+    headerPresenter.setBackBtnAction(event -> {
+      viewParent.setView("home");
+      view.keyFld.clear();
+      model.killConnection();
+    });
     headerPresenter.setHelpBtnAction(event ->
         popOverHelper.helpPopOver.show(view.headerView.helpBtn));
     headerPresenter.setSettingsBtnAction(event ->
