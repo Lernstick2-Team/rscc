@@ -45,10 +45,9 @@ public class ExpertSettingsDialog extends DialogPane {
   final TextField udpPackageSizeFld = new TextField();
   final TextField proxyPortFld = new TextField();
   final TextField stunServerPortFld = new TextField();
-  final ButtonType defaults = new ButtonType("Defaults");
   final Button addServer = new Button("+");
   final Button removeServer = new Button("-");
-  final ListView stunServersList = new ListView();
+  final ListView<String> stunServersList = new ListView<>();
 
   final Dialog dialog = new Dialog();
   final GridPane settingsPane = new GridPane();
@@ -74,10 +73,6 @@ public class ExpertSettingsDialog extends DialogPane {
       if (result.get() == ButtonType.APPLY) {
         save();
       }
-      if (result.get() == defaults) {
-        model.defaultUserPreferences();
-
-      }
     }
 
 
@@ -102,14 +97,14 @@ public class ExpertSettingsDialog extends DialogPane {
     stunServersLbl.textProperty().set(strings.expertStunserverLbl);
     stunServerPortLbl.textProperty().set(strings.expertStunServerPortLbl);
 
-    forceConnectOverServerTgl.selectedProperty().setValue(model.isForcingServerMode());
-    keyServerIpFld.textProperty().setValue(model.getKeyServerIp());
-    keyServerHttpPortFld.textProperty().setValue(model.getKeyServerHttpPort());
-    vncPortFld.textProperty().setValue(Integer.toString(model.getVncPort()));
-    icePortFld.textProperty().setValue(Integer.toString(model.getIcePort()));
-    udpPackageSizeFld.textProperty().setValue(Integer.toString(model.getUdpPackageSize()));
-    proxyPortFld.textProperty().setValue(Integer.toString(model.getProxyPort()));
-    stunServerPortFld.textProperty().setValue(Integer.toString(model.getStunServerPort()));
+    forceConnectOverServerTgl.setSelected(model.isForcingServerMode());
+    keyServerIpFld.setText(model.getKeyServerIp());
+    keyServerHttpPortFld.setText(model.getKeyServerHttpPort());
+    vncPortFld.setText(Integer.toString(model.getVncPort()));
+    icePortFld.setText(Integer.toString(model.getIcePort()));
+    udpPackageSizeFld.setText(Integer.toString(model.getUdpPackageSize()));
+    proxyPortFld.setText(Integer.toString(model.getProxyPort()));
+    stunServerPortFld.setText(Integer.toString(model.getStunServerPort()));
     for (String server : model.getStunServers()) {
       stunServersList.getItems().add(server);
     }
@@ -155,26 +150,23 @@ public class ExpertSettingsDialog extends DialogPane {
 
     this.getButtonTypes().add(ButtonType.APPLY);
     this.getButtonTypes().add(ButtonType.CANCEL);
-    //TODO would be great if the default button does not close the dialog.
-    this.getButtonTypes().add(defaults);
-
     this.setContent(settingsPane);
     dialog.setDialogPane(this);
   }
 
 
   private void save() {
-    model.forcingServerModeProperty().setValue(forceConnectOverServerTgl
-        .selectedProperty().getValue());
-    model.keyServerIpProperty().setValue(keyServerIpFld.textProperty().get());
-    model.keyServerHttpPortProperty().setValue(keyServerHttpPortFld.textProperty().get());
-    model.vncPortProperty().setValue(Integer.parseInt(vncPortFld.getText()));
-    model.icePortProperty().setValue(Integer.parseInt(icePortFld.getText()));
-    model.udpPackageSizeProperty().setValue(Integer.parseInt(udpPackageSizeFld.getText()));
-    model.proxyPortProperty().setValue(Integer.parseInt(proxyPortFld.getText()));
-    model.stunServerPortProperty().setValue(Integer.parseInt(stunServerPortFld.getText()));
-    String[] stunServers = (String[]) stunServersList.getItems().stream().toArray(String[]::new);
+    model.setForcingServerMode(forceConnectOverServerTgl.isSelected());
+    model.setKeyServerIp(keyServerIpFld.getText());
+    model.setKeyServerHttpPort(keyServerHttpPortFld.getText());
+    model.setVncPort(Integer.parseInt(vncPortFld.getText()));
+    model.setIcePort(Integer.parseInt(icePortFld.getText()));
+    model.setUdpPackageSize(Integer.parseInt(udpPackageSizeFld.getText()));
+    model.setProxyPort(Integer.parseInt(proxyPortFld.getText()));
+    model.setStunServerPort(Integer.parseInt(stunServerPortFld.getText()));
+    String[] stunServers = (String[]) stunServersList.getItems().toArray();
     model.setStunServers(stunServers);
+    model.saveUserPreferences();
   }
 
 
