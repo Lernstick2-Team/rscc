@@ -47,6 +47,7 @@ public class ExpertSettingsDialog extends DialogPane {
   final TextField stunServerPortFld = new TextField();
   final Button addServer = new Button("+");
   final Button removeServer = new Button("-");
+  final Button loadDefaults = new Button();
   final ListView<String> stunServersList = new ListView<>();
 
   final Dialog dialog = new Dialog();
@@ -87,16 +88,17 @@ public class ExpertSettingsDialog extends DialogPane {
 
   private void initFieldData() {
     // populate fields which require initial data
-    forceConnectOverServerLbl.textProperty().set(strings.expertForceConnectOverServerLbl);
-    keyserverIpLbl.textProperty().set(strings.expertKeyserverIpLbl);
-    keyServerHttpPortLbl.textProperty().set(strings.expertKeyserverHttpLbl);
-    vncPortLbl.textProperty().set(strings.expertVncPortLbl);
-    icePortLbl.textProperty().set(strings.expertIcePortLbl);
-    udpPackageSizeLbl.textProperty().set(strings.expertUdpPackageSizeLbl);
-    proxyPortLbl.textProperty().set(strings.expertProxyPortLbl);
-    stunServersLbl.textProperty().set(strings.expertStunserverLbl);
-    stunServerPortLbl.textProperty().set(strings.expertStunServerPortLbl);
-
+    forceConnectOverServerLbl.setText(strings.expertForceConnectOverServerLbl);
+    keyserverIpLbl.setText(strings.expertKeyserverIpLbl);
+    keyServerHttpPortLbl.setText(strings.expertKeyserverHttpLbl);
+    vncPortLbl.setText(strings.expertVncPortLbl);
+    icePortLbl.setText(strings.expertIcePortLbl);
+    udpPackageSizeLbl.setText(strings.expertUdpPackageSizeLbl);
+    proxyPortLbl.setText(strings.expertProxyPortLbl);
+    stunServersLbl.setText(strings.expertStunserverLbl);
+    stunServerPortLbl.setText(strings.expertStunServerPortLbl);
+    loadDefaults.setText(strings.editDialogDefaultButtonToolTipText);
+    
     forceConnectOverServerTgl.setSelected(model.isForcingServerMode());
     keyServerIpFld.setText(model.getKeyServerIp());
     keyServerHttpPortFld.setText(model.getKeyServerHttpPort());
