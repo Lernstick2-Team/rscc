@@ -363,6 +363,7 @@ public class Rscc {
       LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
       setConnectionStatus(
           "Key " + getKeyUtil().getKey() + " could not be verified by the server.", 3);
+      setConnectionEstablishmentRunning(false);
       return;
     }
 
