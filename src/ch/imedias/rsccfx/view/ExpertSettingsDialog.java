@@ -4,8 +4,10 @@ import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.view.util.NumberTextField;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -50,7 +52,8 @@ public class ExpertSettingsDialog extends DialogPane {
   final Button addServer = new Button("+");
   final Button removeServer = new Button("-");
   final Button loadDefaults = new Button();
-  final ListView<String> stunServersList = new ListView<>();
+  final ObservableList<String> stunServersList = FXCollections.observableArrayList();
+  final ListView<String> stunServersListView = new ListView<>(stunServersList);
 
   final Dialog dialog = new Dialog();
   final GridPane settingsPane = new GridPane();
@@ -82,9 +85,9 @@ public class ExpertSettingsDialog extends DialogPane {
   }
 
   private void attachEvents() {
-    addServer.setOnAction(e -> stunServersList.getItems().add("new Stun Server"));
-    removeServer.setOnAction(e -> stunServersList.getItems()
-        .removeAll(stunServersList.getSelectionModel().getSelectedItems()));
+    addServer.setOnAction(e -> stunServersList.add("new Stun Server"));
+    removeServer.setOnAction(e -> stunServersList
+        .removeAll(stunServersListView.getSelectionModel().getSelectedItems()));
     loadDefaults.setOnAction(e -> defaultUserPreferences());
   }
 
@@ -100,11 +103,8 @@ public class ExpertSettingsDialog extends DialogPane {
     udpPackageSizeFld.setText(Integer.toString(udpPackageSize));
     proxyPortFld.setText(Integer.toString(proxyPort));
     stunServerPortFld.setText(Integer.toString(stunServerPort));
-
-    stunServersList.getItems().clear();
-    for (String server : stunServers) {
-      stunServersList.getItems().add(server);
-    }
+    stunServersList.clear();
+    stunServersList.addAll(Arrays.asList(stunServers));
   }
 
   /**
@@ -148,8 +148,8 @@ public class ExpertSettingsDialog extends DialogPane {
         model.getStunServers()
     );
 
-    stunServersList.setEditable(true);
-    stunServersList.setCellFactory(TextFieldListCell.forListView());
+    stunServersListView.setEditable(true);
+    stunServersListView.setCellFactory(TextFieldListCell.forListView());
 
   }
 
@@ -184,7 +184,7 @@ public class ExpertSettingsDialog extends DialogPane {
     settingsPane.add(stunServerPortLbl, 0, 8);
     settingsPane.add(stunServerPortFld, 1, 8);
     settingsPane.add(stunServersLbl, 0, 9);
-    settingsPane.add(stunServersList, 1, 9);
+    settingsPane.add(stunServersListView, 1, 9);
     settingsPane.add(new HBox(addServer, removeServer), 1, 10);
     settingsPane.add(loadDefaults, 0, 11);
 
@@ -193,7 +193,6 @@ public class ExpertSettingsDialog extends DialogPane {
     this.setContent(settingsPane);
     dialog.setDialogPane(this);
   }
-
 
   private void save() {
     model.setForcingServerMode(forceConnectOverServerTgl.isSelected());
@@ -204,7 +203,7 @@ public class ExpertSettingsDialog extends DialogPane {
     model.setUdpPackageSize(Integer.parseInt(udpPackageSizeFld.getText()));
     model.setProxyPort(Integer.parseInt(proxyPortFld.getText()));
     model.setStunServerPort(Integer.parseInt(stunServerPortFld.getText()));
-    String[] stunServers = (String[]) (stunServersList.getItems().toArray());
+    String[] stunServers = stunServersList.toArray(new String[stunServersList.size()]);
     model.setStunServers(stunServers);
     model.saveUserPreferences();
   }
