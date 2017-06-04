@@ -148,6 +148,7 @@ public class ExpertSettingsDialog extends DialogPane {
     settingsPane.add(stunServersLbl, 0, 9);
     settingsPane.add(stunServersList, 1, 9);
     settingsPane.add(new HBox(addServer, removeServer), 1, 10);
+    settingsPane.add(loadDefaults, 0, 11);
 
 
     this.getButtonTypes().add(ButtonType.APPLY);
