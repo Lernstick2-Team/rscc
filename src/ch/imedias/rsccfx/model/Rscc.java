@@ -33,6 +33,33 @@ import javafx.beans.property.StringProperty;
  */
 public class Rscc {
 
+  public static final String PREFERENCES_KEY_SERVER_IP = "keyServerIp";
+  public static final String DEFAULT_KEY_SERVER_IP = "86.119.39.89";
+  public static final String PREFERENCES_KEY_SERVER_HTTP_PORT = "keyServerHttpPort";
+  public static final String DEFAULT_KEY_SERVER_HTTP_PORT = "800";
+  public static final String PREFERENCES_VNC_PORT = "vncPort";
+  public static final int DEFAULT_VNC_PORT = 5900;
+  public static final String PREFERENCES_ICE_PORT = "icePort";
+  public static final int DEFAULT_ICE_PORT = 5050;
+  public static final String PREFERENCES_UDP_PACKAGE_SIZE = "udpPackageSize";
+  public static final int DEFAULT_UDP_PACKAGE_SIZE = 10000;
+  public static final String PREFERENCES_PROXY_PORT = "proxyPort";
+  public static final int DEFAULT_PROXY_PORT = 2601;
+  public static final String PREFERENCES_STUN_SERVER_PORT = "stunServerPort";
+  public static final int DEFAULT_STUN_SERVER_PORT = 3478;
+  public static final String PREFERENCES_FORCING_SERVER_MODE = "forcingServerMode";
+  public static final boolean DEFAULT_FORCING_SERVER_MODE = false;
+  public static final String PREFERENCES_VNC_VIEW_ONLY = "vncViewOnly";
+  public static final boolean DEFAULT_VNC_VIEW_ONLY = false;
+  public static final String PREFERENCES_VNC_BGR_233 = "vncBgr233";
+  public static final boolean DEFAULT_VNC_BGR_233 = false;
+  public static final String PREFERENCES_VNC_COMPRESSION = "vncCompression";
+  public static final int DEFAULT_VNC_COMPRESSION = 6;
+  public static final String PREFERENCES_VNC_QUALITY = "vncQuality";
+  public static final int DEFAULT_VNC_QUALITY = 6;
+  public static final String PREFERENCES_STUN_SERVERS = "STUNServers";
+  public static final String DEFAULT_STUN_SERVERS = "numb.viagenie.ca;stun.ekiga.net;stun.gmx.net;stun.1und1.de";
+  public static final String DELIMITER = ";";
   private static String[] STUN_SERVERS = {
       "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
   private static final int PACKAGE_SIZE = 10000; // needed, since a static method access it.
@@ -123,22 +150,22 @@ public class Rscc {
    * Saves the UserPreferences.
    */
   private void loadUserPreferences() {
-    setKeyServerIp(preferences.get("keyServerIp", "86.119.39.89"));
-    setKeyServerHttpPort(preferences.get("keyServerHttpPort", "800"));
-    setVncPort(preferences.getInt("vncPort", 5900));
-    setIcePort(preferences.getInt("icePort", 5050));
-    setUdpPackageSize(preferences.getInt("udpPackageSize", 10000));
-    setProxyPort(preferences.getInt("proxyPort", 2601));
-    setStunServerPort(preferences.getInt("stunServerPort", 3478));
-    setForcingServerMode(preferences.getBoolean("forcingServerMode", false));
-    setVncViewOnly(preferences.getBoolean("vncViewOnly", false));
-    setVncBgr233(preferences.getBoolean("vncBgr233", false));
-    setVncCompression(preferences.getDouble("vncCompression", 6));
-    setVncQuality(preferences.getDouble("vncQuality", 6));
+    setKeyServerIp(preferences.get(PREFERENCES_KEY_SERVER_IP, DEFAULT_KEY_SERVER_IP));
+    setKeyServerHttpPort(preferences.get(PREFERENCES_KEY_SERVER_HTTP_PORT, DEFAULT_KEY_SERVER_HTTP_PORT));
+    setVncPort(preferences.getInt(PREFERENCES_VNC_PORT, DEFAULT_VNC_PORT));
+    setIcePort(preferences.getInt(PREFERENCES_ICE_PORT, DEFAULT_ICE_PORT));
+    setUdpPackageSize(preferences.getInt(PREFERENCES_UDP_PACKAGE_SIZE, DEFAULT_UDP_PACKAGE_SIZE));
+    setProxyPort(preferences.getInt(PREFERENCES_PROXY_PORT, DEFAULT_PROXY_PORT));
+    setStunServerPort(preferences.getInt(PREFERENCES_STUN_SERVER_PORT, DEFAULT_STUN_SERVER_PORT));
+    setForcingServerMode(preferences.getBoolean(PREFERENCES_FORCING_SERVER_MODE, DEFAULT_FORCING_SERVER_MODE));
+    setVncViewOnly(preferences.getBoolean(PREFERENCES_VNC_VIEW_ONLY, DEFAULT_VNC_VIEW_ONLY));
+    setVncBgr233(preferences.getBoolean(PREFERENCES_VNC_BGR_233, DEFAULT_VNC_BGR_233));
+    setVncCompression(preferences.getDouble(PREFERENCES_VNC_COMPRESSION, DEFAULT_VNC_COMPRESSION));
+    setVncQuality(preferences.getDouble(PREFERENCES_VNC_QUALITY, DEFAULT_VNC_QUALITY));
 
-    String stunServers = preferences.get("STUNServers",
-        "numb.viagenie.ca;stun.ekiga.net;stun.gmx.net;stun.1und1.de");
-    setStunServers(stunServers.split(";"));
+    String stunServers = preferences.get(PREFERENCES_STUN_SERVERS,
+        DEFAULT_STUN_SERVERS);
+    setStunServers(stunServers.split(DELIMITER));
 
     LOGGER.info("Loaded UserPrefs");
   }
@@ -147,22 +174,37 @@ public class Rscc {
    * Loads the UserPreferences.
    */
   public void saveUserPreferences() {
-    preferences.put("keyServerIp", getKeyServerIp());
-    preferences.put("keyServerHttpPort", getKeyServerHttpPort());
-    preferences.putInt("vncPort", getVncPort());
-    preferences.putInt("icePort", getIcePort());
-    preferences.putInt("udpPackageSize", getUdpPackageSize());
-    preferences.putInt("proxyPort", getProxyPort());
-    preferences.putInt("stunServerPort", getStunServerPort());
-    preferences.putBoolean("forcingServerMode", isForcingServerMode());
-    preferences.putBoolean("vncViewOnly", getVncViewOnly());
-    preferences.putBoolean("vncBgr233", getVncBgr233());
-    preferences.putDouble("vncCompression", getVncCompression());
-    preferences.putDouble("vncQuality", getVncQuality());
+    preferences.put(PREFERENCES_KEY_SERVER_IP, getKeyServerIp());
+    preferences.put(PREFERENCES_KEY_SERVER_HTTP_PORT, getKeyServerHttpPort());
+    preferences.putInt(PREFERENCES_VNC_PORT, getVncPort());
+    preferences.putInt(PREFERENCES_ICE_PORT, getIcePort());
+    preferences.putInt(PREFERENCES_UDP_PACKAGE_SIZE, getUdpPackageSize());
+    preferences.putInt(PREFERENCES_PROXY_PORT, getProxyPort());
+    preferences.putInt(PREFERENCES_STUN_SERVERS, getStunServerPort());
+    preferences.putBoolean(PREFERENCES_FORCING_SERVER_MODE, isForcingServerMode());
+    preferences.putBoolean(PREFERENCES_VNC_VIEW_ONLY, getVncViewOnly());
+    preferences.putBoolean(PREFERENCES_VNC_BGR_233, getVncBgr233());
+    preferences.putDouble(PREFERENCES_VNC_COMPRESSION, getVncCompression());
+    preferences.putDouble(PREFERENCES_VNC_QUALITY, getVncQuality());
 
-    preferences.put("STUNServers", String.join(";", STUN_SERVERS));
+    preferences.put(PREFERENCES_STUN_SERVERS, String.join(DELIMITER, STUN_SERVERS));
 
     LOGGER.info("Saved UserPrefs");
+  }
+
+  /**
+   * Loads the default UserPreferences.
+   */
+  public void defaultUserPreferences() {
+    setKeyServerIp(DEFAULT_KEY_SERVER_IP);
+    setKeyServerHttpPort(DEFAULT_KEY_SERVER_HTTP_PORT);
+    setVncPort(DEFAULT_VNC_PORT);
+    setIcePort(DEFAULT_ICE_PORT);
+    setVncViewOnly(DEFAULT_VNC_VIEW_ONLY);
+    setUdpPackageSize(DEFAULT_UDP_PACKAGE_SIZE);
+    setProxyPort(DEFAULT_PROXY_PORT);
+    setStunServerPort(DEFAULT_STUN_SERVER_PORT);
+    setStunServers(DEFAULT_STUN_SERVERS.split(DELIMITER));
   }
 
   public static int getUdpPackageSizeStatic() {
@@ -530,24 +572,6 @@ public class Rscc {
     setConnectionStatus("VNC Viewer service is stopped", 1);
 
     setConnectionEstablishmentRunning(false);
-  }
-
-  /**
-   * Sets Expert settings to default values.
-   * TODO: needs to be imported from an xml and exported to an xml to preserve userValues.
-   */
-  public void defaultExpertSettings() {
-
-    keyServerIp.setValue("86.119.39.89");
-    keyServerHttpPort.setValue("800");
-    vncPort.setValue(5900);
-    icePort.setValue(5050);
-    vncViewOnly.setValue(false);
-    udpPackageSize.setValue(10000);
-    proxyPort.setValue(2601);
-    stunServerPort.setValue(3478);
-    STUN_SERVERS = new String[] {
-        "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
   }
 
 

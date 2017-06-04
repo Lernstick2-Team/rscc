@@ -16,7 +16,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 
 /**
@@ -76,7 +75,7 @@ public class ExpertSettingsDialog extends DialogPane {
         save();
       }
       if (result.get() == defaults) {
-        model.defaultExpertSettings();
+        model.defaultUserPreferences();
 
       }
     }
