@@ -6,6 +6,7 @@ import ch.imedias.rsccfx.model.Rscc;
 import java.util.Optional;
 import java.util.logging.Logger;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
@@ -14,6 +15,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 
 /**
@@ -44,6 +47,8 @@ public class ExpertSettingsDialog extends DialogPane {
   final TextField proxyPortFld = new TextField();
   final TextField stunServerPortFld = new TextField();
   final ButtonType defaults = new ButtonType("Defaults");
+  final Button addServer = new Button("+");
+  final Button removeServer = new Button("-");
   final ListView stunServersList = new ListView();
 
   final Dialog dialog = new Dialog();
@@ -63,6 +68,7 @@ public class ExpertSettingsDialog extends DialogPane {
     this.getStylesheets().add(RsccApp.styleSheet);
     initFieldData();
     layoutForm();
+    attachEvents();
 
     Optional<ButtonType> result = dialog.showAndWait();
     if (result.isPresent()) {
@@ -76,6 +82,12 @@ public class ExpertSettingsDialog extends DialogPane {
     }
 
 
+  }
+
+  private void attachEvents() {
+    addServer.setOnAction(e->stunServersList.getItems().add("new Stun Server"));
+    removeServer.setOnAction(e->stunServersList.getItems()
+        .removeAll(stunServersList.getSelectionModel().getSelectedItems()));
   }
 
 
@@ -139,10 +151,12 @@ public class ExpertSettingsDialog extends DialogPane {
     settingsPane.add(stunServerPortFld, 1, 8);
     settingsPane.add(stunServersLbl, 0, 9);
     settingsPane.add(stunServersList, 1, 9);
+    settingsPane.add(new HBox(addServer,removeServer),1,10);
 
 
     this.getButtonTypes().add(ButtonType.APPLY);
     this.getButtonTypes().add(ButtonType.CANCEL);
+    //TODO would be great if the default button does not close the dialog.
     this.getButtonTypes().add(defaults);
 
     this.setContent(settingsPane);
