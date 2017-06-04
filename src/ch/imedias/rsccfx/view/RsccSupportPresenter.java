@@ -168,9 +168,11 @@ public class RsccSupportPresenter implements ControlledPresenter {
     view.startServiceBtn.setOnAction(event -> {
       if (model.isVncViewerProcessRunning()) {
         view.startServiceBtn.setText(view.strings.startService);
-        model.stopVncViewerAsService();
+        Thread thread = new Thread(model::stopVncViewerAsService);
+        thread.start();
       } else {
-        model.startVncViewerAsService();
+        Thread thread = new Thread(model::startVncViewerAsService);
+        thread.start();
         view.startServiceBtn.setText(view.strings.stopService);
       }
     });
