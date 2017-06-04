@@ -134,6 +134,12 @@ public class VncServerHandler {
             if (errorString != null && errorString.contains("connection from client")) {
               LOGGER.info("Client has connected");
               model.setVncSessionRunning(true);
+              if (model.getRudp() != null) {
+                model.setConnectionStatus("VNC-Connection established using ICE", 2);
+              } else {
+                model.setConnectionStatus("VNC-Connection established over Server", 2);
+              }
+
             }
 
           }

@@ -63,7 +63,7 @@ public class RunRudp extends Thread {
 
       String remoteAddressAsString = model.getRemoteClientIpAddress().getHostAddress();
 
-      model.setConnectionStatus("Trying to setup UDP proxy", 1);
+      model.setConnectionStatus("Starting RUDP...", 1);
 
 
       if (viewerIsRudpClient && callAsViewer) {
@@ -229,7 +229,6 @@ public class RunRudp extends Thread {
    */
   private void startProxy(InputStream tcpInput, OutputStream tcpOutput, InputStream
       rudpInput, OutputStream rudpOutput, int bufferSize) {
-    model.setConnectionStatus("UDP proxy succesful", 2);
 
     final byte[] request = new byte[bufferSize];
     byte[] reply = new byte[bufferSize];
