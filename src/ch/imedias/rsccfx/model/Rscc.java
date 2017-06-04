@@ -158,7 +158,6 @@ public class Rscc {
     setUdpPackageSize(preferences.getInt(PREFERENCES_UDP_PACKAGE_SIZE, DEFAULT_UDP_PACKAGE_SIZE));
     setProxyPort(preferences.getInt(PREFERENCES_PROXY_PORT, DEFAULT_PROXY_PORT));
     setStunServerPort(preferences.getInt(PREFERENCES_STUN_SERVER_PORT, DEFAULT_STUN_SERVER_PORT));
-    setForcingServerMode(preferences.getBoolean(PREFERENCES_FORCING_SERVER_MODE, DEFAULT_FORCING_SERVER_MODE));
     setVncViewOnly(preferences.getBoolean(PREFERENCES_VNC_VIEW_ONLY, DEFAULT_VNC_VIEW_ONLY));
     setVncBgr233(preferences.getBoolean(PREFERENCES_VNC_BGR_233, DEFAULT_VNC_BGR_233));
     setVncCompression(preferences.getDouble(PREFERENCES_VNC_COMPRESSION, DEFAULT_VNC_COMPRESSION));
@@ -182,7 +181,6 @@ public class Rscc {
     preferences.putInt(PREFERENCES_UDP_PACKAGE_SIZE, getUdpPackageSize());
     preferences.putInt(PREFERENCES_PROXY_PORT, getProxyPort());
     preferences.putInt(PREFERENCES_STUN_SERVERS, getStunServerPort());
-    preferences.putBoolean(PREFERENCES_FORCING_SERVER_MODE, isForcingServerMode());
     preferences.putBoolean(PREFERENCES_VNC_VIEW_ONLY, getVncViewOnly());
     preferences.putBoolean(PREFERENCES_VNC_BGR_233, getVncBgr233());
     preferences.putDouble(PREFERENCES_VNC_COMPRESSION, getVncCompression());
