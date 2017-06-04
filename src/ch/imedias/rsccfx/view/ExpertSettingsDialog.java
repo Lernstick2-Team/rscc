@@ -3,8 +3,10 @@ package ch.imedias.rsccfx.view;
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
+import ch.imedias.rsccfx.view.util.NumberTextField;
 import java.util.Optional;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -40,11 +42,11 @@ public class ExpertSettingsDialog extends DialogPane {
 
   final TextField keyServerIpFld = new TextField();
   final TextField keyServerHttpPortFld = new TextField();
-  final TextField vncPortFld = new TextField();
-  final TextField icePortFld = new TextField();
-  final TextField udpPackageSizeFld = new TextField();
-  final TextField proxyPortFld = new TextField();
-  final TextField stunServerPortFld = new TextField();
+  final NumberTextField vncPortFld = new NumberTextField();
+  final NumberTextField icePortFld = new NumberTextField();
+  final NumberTextField udpPackageSizeFld = new NumberTextField();
+  final NumberTextField proxyPortFld = new NumberTextField();
+  final NumberTextField stunServerPortFld = new NumberTextField();
   final Button addServer = new Button("+");
   final Button removeServer = new Button("-");
   final Button loadDefaults = new Button();
@@ -202,7 +204,7 @@ public class ExpertSettingsDialog extends DialogPane {
     model.setUdpPackageSize(Integer.parseInt(udpPackageSizeFld.getText()));
     model.setProxyPort(Integer.parseInt(proxyPortFld.getText()));
     model.setStunServerPort(Integer.parseInt(stunServerPortFld.getText()));
-    String[] stunServers = (String[]) stunServersList.getItems().toArray();
+    String[] stunServers = (String[]) (stunServersList.getItems().toArray());
     model.setStunServers(stunServers);
     model.saveUserPreferences();
   }
