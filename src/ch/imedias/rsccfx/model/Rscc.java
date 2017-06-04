@@ -118,6 +118,10 @@ public class Rscc {
     loadUserPreferences();
   }
 
+
+  /**
+   * Saves the UserPreferences.
+   */
   private void loadUserPreferences() {
     setKeyServerIp(preferences.get("keyServerIp", "86.119.39.89"));
     setKeyServerHttpPort(preferences.get("keyServerHttpPort", "800"));
@@ -132,11 +136,16 @@ public class Rscc {
     setVncCompression(preferences.getDouble("vncCompression", 6));
     setVncQuality(preferences.getDouble("vncQuality", 6));
 
-    //TODO StunServers are missing
+    String stunServers = preferences.get("STUNServers",
+        "numb.viagenie.ca;stun.ekiga.net;stun.gmx.net;stun.1und1.de");
+    setStunServers(stunServers.split(";"));
 
     LOGGER.info("Loaded UserPrefs");
   }
 
+  /**
+   * Loads the UserPreferences.
+   */
   public void saveUserPreferences() {
     preferences.put("keyServerIp", getKeyServerIp());
     preferences.put("keyServerHttpPort", getKeyServerHttpPort());
@@ -151,7 +160,7 @@ public class Rscc {
     preferences.putDouble("vncCompression", getVncCompression());
     preferences.putDouble("vncQuality", getVncQuality());
 
-    //TODO StunServers are missing
+    preferences.put("STUNServers", String.join(";", STUN_SERVERS));
 
     LOGGER.info("Saved UserPrefs");
   }
@@ -590,6 +599,10 @@ public class Rscc {
     this.vncQuality.set(vncQuality);
   }
 
+  public void setVncQuality(double vncQuality) {
+    this.vncQuality.set(vncQuality);
+  }
+
   public DoubleProperty vncQualityProperty() {
     return vncQuality;
   }
@@ -838,7 +851,5 @@ public class Rscc {
     return pathToDefaultSupporters;
   }
 
-  public void setVncQuality(double vncQuality) {
-    this.vncQuality.set(vncQuality);
-  }
+
 }
