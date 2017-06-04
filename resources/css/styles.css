@@ -137,6 +137,12 @@
     -fx-padding: 2em 0 2em 0;
 }
 
+.context-menu {
+    -fx-font-size: 0.7em;
+    -fx-border-radius: 0.308em;
+    -fx-background-radius: 0.308em;
+}
+
 .titled-pane {
     -fx-font-size: 1.641em;
 }
