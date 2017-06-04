@@ -59,9 +59,10 @@ public class Rscc {
   public static final int DEFAULT_VNC_QUALITY = 6;
   public static final String PREFERENCES_STUN_SERVERS = "STUNServers";
   public static final String DEFAULT_STUN_SERVERS = "numb.viagenie.ca;stun.ekiga.net;stun.gmx.net;stun.1und1.de";
+  public static final String DELIMITER = ";";
+
   private static String[] STUN_SERVERS = {
       "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
-  public static final String DELIMITER = ";";
   private static final int PACKAGE_SIZE = 10000; // needed, since a static method access it. // TODO: make access depend on current setting
   private static final Logger LOGGER =
       Logger.getLogger(Rscc.class.getName());
@@ -205,6 +206,8 @@ public class Rscc {
     setProxyPort(DEFAULT_PROXY_PORT);
     setStunServerPort(DEFAULT_STUN_SERVER_PORT);
     setStunServers(DEFAULT_STUN_SERVERS.split(DELIMITER));
+
+    LOGGER.info("Loaded default UserPrefs");
   }
 
   public static int getUdpPackageSizeStatic() {
