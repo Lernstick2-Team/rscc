@@ -10,17 +10,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -62,8 +58,8 @@ public class Rscc {
 
   private final StringProperty keyServerIp = new SimpleStringProperty();
   private final StringProperty keyServerHttpPort = new SimpleStringProperty();
-  private final IntegerProperty vncPort = new SimpleIntegerProperty(5900);
-  private final IntegerProperty icePort = new SimpleIntegerProperty(5050);
+  private final IntegerProperty vncPort = new SimpleIntegerProperty();
+  private final IntegerProperty icePort = new SimpleIntegerProperty();
   private final BooleanProperty vncViewOnly = new SimpleBooleanProperty();
   private final DoubleProperty vncQuality = new SimpleDoubleProperty();
   private final DoubleProperty vncCompression = new SimpleDoubleProperty();
@@ -72,8 +68,8 @@ public class Rscc {
   private final StringProperty connectionStatusStyle = new SimpleStringProperty();
   private final IntegerProperty udpPackageSize = new SimpleIntegerProperty(
       getUdpPackageSizeStatic());
-  private final IntegerProperty proxyPort = new SimpleIntegerProperty(2601);
-  private final IntegerProperty stunServerPort = new SimpleIntegerProperty(3478);
+  private final IntegerProperty proxyPort = new SimpleIntegerProperty();
+  private final IntegerProperty stunServerPort = new SimpleIntegerProperty();
   private final String[] connectionStatusStyles = {
       "statusBox", "statusBoxInitialize", "statusBoxSuccess", "statusBoxFail"};
   private final StringProperty terminalOutput = new SimpleStringProperty();
@@ -86,6 +82,7 @@ public class Rscc {
   private final BooleanProperty rscccfpHasTalkedToOtherClient = new SimpleBooleanProperty(false);
   private final BooleanProperty isSshRunning = new SimpleBooleanProperty(false);
 
+  private final Preferences preferences = Preferences.userNodeForPackage(Rscc.class);
 
   private final KeyUtil keyUtil;
   private String pathToResources;
@@ -118,7 +115,45 @@ public class Rscc {
     this.systemCommander = systemCommander;
     this.keyUtil = keyUtil;
     defineResourcePath();
-    readServerConfig();
+    loadUserPreferences();
+  }
+
+  private void loadUserPreferences() {
+    setKeyServerIp(preferences.get("keyServerIp", "86.119.39.89"));
+    setKeyServerHttpPort(preferences.get("keyServerHttpPort", "800"));
+    setVncPort(preferences.getInt("vncPort", 5900));
+    setIcePort(preferences.getInt("icePort", 5050));
+    setUdpPackageSize(preferences.getInt("udpPackageSize", 10000));
+    setProxyPort(preferences.getInt("proxyPort", 2601));
+    setStunServerPort(preferences.getInt("stunServerPort", 3478));
+    setForcingServerMode(preferences.getBoolean("forcingServerMode", false));
+    setVncViewOnly(preferences.getBoolean("vncViewOnly", false));
+    setVncBgr233(preferences.getBoolean("vncBgr233", false));
+    setVncCompression(preferences.getDouble("vncCompression", 6));
+    setVncQuality(preferences.getDouble("vncQuality", 6));
+
+    //TODO StunServers are missing
+
+    LOGGER.info("Loaded UserPrefs");
+  }
+
+  public void saveUserPreferences() {
+    preferences.put("keyServerIp", getKeyServerIp());
+    preferences.put("keyServerHttpPort", getKeyServerHttpPort());
+    preferences.putInt("vncPort", getVncPort());
+    preferences.putInt("icePort", getIcePort());
+    preferences.putInt("udpPackageSize", getUdpPackageSize());
+    preferences.putInt("proxyPort", getProxyPort());
+    preferences.putInt("stunServerPort", getStunServerPort());
+    preferences.putBoolean("forcingServerMode", isForcingServerMode());
+    preferences.putBoolean("vncViewOnly", getVncViewOnly());
+    preferences.putBoolean("vncBgr233", getVncBgr233());
+    preferences.putDouble("vncCompression", getVncCompression());
+    preferences.putDouble("vncQuality", getVncQuality());
+
+    //TODO StunServers are missing
+
+    LOGGER.info("Saved UserPrefs");
   }
 
   public static int getUdpPackageSizeStatic() {
@@ -423,29 +458,6 @@ public class Rscc {
     setConnectionStatus("Refreshing key...", 1);
     killConnection();
     requestKeyFromServer();
-  }
-
-  /**
-   * Reads the docker server configuration from file ssh.rc under "/pathToResourceDocker".
-   */
-  private void readServerConfig() {
-    String configFilePath = pathToResourceDocker + "/ssh.rc";
-    try {
-      List<String> lines = Files.readAllLines(Paths.get(configFilePath), Charset.forName("UTF-8"));
-      for (String line : lines) {
-        if (line.contains("p2p_server=") && !line.endsWith("=")) {
-          setKeyServerIp(line.split("=")[1]);
-        } else if (line.contains("http_port=") && !line.endsWith("=")) {
-          setKeyServerHttpPort(line.split("=")[1]);
-        }
-      }
-      LOGGER.fine("Set serverIP to: " + getKeyServerIp()
-          + "\n Set serverHTTP-port to: " + getKeyServerHttpPort());
-    } catch (IOException e) {
-      LOGGER.severe("Exception thrown when reading from file: "
-          + configFilePath
-          + "\n Exception Message: " + e.getMessage());
-    }
   }
 
 
@@ -824,5 +836,9 @@ public class Rscc {
 
   public String getPathToDefaultSupporters() {
     return pathToDefaultSupporters;
+  }
+
+  public void setVncQuality(double vncQuality) {
+    this.vncQuality.set(vncQuality);
   }
 }
