@@ -83,6 +83,10 @@ public class ExpertSettingsDialog extends DialogPane {
     addServer.setOnAction(e -> stunServersList.getItems().add("new Stun Server"));
     removeServer.setOnAction(e -> stunServersList.getItems()
         .removeAll(stunServersList.getSelectionModel().getSelectedItems()));
+    loadDefaults.setOnAction(e -> {
+      model.defaultUserPreferences();
+      initFieldData();
+    });
   }
 
 
