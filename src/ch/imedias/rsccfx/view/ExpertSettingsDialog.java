@@ -83,12 +83,43 @@ public class ExpertSettingsDialog extends DialogPane {
     addServer.setOnAction(e -> stunServersList.getItems().add("new Stun Server"));
     removeServer.setOnAction(e -> stunServersList.getItems()
         .removeAll(stunServersList.getSelectionModel().getSelectedItems()));
-    loadDefaults.setOnAction(e -> {
-      model.defaultUserPreferences();
-      initFieldData();
-    });
+    loadDefaults.setOnAction(e -> defaultUserPreferences());
   }
 
+  private void setFieldValues(boolean forcingServerMode, String keyServerIp,
+                              String keyServerHttpPort, int vncPort, int icePort,
+                              int udpPackageSize, int proxyPort, int stunServerPort,
+                              String[] stunServers) {
+    forceConnectOverServerTgl.setSelected(forcingServerMode);
+    keyServerIpFld.setText(keyServerIp);
+    keyServerHttpPortFld.setText(keyServerHttpPort);
+    vncPortFld.setText(Integer.toString(vncPort));
+    icePortFld.setText(Integer.toString(icePort));
+    udpPackageSizeFld.setText(Integer.toString(udpPackageSize));
+    proxyPortFld.setText(Integer.toString(proxyPort));
+    stunServerPortFld.setText(Integer.toString(stunServerPort));
+
+    stunServersList.getItems().clear();
+    for (String server : stunServers) {
+      stunServersList.getItems().add(server);
+    }
+  }
+
+  /**
+   * Loads the default UserPreferences.
+   */
+  private void defaultUserPreferences() {
+    setFieldValues(false,
+        Rscc.DEFAULT_KEY_SERVER_IP,
+        Rscc.DEFAULT_KEY_SERVER_HTTP_PORT,
+        Rscc.DEFAULT_VNC_PORT,
+        Rscc.DEFAULT_ICE_PORT,
+        Rscc.DEFAULT_UDP_PACKAGE_SIZE,
+        Rscc.DEFAULT_PROXY_PORT,
+        Rscc.DEFAULT_STUN_SERVER_PORT,
+        Rscc.DEFAULT_STUN_SERVERS.split(Rscc.DELIMITER)
+    );
+  }
 
   private void initFieldData() {
     // populate fields which require initial data
@@ -102,18 +133,19 @@ public class ExpertSettingsDialog extends DialogPane {
     stunServersLbl.setText(strings.expertStunserverLbl);
     stunServerPortLbl.setText(strings.expertStunServerPortLbl);
     loadDefaults.setText(strings.editDialogDefaultButtonToolTipText);
-    
-    forceConnectOverServerTgl.setSelected(model.isForcingServerMode());
-    keyServerIpFld.setText(model.getKeyServerIp());
-    keyServerHttpPortFld.setText(model.getKeyServerHttpPort());
-    vncPortFld.setText(Integer.toString(model.getVncPort()));
-    icePortFld.setText(Integer.toString(model.getIcePort()));
-    udpPackageSizeFld.setText(Integer.toString(model.getUdpPackageSize()));
-    proxyPortFld.setText(Integer.toString(model.getProxyPort()));
-    stunServerPortFld.setText(Integer.toString(model.getStunServerPort()));
-    for (String server : model.getStunServers()) {
-      stunServersList.getItems().add(server);
-    }
+
+    setFieldValues(
+        model.isForcingServerMode(),
+        model.getKeyServerIp(),
+        model.getKeyServerHttpPort(),
+        model.getVncPort(),
+        model.getIcePort(),
+        model.getUdpPackageSize(),
+        model.getProxyPort(),
+        model.getStunServerPort(),
+        model.getStunServers()
+    );
+
     stunServersList.setEditable(true);
     stunServersList.setCellFactory(TextFieldListCell.forListView());
 
@@ -153,7 +185,6 @@ public class ExpertSettingsDialog extends DialogPane {
     settingsPane.add(stunServersList, 1, 9);
     settingsPane.add(new HBox(addServer, removeServer), 1, 10);
     settingsPane.add(loadDefaults, 0, 11);
-
 
     this.getButtonTypes().add(ButtonType.APPLY);
     this.getButtonTypes().add(ButtonType.CANCEL);

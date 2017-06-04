@@ -193,23 +193,6 @@ public class Rscc {
     LOGGER.info("Saved UserPrefs");
   }
 
-  /**
-   * Loads the default UserPreferences.
-   */
-  public void defaultUserPreferences() {
-    setKeyServerIp(DEFAULT_KEY_SERVER_IP);
-    setKeyServerHttpPort(DEFAULT_KEY_SERVER_HTTP_PORT);
-    setVncPort(DEFAULT_VNC_PORT);
-    setIcePort(DEFAULT_ICE_PORT);
-    setVncViewOnly(DEFAULT_VNC_VIEW_ONLY);
-    setUdpPackageSize(DEFAULT_UDP_PACKAGE_SIZE);
-    setProxyPort(DEFAULT_PROXY_PORT);
-    setStunServerPort(DEFAULT_STUN_SERVER_PORT);
-    setStunServers(DEFAULT_STUN_SERVERS.split(DELIMITER));
-
-    LOGGER.info("Loaded default UserPrefs");
-  }
-
   public static int getUdpPackageSizeStatic() {
     return PACKAGE_SIZE;
   }
