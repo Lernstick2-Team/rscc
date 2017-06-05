@@ -58,12 +58,14 @@ public class Rscc {
   public static final String PREFERENCES_VNC_QUALITY = "vncQuality";
   public static final int DEFAULT_VNC_QUALITY = 6;
   public static final String PREFERENCES_STUN_SERVERS = "STUNServers";
-  public static final String DEFAULT_STUN_SERVERS = "numb.viagenie.ca;stun.ekiga.net;stun.gmx.net;stun.1und1.de";
+  public static final String DEFAULT_STUN_SERVERS = "numb.viagenie.ca;"
+      + "stun.ekiga.net;stun.gmx.net;stun.1und1.de";
   public static final String DELIMITER = ";";
 
   private static String[] STUN_SERVERS = {
       "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
-  private static final int PACKAGE_SIZE = 10000; // needed, since a static method access it. // TODO: make access depend on current setting
+  private static final int PACKAGE_SIZE = 10000; // needed, since a static method access it.
+  // TODO: make access depend on current setting
   private static final Logger LOGGER =
       Logger.getLogger(Rscc.class.getName());
   /**
@@ -104,10 +106,14 @@ public class Rscc {
 
   private final BooleanProperty forcingServerMode = new SimpleBooleanProperty(false);
   private final BooleanProperty vncSessionRunning = new SimpleBooleanProperty(false);
-  private final BooleanProperty vncServerProcessRunning = new SimpleBooleanProperty(false);
-  private final BooleanProperty vncViewerProcessRunning = new SimpleBooleanProperty(false);
-  private final BooleanProperty connectionEstablishmentRunning = new SimpleBooleanProperty(false);
-  private final BooleanProperty rscccfpHasTalkedToOtherClient = new SimpleBooleanProperty(false);
+  private final BooleanProperty vncServerProcessRunning
+      = new SimpleBooleanProperty(false);
+  private final BooleanProperty vncViewerProcessRunning
+      = new SimpleBooleanProperty(false);
+  private final BooleanProperty connectionEstablishmentRunning
+      = new SimpleBooleanProperty(false);
+  private final BooleanProperty rscccfpHasTalkedToOtherClient
+      = new SimpleBooleanProperty(false);
   private final BooleanProperty isSshRunning = new SimpleBooleanProperty(false);
 
   private final Preferences preferences = Preferences.userNodeForPackage(Rscc.class);
@@ -152,7 +158,8 @@ public class Rscc {
    */
   private void loadUserPreferences() {
     setKeyServerIp(preferences.get(PREFERENCES_KEY_SERVER_IP, DEFAULT_KEY_SERVER_IP));
-    setKeyServerHttpPort(preferences.get(PREFERENCES_KEY_SERVER_HTTP_PORT, DEFAULT_KEY_SERVER_HTTP_PORT));
+    setKeyServerHttpPort(preferences.get(PREFERENCES_KEY_SERVER_HTTP_PORT,
+        DEFAULT_KEY_SERVER_HTTP_PORT));
     setVncPort(preferences.getInt(PREFERENCES_VNC_PORT, DEFAULT_VNC_PORT));
     setIcePort(preferences.getInt(PREFERENCES_ICE_PORT, DEFAULT_ICE_PORT));
     setUdpPackageSize(preferences.getInt(PREFERENCES_UDP_PACKAGE_SIZE, DEFAULT_UDP_PACKAGE_SIZE));
