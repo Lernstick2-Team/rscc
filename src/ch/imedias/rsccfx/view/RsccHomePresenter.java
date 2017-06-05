@@ -73,7 +73,7 @@ public class RsccHomePresenter implements ControlledPresenter {
 
   private void attachEvents() {
     view.supportViewBtn.setOnAction(event -> {
-      model.setConnectionStatus("Waiting for key input", 0);
+      model.setConnectionStatus("Please enter the Key", 0);
       viewParent.setView(RsccApp.SUPPORT_VIEW);
     });
     view.requestViewBtn.setOnAction(event -> {

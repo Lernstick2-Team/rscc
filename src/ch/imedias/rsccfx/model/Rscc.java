@@ -281,7 +281,7 @@ public class Rscc {
     rscccfp = new Rscccfp(this, true);
     rscccfp.setDaemon(true);
     rscccfp.start();
-    setConnectionStatus("Key successful generated", 2);
+    setConnectionStatus("Key successfully generated", 1);
 
     try {
       rscccfp.join();
@@ -312,7 +312,6 @@ public class Rscc {
           LOGGER.info("RSCC: Starting rudp");
 
           rudp.start();
-          setConnectionStatus("Key successful generated", 2);
         }
 
         setConnectionStatus("VNC-Server waits for incoming connection", 2);
@@ -369,7 +368,6 @@ public class Rscc {
     rscccfp = new Rscccfp(this, false);
     rscccfp.setDaemon(true);
     rscccfp.start();
-    setConnectionStatus("connected to User", 2);
 
 
     try {
@@ -378,7 +376,7 @@ public class Rscc {
       e.printStackTrace();
     }
 
-    RunRudp rudp = null;
+    rudp = null;
 
     if (isLocalIceSuccessful) {
       rudp = new RunRudp(this, true, true);
@@ -389,15 +387,11 @@ public class Rscc {
 
     if (rudp != null) {
       LOGGER.info("RSCC: Starting rudp");
-      setConnectionStatus("Starting direct VNC connection.", 1);
-
       rudp.start();
-      setConnectionStatus("connected to User", 2);
-
     }
 
     LOGGER.info("RSCC: Starting VNCViewer");
-    setConnectionStatus("Starting VNC Viewer.", 1);
+    setConnectionStatus("Starting VNC Viewer...", 1);
 
     int i = 0;
     while (!isVncSessionRunning() && i < 10) {
@@ -410,6 +404,18 @@ public class Rscc {
         e.printStackTrace();
       }
     }
+
+
+    if (isVncSessionRunning()) {
+      if (rudp != null) {
+        setConnectionStatus("VNC-Connection established using ICE", 2);
+      } else {
+
+        setConnectionStatus("VNC-Connection established over Server", 2);
+      }
+
+    }
+
     setConnectionEstablishmentRunning(false);
   }
 
@@ -463,8 +469,9 @@ public class Rscc {
 
   /**
    * Calls Supporter from addressbook (Starts VNC Server in Reverse mode).
-   * @param address public reachable IP/Domain.
-   * @param port    public reachable Port where vncViewer is listening.
+   *
+   * @param address     public reachable IP/Domain.
+   * @param port        public reachable Port where vncViewer is listening.
    * @param isEncrypted sets if connection should be encrypted.
    */
   public void callSupporterDirect(String address, String port, boolean isEncrypted) {
@@ -800,5 +807,9 @@ public class Rscc {
 
   public String getPathToDefaultSupporters() {
     return pathToDefaultSupporters;
+  }
+
+  public RunRudp getRudp() {
+    return rudp;
   }
 }

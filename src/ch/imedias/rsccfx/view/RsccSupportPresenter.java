@@ -82,7 +82,10 @@ public class RsccSupportPresenter implements ControlledPresenter {
   }
 
   private void attachEvents() {
-    view.connectBtn.setOnAction(event -> model.connectToUser());
+    view.connectBtn.setOnAction(event -> {
+      Thread thread = new Thread(model::connectToUser);
+      thread.start();
+    });
 
     // formats the key while typing
     StringProperty key = view.keyFld.textProperty();
@@ -138,7 +141,8 @@ public class RsccSupportPresenter implements ControlledPresenter {
     // make it possible to connect by pressing enter
     view.keyFld.setOnKeyPressed(ke -> {
       if (ke.getCode() == KeyCode.ENTER && keyUtil.isKeyValid()) {
-        model.connectToUser();
+        Thread thread = new Thread(model::connectToUser);
+        thread.start();
       }
     });
 
@@ -164,9 +168,11 @@ public class RsccSupportPresenter implements ControlledPresenter {
     view.startServiceBtn.setOnAction(event -> {
       if (model.isVncViewerProcessRunning()) {
         view.startServiceBtn.setText(view.strings.startService);
-        model.stopVncViewerAsService();
+        Thread thread = new Thread(model::stopVncViewerAsService);
+        thread.start();
       } else {
-        model.startVncViewerAsService();
+        Thread thread = new Thread(model::startVncViewerAsService);
+        thread.start();
         view.startServiceBtn.setText(view.strings.stopService);
       }
     });
