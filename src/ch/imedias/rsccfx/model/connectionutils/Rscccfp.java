@@ -142,22 +142,18 @@ public class Rscccfp extends Thread {
 
     try {
       int remoteForcesServerMode = inputStream.read();
-      if (remoteForcesServerMode == 1) {
-        LOGGER.info("RSCCCFP: Remote forces ServerMode");
-        model.setForcingServerMode(true);
+      if (remoteForcesServerMode == 1 || model.isForcingServerMode()) {
+        model.setRemoteIceSuccessful(false);
+        model.setLocalIceSuccessful(false);
+        agent.free();
+        closeConnection();
+        LOGGER.info("RSCCCFP: Ending, ServerMode forced");
+        return;
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    if (model.isForcingServerMode()) {
-      model.setRemoteIceSuccessful(false);
-      model.setLocalIceSuccessful(false);
-      agent.free();
-      closeConnection();
-      LOGGER.info("RSCCCFP: Stopping, ServerMode forced");
-      return;
-    }
 
     //Start ICE Agent
     startStun();
