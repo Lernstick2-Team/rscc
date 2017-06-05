@@ -281,7 +281,7 @@ public class Rscc {
     rscccfp = new Rscccfp(this, true);
     rscccfp.setDaemon(true);
     rscccfp.start();
-    setConnectionStatus("Key successful generated", 1);
+    setConnectionStatus("Key successfully generated", 1);
 
     try {
       rscccfp.join();
