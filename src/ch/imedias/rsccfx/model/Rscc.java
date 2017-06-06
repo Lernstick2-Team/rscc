@@ -10,16 +10,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -36,7 +33,39 @@ import javafx.beans.property.StringProperty;
  */
 public class Rscc {
 
+  public static final String PREFERENCES_KEY_SERVER_IP = "keyServerIp";
+  public static final String DEFAULT_KEY_SERVER_IP = "86.119.39.89";
+  public static final String PREFERENCES_KEY_SERVER_HTTP_PORT = "keyServerHttpPort";
+  public static final String DEFAULT_KEY_SERVER_HTTP_PORT = "800";
+  public static final String PREFERENCES_VNC_PORT = "vncPort";
+  public static final int DEFAULT_VNC_PORT = 5900;
+  public static final String PREFERENCES_ICE_PORT = "icePort";
+  public static final int DEFAULT_ICE_PORT = 5050;
+  public static final String PREFERENCES_UDP_PACKAGE_SIZE = "udpPackageSize";
+  public static final int DEFAULT_UDP_PACKAGE_SIZE = 10000;
+  public static final String PREFERENCES_PROXY_PORT = "proxyPort";
+  public static final int DEFAULT_PROXY_PORT = 2601;
+  public static final String PREFERENCES_STUN_SERVER_PORT = "stunServerPort";
+  public static final int DEFAULT_STUN_SERVER_PORT = 3478;
+  public static final String PREFERENCES_FORCING_SERVER_MODE = "forcingServerMode";
+  public static final boolean DEFAULT_FORCING_SERVER_MODE = false;
+  public static final String PREFERENCES_VNC_VIEW_ONLY = "vncViewOnly";
+  public static final boolean DEFAULT_VNC_VIEW_ONLY = false;
+  public static final String PREFERENCES_VNC_BGR_233 = "vncBgr233";
+  public static final boolean DEFAULT_VNC_BGR_233 = false;
+  public static final String PREFERENCES_VNC_COMPRESSION = "vncCompression";
+  public static final int DEFAULT_VNC_COMPRESSION = 6;
+  public static final String PREFERENCES_VNC_QUALITY = "vncQuality";
+  public static final int DEFAULT_VNC_QUALITY = 6;
+  public static final String PREFERENCES_STUN_SERVERS = "STUNServers";
+  public static final String DEFAULT_STUN_SERVERS = "numb.viagenie.ca;"
+      + "stun.ekiga.net;stun.gmx.net;stun.1und1.de";
+  public static final String DELIMITER = ";";
+
+  private static String[] STUN_SERVERS = {
+      "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
   private static final int PACKAGE_SIZE = 10000; // needed, since a static method access it.
+  // TODO: make access depend on current setting
   private static final Logger LOGGER =
       Logger.getLogger(Rscc.class.getName());
   /**
@@ -51,8 +80,6 @@ public class Rscc {
    * ".rscc" is a hidden folder in the user's home directory (e.g. /home/user)
    */
   private static final String RSCC_FOLDER_NAME = ".config/rscc";
-  private static final String[] STUN_SERVERS = {
-      "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
   private static final String[] EXTRACTED_RESOURCES =
       {DOCKER_FOLDER_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
   private static final UnaryOperator<String> REMOVE_FILE_IN_PATH =
@@ -61,8 +88,8 @@ public class Rscc {
 
   private final StringProperty keyServerIp = new SimpleStringProperty();
   private final StringProperty keyServerHttpPort = new SimpleStringProperty();
-  private final IntegerProperty vncPort = new SimpleIntegerProperty(5900);
-  private final IntegerProperty icePort = new SimpleIntegerProperty(5050);
+  private final IntegerProperty vncPort = new SimpleIntegerProperty();
+  private final IntegerProperty icePort = new SimpleIntegerProperty();
   private final BooleanProperty vncViewOnly = new SimpleBooleanProperty();
   private final DoubleProperty vncQuality = new SimpleDoubleProperty();
   private final DoubleProperty vncCompression = new SimpleDoubleProperty();
@@ -71,20 +98,25 @@ public class Rscc {
   private final StringProperty connectionStatusStyle = new SimpleStringProperty();
   private final IntegerProperty udpPackageSize = new SimpleIntegerProperty(
       getUdpPackageSizeStatic());
-  private final IntegerProperty proxyPort = new SimpleIntegerProperty(2601);
-  private final IntegerProperty stunServerPort = new SimpleIntegerProperty(3478);
+  private final IntegerProperty proxyPort = new SimpleIntegerProperty();
+  private final IntegerProperty stunServerPort = new SimpleIntegerProperty();
   private final String[] connectionStatusStyles = {
       "statusBox", "statusBoxInitialize", "statusBoxSuccess", "statusBoxFail"};
   private final StringProperty terminalOutput = new SimpleStringProperty();
 
   private final BooleanProperty forcingServerMode = new SimpleBooleanProperty(false);
   private final BooleanProperty vncSessionRunning = new SimpleBooleanProperty(false);
-  private final BooleanProperty vncServerProcessRunning = new SimpleBooleanProperty(false);
-  private final BooleanProperty vncViewerProcessRunning = new SimpleBooleanProperty(false);
-  private final BooleanProperty connectionEstablishmentRunning = new SimpleBooleanProperty(false);
-  private final BooleanProperty rscccfpHasTalkedToOtherClient = new SimpleBooleanProperty(false);
+  private final BooleanProperty vncServerProcessRunning
+      = new SimpleBooleanProperty(false);
+  private final BooleanProperty vncViewerProcessRunning
+      = new SimpleBooleanProperty(false);
+  private final BooleanProperty connectionEstablishmentRunning
+      = new SimpleBooleanProperty(false);
+  private final BooleanProperty rscccfpHasTalkedToOtherClient
+      = new SimpleBooleanProperty(false);
   private final BooleanProperty isSshRunning = new SimpleBooleanProperty(false);
 
+  private final Preferences preferences = Preferences.userNodeForPackage(Rscc.class);
 
   private final KeyUtil keyUtil;
   private String pathToResources;
@@ -117,7 +149,53 @@ public class Rscc {
     this.systemCommander = systemCommander;
     this.keyUtil = keyUtil;
     defineResourcePath();
-    readServerConfig();
+    loadUserPreferences();
+  }
+
+
+  /**
+   * Saves the UserPreferences.
+   */
+  private void loadUserPreferences() {
+    setKeyServerIp(preferences.get(PREFERENCES_KEY_SERVER_IP, DEFAULT_KEY_SERVER_IP));
+    setKeyServerHttpPort(preferences.get(PREFERENCES_KEY_SERVER_HTTP_PORT,
+        DEFAULT_KEY_SERVER_HTTP_PORT));
+    setVncPort(preferences.getInt(PREFERENCES_VNC_PORT, DEFAULT_VNC_PORT));
+    setIcePort(preferences.getInt(PREFERENCES_ICE_PORT, DEFAULT_ICE_PORT));
+    setUdpPackageSize(preferences.getInt(PREFERENCES_UDP_PACKAGE_SIZE, DEFAULT_UDP_PACKAGE_SIZE));
+    setProxyPort(preferences.getInt(PREFERENCES_PROXY_PORT, DEFAULT_PROXY_PORT));
+    setStunServerPort(preferences.getInt(PREFERENCES_STUN_SERVER_PORT, DEFAULT_STUN_SERVER_PORT));
+    setVncViewOnly(preferences.getBoolean(PREFERENCES_VNC_VIEW_ONLY, DEFAULT_VNC_VIEW_ONLY));
+    setVncBgr233(preferences.getBoolean(PREFERENCES_VNC_BGR_233, DEFAULT_VNC_BGR_233));
+    setVncCompression(preferences.getDouble(PREFERENCES_VNC_COMPRESSION, DEFAULT_VNC_COMPRESSION));
+    setVncQuality(preferences.getDouble(PREFERENCES_VNC_QUALITY, DEFAULT_VNC_QUALITY));
+
+    String stunServers = preferences.get(PREFERENCES_STUN_SERVERS,
+        DEFAULT_STUN_SERVERS);
+    setStunServers(stunServers.split(DELIMITER));
+
+    LOGGER.info("Loaded UserPrefs");
+  }
+
+  /**
+   * Loads the UserPreferences.
+   */
+  public void saveUserPreferences() {
+    preferences.put(PREFERENCES_KEY_SERVER_IP, getKeyServerIp());
+    preferences.put(PREFERENCES_KEY_SERVER_HTTP_PORT, getKeyServerHttpPort());
+    preferences.putInt(PREFERENCES_VNC_PORT, getVncPort());
+    preferences.putInt(PREFERENCES_ICE_PORT, getIcePort());
+    preferences.putInt(PREFERENCES_UDP_PACKAGE_SIZE, getUdpPackageSize());
+    preferences.putInt(PREFERENCES_PROXY_PORT, getProxyPort());
+    preferences.putInt(PREFERENCES_STUN_SERVERS, getStunServerPort());
+    preferences.putBoolean(PREFERENCES_VNC_VIEW_ONLY, getVncViewOnly());
+    preferences.putBoolean(PREFERENCES_VNC_BGR_233, getVncBgr233());
+    preferences.putDouble(PREFERENCES_VNC_COMPRESSION, getVncCompression());
+    preferences.putDouble(PREFERENCES_VNC_QUALITY, getVncQuality());
+
+    preferences.put(PREFERENCES_STUN_SERVERS, String.join(DELIMITER, STUN_SERVERS));
+
+    LOGGER.info("Saved UserPrefs");
   }
 
   public static int getUdpPackageSizeStatic() {
@@ -431,29 +509,6 @@ public class Rscc {
     requestKeyFromServer();
   }
 
-  /**
-   * Reads the docker server configuration from file ssh.rc under "/pathToResourceDocker".
-   */
-  private void readServerConfig() {
-    String configFilePath = pathToResourceDocker + "/ssh.rc";
-    try {
-      List<String> lines = Files.readAllLines(Paths.get(configFilePath), Charset.forName("UTF-8"));
-      for (String line : lines) {
-        if (line.contains("p2p_server=") && !line.endsWith("=")) {
-          setKeyServerIp(line.split("=")[1]);
-        } else if (line.contains("http_port=") && !line.endsWith("=")) {
-          setKeyServerHttpPort(line.split("=")[1]);
-        }
-      }
-      LOGGER.fine("Set serverIP to: " + getKeyServerIp()
-          + "\n Set serverHTTP-port to: " + getKeyServerHttpPort());
-    } catch (IOException e) {
-      LOGGER.severe("Exception thrown when reading from file: "
-          + configFilePath
-          + "\n Exception Message: " + e.getMessage());
-    }
-  }
-
 
   /**
    * Starts VNCViewer in reverse mode (-listen).
@@ -566,6 +621,10 @@ public class Rscc {
     this.vncQuality.set(vncQuality);
   }
 
+  public void setVncQuality(double vncQuality) {
+    this.vncQuality.set(vncQuality);
+  }
+
   public DoubleProperty vncQualityProperty() {
     return vncQuality;
   }
@@ -666,6 +725,10 @@ public class Rscc {
     return STUN_SERVERS;
   }
 
+  public void setStunServers(String[] servers) {
+    STUN_SERVERS = servers;
+  }
+
   public boolean isLocalIceSuccessful() {
     return isLocalIceSuccessful;
   }
@@ -726,48 +789,48 @@ public class Rscc {
     return vncServerProcessRunning.get();
   }
 
-  public BooleanProperty vncServerProcessRunningProperty() {
-    return vncServerProcessRunning;
-  }
-
   public void setVncServerProcessRunning(boolean vncServerProcessRunning) {
     this.vncServerProcessRunning.set(vncServerProcessRunning);
+  }
+
+  public BooleanProperty vncServerProcessRunningProperty() {
+    return vncServerProcessRunning;
   }
 
   public boolean isVncViewerProcessRunning() {
     return vncViewerProcessRunning.get();
   }
 
-  public BooleanProperty vncViewerProcessRunningProperty() {
-    return vncViewerProcessRunning;
-  }
-
   public void setVncViewerProcessRunning(boolean vncViewerProcessRunning) {
     this.vncViewerProcessRunning.set(vncViewerProcessRunning);
+  }
+
+  public BooleanProperty vncViewerProcessRunningProperty() {
+    return vncViewerProcessRunning;
   }
 
   public boolean isConnectionEstablishmentRunning() {
     return connectionEstablishmentRunning.get();
   }
 
-  public BooleanProperty connectionEstablishmentRunningProperty() {
-    return connectionEstablishmentRunning;
-  }
-
   public void setConnectionEstablishmentRunning(boolean connectionEstablishmentRunning) {
     this.connectionEstablishmentRunning.set(connectionEstablishmentRunning);
+  }
+
+  public BooleanProperty connectionEstablishmentRunningProperty() {
+    return connectionEstablishmentRunning;
   }
 
   public boolean getRscccfpHasTalkedToOtherClient() {
     return rscccfpHasTalkedToOtherClient.get();
   }
 
-  public BooleanProperty rscccfpHasTalkedToOtherClientProperty() {
-    return rscccfpHasTalkedToOtherClient;
-  }
-
   public void setRscccfpHasTalkedToOtherClient(boolean rscccfpHasTalkedToOtherClient) {
     this.rscccfpHasTalkedToOtherClient.set(rscccfpHasTalkedToOtherClient);
+  }
+
+  public BooleanProperty rscccfpHasTalkedToOtherClientProperty() {
+    return rscccfpHasTalkedToOtherClient;
   }
 
   public int getUdpPackageSize() {

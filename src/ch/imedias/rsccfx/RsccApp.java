@@ -157,6 +157,7 @@ public class RsccApp extends Application {
 
   @Override
   public void stop() throws Exception {
+    model.saveUserPreferences();
     model.killConnection();
     super.stop();
     System.exit(0);
