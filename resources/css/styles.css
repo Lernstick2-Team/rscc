@@ -137,7 +137,7 @@
     -fx-padding: 2em 0 2em 0;
 }
 
-.context-menu {
+.keyFld .context-menu {
     -fx-font-size: 0.7em;
     -fx-border-radius: 0.308em;
     -fx-background-radius: 0.308em;
@@ -195,6 +195,13 @@
     -fx-border-color: lightgrey;
 
 }
+
+.supporterBtn .context-menu {
+    -fx-font-size: 1em;
+    -fx-border-radius: 0.308em;
+    -fx-background-radius: 0.308em;
+}
+
 
 .supporterBtn:hover{
     -fx-cursor: hand;
