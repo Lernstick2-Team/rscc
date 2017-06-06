@@ -79,7 +79,7 @@ public class Rscc {
    * sh files can not be executed in the JAR file and therefore must be extracted.
    * ".rscc" is a hidden folder in the user's home directory (e.g. /home/user)
    */
-  private static final String RSCC_FOLDER_NAME = ".rscc";
+  private static final String RSCC_FOLDER_NAME = ".config/rscc";
   private static final String[] EXTRACTED_RESOURCES =
       {DOCKER_FOLDER_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
   private static final UnaryOperator<String> REMOVE_FILE_IN_PATH =
@@ -359,7 +359,7 @@ public class Rscc {
     rscccfp = new Rscccfp(this, true);
     rscccfp.setDaemon(true);
     rscccfp.start();
-    setConnectionStatus("Key successful generated", 2);
+    setConnectionStatus("Key successfully generated", 1);
 
     try {
       rscccfp.join();
@@ -390,7 +390,6 @@ public class Rscc {
           LOGGER.info("RSCC: Starting rudp");
 
           rudp.start();
-          setConnectionStatus("Key successful generated", 2);
         }
 
         setConnectionStatus("VNC-Server waits for incoming connection", 2);
@@ -441,13 +440,13 @@ public class Rscc {
       LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
       setConnectionStatus(
           "Key " + getKeyUtil().getKey() + " could not be verified by the server.", 3);
+      setConnectionEstablishmentRunning(false);
       return;
     }
 
     rscccfp = new Rscccfp(this, false);
     rscccfp.setDaemon(true);
     rscccfp.start();
-    setConnectionStatus("connected to User", 2);
 
 
     try {
@@ -456,7 +455,7 @@ public class Rscc {
       e.printStackTrace();
     }
 
-    RunRudp rudp = null;
+    rudp = null;
 
     if (isLocalIceSuccessful) {
       rudp = new RunRudp(this, true, true);
@@ -467,15 +466,11 @@ public class Rscc {
 
     if (rudp != null) {
       LOGGER.info("RSCC: Starting rudp");
-      setConnectionStatus("Starting direct VNC connection.", 1);
-
       rudp.start();
-      setConnectionStatus("connected to User", 2);
-
     }
 
     LOGGER.info("RSCC: Starting VNCViewer");
-    setConnectionStatus("Starting VNC Viewer.", 1);
+    setConnectionStatus("Starting VNC Viewer...", 1);
 
     int i = 0;
     while (!isVncSessionRunning() && i < 10) {
@@ -488,6 +483,18 @@ public class Rscc {
         e.printStackTrace();
       }
     }
+
+
+    if (isVncSessionRunning()) {
+      if (rudp != null) {
+        setConnectionStatus("VNC-Connection established using ICE", 2);
+      } else {
+
+        setConnectionStatus("VNC-Connection established over Server", 2);
+      }
+
+    }
+
     setConnectionEstablishmentRunning(false);
   }
 
@@ -866,5 +873,7 @@ public class Rscc {
     return pathToDefaultSupporters;
   }
 
-
+  public RunRudp getRudp() {
+    return rudp;
+  }
 }

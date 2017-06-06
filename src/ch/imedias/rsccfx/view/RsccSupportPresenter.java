@@ -55,7 +55,8 @@ public class RsccSupportPresenter implements ControlledPresenter {
   }
 
   private void initImages() {
-    view.validationImg.load(invalidImage);
+    String validationImage = keyUtil.isKeyValid() ? validImage : invalidImage;
+    Platform.runLater(() -> view.validationImg.load(validationImage));
   }
 
   /**
@@ -80,11 +81,11 @@ public class RsccSupportPresenter implements ControlledPresenter {
 
   }
 
-  /**
-   * Updates the validation image after every key pressed.
-   */
   private void attachEvents() {
-    view.connectBtn.setOnAction(event -> model.connectToUser());
+    view.connectBtn.setOnAction(event -> {
+      Thread thread = new Thread(model::connectToUser);
+      thread.start();
+    });
 
     // formats the key while typing
     StringProperty key = view.keyFld.textProperty();
@@ -140,7 +141,8 @@ public class RsccSupportPresenter implements ControlledPresenter {
     // make it possible to connect by pressing enter
     view.keyFld.setOnKeyPressed(ke -> {
       if (ke.getCode() == KeyCode.ENTER && keyUtil.isKeyValid()) {
-        model.connectToUser();
+        Thread thread = new Thread(model::connectToUser);
+        thread.start();
       }
     });
 
@@ -166,9 +168,11 @@ public class RsccSupportPresenter implements ControlledPresenter {
     view.startServiceBtn.setOnAction(event -> {
       if (model.isVncViewerProcessRunning()) {
         view.startServiceBtn.setText(view.strings.startService);
-        model.stopVncViewerAsService();
+        Thread thread = new Thread(model::stopVncViewerAsService);
+        thread.start();
       } else {
-        model.startVncViewerAsService();
+        Thread thread = new Thread(model::startVncViewerAsService);
+        thread.start();
         view.startServiceBtn.setText(view.strings.stopService);
       }
     });
@@ -198,7 +202,11 @@ public class RsccSupportPresenter implements ControlledPresenter {
    */
   private void initHeader() {
     // Set all the actions regarding buttons in this method.
-    headerPresenter.setBackBtnAction(event -> viewParent.setView("home"));
+    headerPresenter.setBackBtnAction(event -> {
+      viewParent.setView("home");
+      view.keyFld.clear();
+      model.killConnection();
+    });
     headerPresenter.setHelpBtnAction(event ->
         popOverHelper.helpPopOver.show(view.headerView.helpBtn));
     headerPresenter.setSettingsBtnAction(event ->
