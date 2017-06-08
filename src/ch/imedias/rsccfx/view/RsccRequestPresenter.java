@@ -283,6 +283,15 @@ public class RsccRequestPresenter implements ControlledPresenter {
             event.getScreenY());
       }
     });
+
+    // add context menu event on long press with touch
+    button.setOnTouchStationary(touchEvent -> {
+      if (supporters.get(supporters.size() - 1) != supporter) {
+        contextMenu.show(button, touchEvent.getTouchPoint().getScreenX(),
+                touchEvent.getTouchPoint().getScreenY());
+      }
+    });
+
   }
 
   private void initButtonSize(Button button) {
