@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
@@ -45,7 +44,6 @@ public class SupporterAttributesDialog extends DialogPane {
   final ButtonType cancelBtnType = ButtonType.CANCEL;
   final CheckBox chargeableCBox = new CheckBox();
   final CheckBox encryptedCBox = new CheckBox();
-  Alert alert;
   Strings strings = new Strings();
   private Supporter supporter;
 
@@ -83,10 +81,6 @@ public class SupporterAttributesDialog extends DialogPane {
     pictureFld.setText("/images/sup.jpg");
     chargeableCBox.setSelected(supporter.isChargeable());
     encryptedCBox.setSelected(supporter.isEncrypted());
-
-    alert = new Alert(Alert.AlertType.INFORMATION,
-        strings.supporterNameInformationDialog, ButtonType.OK);
-
   }
 
   private void saveData() {
