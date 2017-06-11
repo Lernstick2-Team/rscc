@@ -61,19 +61,12 @@ fi
 keyfile=$(tempfile)
 echo -e "$key\n" | ssh -o StrictHostKeyChecking=no -p $p2p_port -i keys/get.key vnc@$p2p_server > $keyfile 2>>$logfile
 
-uploadkey=$(tempfile -n /tmp/$key.stn)
-sed -n '29,$w '$uploadkey $keyfile
-sed -i '29,$d' $keyfile
-chmod 0600 $keyfile
-
 ### get the remote port from the key file
 remote_port=$(head -1 $keyfile)
 
 ### start the tunnel for port-forwarding
 ssh="ssh -o StrictHostKeyChecking=no -p $p2p_port -f -N -t"
-
 if [ $compress = 'yes' ]; then ssh="$ssh -C"; fi
 $ssh -L $local_port:localhost:$remote_port \
      -i $keyfile vnc@$p2p_server 2>>$logfile
-
 rm $keyfile

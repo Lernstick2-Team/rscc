@@ -5,10 +5,10 @@ import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.xml.Supporter;
 import ch.imedias.rsccfx.view.util.NumberTextField;
 import java.util.Optional;
+import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
@@ -23,9 +23,10 @@ import javafx.scene.layout.Priority;
  */
 public class SupporterAttributesDialog extends DialogPane {
 
+  private static final Logger LOGGER =
+      Logger.getLogger(SupporterAttributesDialog.class.getName());
+
   private static final int DEFAULT_PORT = 5500;
-  // TODO: add correct default encrypted port
-  private static final int DEFAULT_ENCRYPTED_PORT = DEFAULT_PORT;
 
   final Dialog dialog = new Dialog();
   final GridPane attributePane = new GridPane();
@@ -41,7 +42,6 @@ public class SupporterAttributesDialog extends DialogPane {
   final ButtonType cancelBtnType = ButtonType.CANCEL;
   final CheckBox chargeableCBox = new CheckBox();
   final CheckBox encryptedCBox = new CheckBox();
-  Alert alert;
   Strings strings = new Strings();
   private Supporter supporter;
 
@@ -53,7 +53,6 @@ public class SupporterAttributesDialog extends DialogPane {
    * @param supporter the supporter for the dialog.
    */
   public SupporterAttributesDialog(Supporter supporter) {
-    // TODO: 4K usw.?
     this.getStylesheets().add(RsccApp.styleSheet);
     this.supporter = supporter;
     initFieldData();
@@ -78,18 +77,13 @@ public class SupporterAttributesDialog extends DialogPane {
     portFld.setText(String.valueOf(supporter.getPort()));
     chargeableCBox.setSelected(supporter.isChargeable());
     encryptedCBox.setSelected(supporter.isEncrypted());
-
-    alert = new Alert(Alert.AlertType.INFORMATION,
-        strings.supporterNameInformationDialog, ButtonType.OK);
-
   }
 
   private void saveData() {
     supporter.setDescription(nameFld.getText());
     supporter.setAddress(addressFld.getText());
     if (isEmpty(portFld.getText())) {
-      int defaultPort = encryptedCBox.isSelected() ? DEFAULT_ENCRYPTED_PORT : DEFAULT_PORT;
-      portFld.setText(String.valueOf(defaultPort));
+      portFld.setText(String.valueOf(DEFAULT_PORT));
     }
     supporter.setPort(portFld.getText());
     supporter.setEncrypted(encryptedCBox.isSelected());

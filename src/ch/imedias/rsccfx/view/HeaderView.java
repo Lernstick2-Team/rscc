@@ -23,7 +23,7 @@ import javafx.scene.layout.RowConstraints;
  */
 public class HeaderView extends GridPane {
   private static final Logger LOGGER =
-      Logger.getLogger(Rscc.class.getName());
+      Logger.getLogger(HeaderView.class.getName());
 
   private static final double ICON_SIZE = 40;
 
@@ -102,7 +102,6 @@ public class HeaderView extends GridPane {
 
           Button button = (Button) node;
           button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
         });
 
     this.prefHeightProperty().bind(BUTTON_SIZE);
@@ -121,7 +120,5 @@ public class HeaderView extends GridPane {
   private void bindFieldsToModel() {
     // make bindings to the model
   }
-
-
 }
 

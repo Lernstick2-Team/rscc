@@ -23,8 +23,10 @@ public class RsccTest {
   private static final String KEY_SERVER_HTTP_PORT = "800";
 
   Rscc model;
+  SystemCommanderReturnValues returnValues;
   SystemCommander mockSystemCommander;
   KeyUtil mockKeyUtil;
+
 
   /**
    * Initializes test fixture before each test.
@@ -34,18 +36,20 @@ public class RsccTest {
     mockSystemCommander = mock(SystemCommander.class);
     mockKeyUtil = mock(KeyUtil.class);
     model = new Rscc(mockSystemCommander, mockKeyUtil);
+    returnValues = new SystemCommanderReturnValues();
     // since commandStringGenerator is mainly a utility function and is being tested separately
     // call the real method
     doCallRealMethod().when(mockSystemCommander).commandStringGenerator(any(), any(), any());
     model.setKeyServerIp(KEY_SERVER_IP);
     model.setKeyServerHttpPort(KEY_SERVER_HTTP_PORT);
+    returnValues.setOutputString(KEY);
     when(mockSystemCommander.executeTerminalCommand(
-        argThat(string -> string.contains("port_share.sh")))).thenReturn(KEY);
+        argThat(string -> string.contains("port_share.sh")))).thenReturn(returnValues);
     when(mockKeyUtil.getKey()).thenReturn(KEY);
   }
 
   /**
-   * Test for Constructor {@link Rscc#Rscc(SystemCommander,KeyUtil)}.
+   * Test for Constructor {@link Rscc#Rscc(SystemCommander, KeyUtil)}.
    */
   @Test
   public void testRsccConstructorIllegalArguments() {
@@ -72,12 +76,12 @@ public class RsccTest {
   }
 
   /**
-   * Test for Constructor {@link Rscc#Rscc(SystemCommander,KeyUtil)}.
+   * Test for Constructor {@link Rscc#Rscc(SystemCommander, KeyUtil)}.
    */
   @Test
   public void testRsccConstructor() {
     try {
-      new Rscc(mockSystemCommander,mockKeyUtil);
+      new Rscc(mockSystemCommander, mockKeyUtil);
     } catch (Exception e) {
       fail(e.getMessage());
     }
@@ -196,15 +200,15 @@ public class RsccTest {
   public void testSetConnectionStatus() {
     int styleIndexToTest = 0;
     String statusText = "test";
-    model.setConnectionStatus(statusText,styleIndexToTest);
+    model.setConnectionStatus(statusText, styleIndexToTest);
     String currentStatus = model.getConnectionStatusStyle();
-    assertEquals(model.getConnectionStatusStyles(styleIndexToTest),currentStatus);
+    assertEquals(model.getConnectionStatusStyles(styleIndexToTest), currentStatus);
     assertEquals(model.getConnectionStatusText(), statusText);
 
     styleIndexToTest = 1;
-    model.setConnectionStatus(statusText,styleIndexToTest);
+    model.setConnectionStatus(statusText, styleIndexToTest);
     currentStatus = model.getConnectionStatusStyle();
-    assertEquals(model.getConnectionStatusStyles(styleIndexToTest),currentStatus);
+    assertEquals(model.getConnectionStatusStyles(styleIndexToTest), currentStatus);
     assertEquals(model.getConnectionStatusText(), statusText);
   }
 
@@ -216,7 +220,7 @@ public class RsccTest {
     try {
       int styleIndexToTest = -1;
       String statusText = "test";
-      model.setConnectionStatus(statusText,styleIndexToTest);
+      model.setConnectionStatus(statusText, styleIndexToTest);
     } catch (IllegalArgumentException e) {
       // expected behavior
     }
@@ -224,7 +228,7 @@ public class RsccTest {
     try {
       int styleIndexToTest = 52;
       String statusText = "test";
-      model.setConnectionStatus(statusText,styleIndexToTest);
+      model.setConnectionStatus(statusText, styleIndexToTest);
     } catch (IllegalArgumentException e) {
       // expected behavior
     }
@@ -232,7 +236,7 @@ public class RsccTest {
     try {
       int styleIndexToTest = 0;
       String statusText = null;
-      model.setConnectionStatus(statusText,styleIndexToTest);
+      model.setConnectionStatus(statusText, styleIndexToTest);
     } catch (IllegalArgumentException e) {
       // expected behavior
     }

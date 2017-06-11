@@ -45,7 +45,7 @@ public class RsccApp extends Application {
 
   private static final double ROOT_TEXT_SIZE_4K = 13;
   private static final double ROOT_TEXT_SIZE_FULL_HD = 11;
-  private static final double ROOT_TEXT_SIZE_LOW = 9;
+  private static final double ROOT_TEXT_SIZE_LOW = 10;
 
   public static double rootTextSize;
 
@@ -81,7 +81,6 @@ public class RsccApp extends Application {
     stage.setHeight(screenHeight / 1.5);
     stage.setX(screenWidth / 2 - stage.getWidth() / 2);
     stage.setY(screenHeight / 2 - stage.getHeight() / 2);
-
     stage.setMinWidth((screenWidth / 1.8) / 1.2);
     stage.setMinHeight((screenHeight / 1.5) / 1.3);
 
@@ -93,10 +92,17 @@ public class RsccApp extends Application {
       // 4K resolution
       rootTextSize = ROOT_TEXT_SIZE_4K;
       LOGGER.info("4K Resolution, Text Size: " + rootTextSize);
+
     } else if (resolution < borderToFullHd) {
       // low resolution (below Full HD)
       rootTextSize = ROOT_TEXT_SIZE_LOW;
       LOGGER.info("Low Resolution, Text Size: " + rootTextSize);
+      stage.setMinWidth((screenWidth / 1.5));
+      stage.setMinHeight((screenHeight / 1.5));
+      stage.setWidth(screenWidth / 1.2);
+      stage.setHeight(screenHeight / 1.2);
+      stage.setX(screenWidth / 2 - stage.getWidth() / 2);
+      stage.setY(screenHeight / 2 - stage.getHeight() / 2);
     } else {
       // Full HD resolution
       rootTextSize = ROOT_TEXT_SIZE_FULL_HD;
@@ -110,7 +116,6 @@ public class RsccApp extends Application {
 
     SystemCommander systemCommander = new SystemCommander();
     model = new Rscc(systemCommander, new KeyUtil());
-    systemCommander.setModel(model);
     ViewController mainView = new ViewController();
 
     // Set root font size, everything adapts to it afterwards
@@ -147,15 +152,15 @@ public class RsccApp extends Application {
     ((RsccSupportPresenter) mainView.getPresenter(SUPPORT_VIEW)).initSize(scene);
 
     scene.getStylesheets().add(styleSheet);
+
   }
 
   @Override
   public void stop() throws Exception {
-    String key = model.getKeyUtil().getKey();
-    if (key != null) {
-      model.killConnection();
-    }
+    model.saveUserPreferences();
+    model.killConnection();
     super.stop();
+    System.exit(0);
   }
 
   private void setLogLevel(Level logLevel) {

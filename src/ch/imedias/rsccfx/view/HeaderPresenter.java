@@ -2,6 +2,7 @@ package ch.imedias.rsccfx.view;
 
 import ch.imedias.rsccfx.model.Rscc;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
@@ -43,6 +44,7 @@ public class HeaderPresenter {
    */
   public void setHelpBtnAction(EventHandler<ActionEvent> action) {
     view.helpBtn.setOnAction(action);
+    //view.createWebHelp();
   }
 
   /**
@@ -70,8 +72,14 @@ public class HeaderPresenter {
    * Makes the settings button in the header invisible or visible.
    * Is being used in the HomeView to make the settings button invisible,
    * since there are no settings in it.
+   * @param isVisible defines if the button should be visible or not.
    */
   public void setSettingsBtnVisibility(Boolean isVisible) {
     view.settingsBtn.setVisible(isVisible);
   }
+
+  public BooleanProperty getSettingsBtnDisableProperty() {
+    return view.settingsBtn.disableProperty();
+  }
+
 }

@@ -7,9 +7,6 @@ import ch.imedias.rsccfx.model.Rscc;
 import java.util.logging.Logger;
 import javafx.scene.Scene;
 
-// TODO: Check mockup for reference here:
-// https://www.cs.technik.fhnw.ch/confluence16/display/VTDESGB/Mockups+-+Remote+Support+-+Version+0.8?preview=/15991708/15991716/Startscreen.png
-
 /**
  * Defines the behaviour of interactions
  * and initializes the size of the GUI components.
@@ -76,7 +73,7 @@ public class RsccHomePresenter implements ControlledPresenter {
 
   private void attachEvents() {
     view.supportViewBtn.setOnAction(event -> {
-      model.setConnectionStatus("", 0);
+      model.setConnectionStatus("Please enter the Key", 0);
       viewParent.setView(RsccApp.SUPPORT_VIEW);
     });
     view.requestViewBtn.setOnAction(event -> {

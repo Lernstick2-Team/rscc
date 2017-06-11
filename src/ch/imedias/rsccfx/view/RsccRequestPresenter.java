@@ -9,9 +9,7 @@ import ch.imedias.rsccfx.model.xml.SupporterHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -41,7 +39,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
   private PopOverHelper popOverHelper;
   private int buttonSize = 0;
 
-
   /**
    * Initializes a new RsccRequestPresenter with the matching view.
    *
@@ -54,10 +51,13 @@ public class RsccRequestPresenter implements ControlledPresenter {
     headerPresenter = new HeaderPresenter(model, view.headerView);
     supporterHelper = new SupporterHelper(model);
     initHeader();
+    initBindings();
     initSupporterList();
     attachEvents();
+    setupBindings();
     popOverHelper = new PopOverHelper(model, RsccApp.REQUEST_VIEW);
   }
+
 
   /**
    * Defines the ViewController to allow changing views.
@@ -67,6 +67,12 @@ public class RsccRequestPresenter implements ControlledPresenter {
   }
 
   private void attachEvents() {
+    //Disconnects session on button click
+    view.disconnectBtn.setOnAction(event -> {
+      model.killConnection();
+      view.disconnectBtn.setDisable(true);
+    });
+
     view.reloadKeyBtn.setOnAction(
         event -> {
           Thread thread = new Thread(model::refreshKey);
@@ -110,6 +116,14 @@ public class RsccRequestPresenter implements ControlledPresenter {
         view.statusLbl.textProperty().set(newValue);
       });
     });
+
+    model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
+          if (oldValue && !newValue
+              && RsccApp.REQUEST_VIEW.equals(viewParent.getCurrentViewName())) {
+            model.refreshKey();
+          }
+        }
+    );
   }
 
   /**
@@ -124,7 +138,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
     view.supporterDescriptionLbl.prefWidthProperty().bind(scene.widthProperty().divide(3));
     view.supporterInnerPane.prefWidthProperty().bind(scene.widthProperty().divide(3).multiply(2));
     view.reloadKeyBtn.prefHeightProperty().bind(view.generatedKeyFld.heightProperty());
-
   }
 
   /**
@@ -140,6 +153,21 @@ public class RsccRequestPresenter implements ControlledPresenter {
         popOverHelper.helpPopOver.show(view.headerView.helpBtn));
     headerPresenter.setSettingsBtnAction(event ->
         popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
+
+  }
+
+  /**
+   * Setup bindings.
+   */
+  private void setupBindings() {
+    headerPresenter.getSettingsBtnDisableProperty().bind(model.vncServerProcessRunningProperty());
+  }
+
+
+  private void initBindings() {
+    // disable disconnect button if no session is started
+    view.disconnectBtn.disableProperty().bind(model.vncSessionRunningProperty().not());
+
   }
 
   /**
@@ -159,6 +187,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
   /**
    * Creates new SupporterButton and adds it to the GridPane.
+   * @param supporter the supporter which a button should be created for.
    */
   public void createNewSupporterBtn(Supporter supporter) {
     supporters.add(supporter);
@@ -237,7 +266,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     MenuItem connectMenuItem = new MenuItem("Call");
     connectMenuItem.setOnAction(event -> {
-      /*TODO start connection*/
+      model.callSupporterDirect(supporter.getAddress(), supporter.getPort(),
+          supporter.isEncrypted());
     });
 
     MenuItem deleteMenuItem = new MenuItem("Delete");
@@ -264,7 +294,5 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     button.setPadding(new Insets(20));
-
   }
-
 }

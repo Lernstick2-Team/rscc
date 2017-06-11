@@ -4,9 +4,13 @@ import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.connectionutils.rudp.src.ReliableServerSocket;
 import ch.imedias.rsccfx.model.connectionutils.rudp.src.ReliableSocket;
 import ch.imedias.rsccfx.model.connectionutils.rudp.src.ReliableSocketProfile;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -20,11 +24,23 @@ public class RunRudp extends Thread {
   private static final Logger LOGGER = Logger.getLogger(Rscccfp.class.getName());
 
 
-  private boolean isOngoing = true;
+  private boolean exit = false;
   private Rscc model;
   private boolean viewerIsRudpClient;
   private boolean callAsViewer;
   private ReliableSocketProfile profile;
+
+  private InputStream rudpInputStream;
+  private OutputStream rudpOutputStream;
+  private InputStream tcpInputStream;
+  private OutputStream tcpOutputStream;
+  private ReliableSocket rudpSocket;
+  private Socket rudpSocket2;
+  private ReliableServerSocket rudpServerSocket;
+  private Socket tcpSocket;
+  private ServerSocket tcpServerSocket;
+
+  private ListMultimap<String, Closeable> closables = ArrayListMultimap.create();
 
   /**
    * Constructor.
@@ -47,13 +63,7 @@ public class RunRudp extends Thread {
 
       String remoteAddressAsString = model.getRemoteClientIpAddress().getHostAddress();
 
-      ReliableSocket rudpSocket;
-      Socket rudpSocket2;
-      ReliableServerSocket rudpServerSocket;
-      Socket tcpSocket;
-      ServerSocket tcpServerSocket;
-
-      model.setConnectionStatus("Trying to setup UDP proxy", 1);
+      model.setConnectionStatus("Starting RUDP...", 1);
 
 
       if (viewerIsRudpClient && callAsViewer) {
@@ -63,13 +73,17 @@ public class RunRudp extends Thread {
         LOGGER.info("Connect rudp to " + model.getRemoteClientIpAddress().getHostAddress()
             + ":" + model.getRemoteClientPort());
 
-        //possibly it can be run on any port? should at least.
-        // -> TODO try out to remove null and iceport
+        //Could be an issue in a p2p session behind NAT, works locally.
+        //    rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
+        // model.getRemoteClientPort(), null, model.getIcePort());
+        // rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
+        //   model.getRemoteClientPort());
+
         rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
             model.getRemoteClientPort(), null, model.getIcePort());
 
-        final InputStream rudpInputStream = rudpSocket.getInputStream();
-        final OutputStream rudpOutputStream = rudpSocket.getOutputStream();
+        rudpInputStream = rudpSocket.getInputStream();
+        rudpOutputStream = rudpSocket.getOutputStream();
 
         LOGGER.info("Sucessfully connected rudp to " + model.getRemoteClientIpAddress()
             .getHostAddress() + ":" + model.getRemoteClientPort());
@@ -80,8 +94,8 @@ public class RunRudp extends Thread {
         tcpSocket = tcpServerSocket.accept();
         tcpSocket.setTcpNoDelay(true);
 
-        final InputStream tcpInputStream = tcpSocket.getInputStream();
-        final OutputStream tcpOutputStream = tcpSocket.getOutputStream();
+        tcpInputStream = tcpSocket.getInputStream();
+        tcpOutputStream = tcpSocket.getOutputStream();
 
         LOGGER.info("Accepted incoming tcp connection from" + tcpSocket.getInetAddress()
             .getHostAddress());
@@ -103,8 +117,8 @@ public class RunRudp extends Thread {
         rudpServerSocket = new ReliableServerSocket(model.getIcePort());
         rudpSocket2 = rudpServerSocket.accept();
 
-        final InputStream rudpInputStream = rudpSocket2.getInputStream();
-        final OutputStream rudpOutputStream = rudpSocket2.getOutputStream();
+        rudpInputStream = rudpSocket2.getInputStream();
+        rudpOutputStream = rudpSocket2.getOutputStream();
         LOGGER.info("Accepted incoming rudp connection from" + rudpSocket2.getInetAddress()
             .getHostAddress());
 
@@ -114,8 +128,8 @@ public class RunRudp extends Thread {
 
         tcpSocket = new Socket(InetAddress.getByName("127.0.0.1"), model.getVncPort());
 
-        final InputStream tcpInputStream = tcpSocket.getInputStream();
-        final OutputStream tcpOutputStream = tcpSocket.getOutputStream();
+        tcpInputStream = tcpSocket.getInputStream();
+        tcpOutputStream = tcpSocket.getOutputStream();
 
         LOGGER.info("Sucessful tcp connection");
 
@@ -138,8 +152,8 @@ public class RunRudp extends Thread {
         LOGGER.info("Accepted incoming rudp connection from" + rudpSocket2.getInetAddress()
             .getHostAddress());
 
-        final InputStream rudpInputStream = rudpSocket2.getInputStream();
-        final OutputStream rudpOutputStream = rudpSocket2.getOutputStream();
+        rudpInputStream = rudpSocket2.getInputStream();
+        rudpOutputStream = rudpSocket2.getOutputStream();
 
         //TCP Server
         tcpServerSocket = new ServerSocket(model.getProxyPort());
@@ -147,8 +161,8 @@ public class RunRudp extends Thread {
         tcpSocket.setTcpNoDelay(true);
         LOGGER.info("TCP connected");
 
-        final InputStream tcpInputStream = tcpSocket.getInputStream();
-        final OutputStream tcpOutputStream = tcpSocket.getOutputStream();
+        tcpInputStream = tcpSocket.getInputStream();
+        tcpOutputStream = tcpSocket.getOutputStream();
 
         LOGGER.info("Accepted incoming tcp connection from" + tcpSocket.getInetAddress()
             .getHostAddress());
@@ -170,12 +184,16 @@ public class RunRudp extends Thread {
             + ":" + model.getRemoteClientPort());
 
         //possibly it can be run on any port? should at least.
-        // -> TODO try out to remove null and iceport
+        //model.getRemoteClientPort(), null, model.getIcePort()); alternative for starting Ice
+        //on a fixed port (Could be an issue on p2p connection over NAT)
+
+        // rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
+        //   model.getRemoteClientPort());
         rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
             model.getRemoteClientPort(), null, model.getIcePort());
 
-        final InputStream rudpInputStream = rudpSocket.getInputStream();
-        final OutputStream rudpOutputStream = rudpSocket.getOutputStream();
+        rudpInputStream = rudpSocket.getInputStream();
+        rudpOutputStream = rudpSocket.getOutputStream();
 
         LOGGER.info("Sucessfully connected rudp to " + model.getRemoteClientIpAddress()
             .getHostAddress() + ":" + model.getRemoteClientPort());
@@ -186,17 +204,13 @@ public class RunRudp extends Thread {
 
         tcpSocket = new Socket(InetAddress.getByName("127.0.0.1"), model.getVncPort());
 
-        final InputStream tcpInputStream = tcpSocket.getInputStream();
-        final OutputStream tcpOutputStream = tcpSocket.getOutputStream();
+        tcpInputStream = tcpSocket.getInputStream();
+        tcpOutputStream = tcpSocket.getOutputStream();
 
         LOGGER.info("Sucessful tcp connection");
 
         startProxy(tcpInputStream, tcpOutputStream, rudpInputStream, rudpOutputStream,
             model.getUdpPackageSize());
-
-        rudpSocket.close();
-        tcpSocket.close();
-
       }
     } catch (Exception e) {
       LOGGER.info(e.toString() + " " + e.getStackTrace());
@@ -215,7 +229,6 @@ public class RunRudp extends Thread {
    */
   private void startProxy(InputStream tcpInput, OutputStream tcpOutput, InputStream
       rudpInput, OutputStream rudpOutput, int bufferSize) {
-    model.setConnectionStatus("UDP proxy succesful", 2);
 
     final byte[] request = new byte[bufferSize];
     byte[] reply = new byte[bufferSize];
@@ -226,7 +239,7 @@ public class RunRudp extends Thread {
       public void run() {
         int bytesRead;
         try {
-          while ((bytesRead = tcpInput.read(request)) != -1 && isOngoing) {
+          while ((bytesRead = tcpInput.read(request)) != -1 && !exit) {
             rudpOutput.write(request, 0, bytesRead);
             //LOGGER.info("wrote1:" + bytesRead);
             rudpOutput.flush();
@@ -243,8 +256,8 @@ public class RunRudp extends Thread {
           LOGGER.info(e.toString() + " " + e.getStackTrace());
         } finally {
           try {
-            tcpInput.close();
-            rudpOutput.close();
+            closeAll();
+
           } catch (Exception e) {
             LOGGER.info(e.toString() + " " + e.getStackTrace());
           }
@@ -261,7 +274,7 @@ public class RunRudp extends Thread {
 
     int bytesRead;
     try {
-      while ((bytesRead = rudpInput.read(reply)) != -1 && isOngoing) {
+      while ((bytesRead = rudpInput.read(reply)) != -1 && !exit) {
         tcpOutput.write(reply, 0, bytesRead);
         tcpOutput.flush();
       }
@@ -269,8 +282,8 @@ public class RunRudp extends Thread {
       LOGGER.info(e.toString() + " " + e.getStackTrace());
     } finally {
       try {
-        tcpOutput.close();
-        rudpInput.close();
+        closeAll();
+
       } catch (Exception e) {
         LOGGER.info(e.toString() + " " + e.getStackTrace());
       }
@@ -281,14 +294,111 @@ public class RunRudp extends Thread {
     // connection to our client.
   }
 
-  public boolean isIsOngoing() {
-    return isOngoing;
+  /**
+   * Stops the rudp-Proxa and closes all Sockets and streams.
+   */
+  public void closeRudpConnection() {
+    this.exit = true;
+    closeAll();
+    this.exit = false;
+
   }
 
-  public void setIsOngoing(boolean isOngoing) {
-    this.isOngoing = isOngoing;
+  private void closeAll() {
+    setupClosables();
+    closables.forEach(
+        (name, closeable) -> {
+          if (closeable != null) {
+            LOGGER.info(name + " is not null - close");
+            try {
+              closeable.close();
+            } catch (IOException e) {
+              LOGGER.warning(e.getMessage());
+            }
+          }
+        }
+    );
+  }
+
+  private void setupClosables() {
+
+    if (tcpInputStream != null) {
+      LOGGER.info("tcpInputStream is not null - close");
+      try {
+        tcpInputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (rudpInputStream != null) {
+      LOGGER.info("rudpInputStream is not null - close");
+      try {
+        rudpInputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (tcpOutputStream != null) {
+      LOGGER.info("tcpOutputStream is not null - close");
+      try {
+        tcpOutputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (rudpOutputStream != null) {
+      LOGGER.info("rudpOutputStream is not null - close");
+      try {
+        rudpOutputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (rudpSocket != null && !rudpSocket.isClosed()) {
+      LOGGER.info("rudpSocket is not null - close");
+      try {
+        rudpSocket.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (rudpSocket2 != null && !rudpSocket2.isClosed()) {
+      LOGGER.info("rudpSocket2 is not null - close");
+      try {
+        rudpSocket2.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (rudpServerSocket != null && !rudpServerSocket.isClosed()) {
+      LOGGER.info("rudpServerSocket is not null - close");
+      try {
+        rudpServerSocket.close();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    if (tcpServerSocket != null && !tcpServerSocket.isClosed()) {
+      LOGGER.info("tcpServerSocket is not null - close");
+      try {
+        tcpServerSocket.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    if (tcpSocket != null && !tcpSocket.isClosed()) {
+      LOGGER.info("tcpSocket is not null - close");
+      try {
+        tcpSocket.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 }
+
+
+
 
 
 

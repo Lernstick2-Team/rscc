@@ -137,6 +137,12 @@
     -fx-padding: 2em 0 2em 0;
 }
 
+.keyFld .context-menu {
+    -fx-font-size: 0.7em;
+    -fx-border-radius: 0.308em;
+    -fx-background-radius: 0.308em;
+}
+
 .titled-pane {
     -fx-font-size: 1.641em;
 }
@@ -167,7 +173,7 @@
 }
 
 #scrollPane {
-    -fx-background-color: transparent;
+    -fx-background: none;
 }
 
 #reloadKeyBtn {
@@ -189,6 +195,13 @@
     -fx-border-color: lightgrey;
 
 }
+
+.supporterBtn .context-menu {
+    -fx-font-size: 1em;
+    -fx-border-radius: 0.308em;
+    -fx-background-radius: 0.308em;
+}
+
 
 .supporterBtn:hover{
     -fx-cursor: hand;
