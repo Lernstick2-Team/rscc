@@ -3,6 +3,7 @@ package ch.imedias.rsccfx.model.xml;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,18 +41,8 @@ public class SupporterTest {
    * Test for {@link Supporter#equals(Object)} and {@link Supporter#hashCode()}.
    */
   @Test
-  public void testEqualsHashCode() {
-    String description = "Test Description";
-    String address = "Test Address";
-    String port = "65535";
-    boolean encrypted = true;
-    boolean chargeable = true;
-
-    // both supporters have the same attributes, so equals and hashcode should also be the same
-    Supporter supporter1 = new Supporter(description, address, port, encrypted, chargeable);
-    Supporter supporter2 = new Supporter(description, address, port, encrypted, chargeable);
-    assertTrue(supporter1.equals(supporter2) && supporter2.equals(supporter1));
-    assertTrue(supporter1.hashCode() == supporter2.hashCode());
+  public void testEqualsContract() {
+    EqualsVerifier.forClass(Supporter.class).verify();
   }
 
 }
