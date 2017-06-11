@@ -1,9 +1,11 @@
 package ch.imedias.rsccfx.model.xml;
 
+import static com.sun.javaws.JnlpxArgs.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,7 +44,12 @@ public class SupporterTest {
    */
   @Test
   public void testEqualsContract() {
-    EqualsVerifier.forClass(Supporter.class).verify();
+
+    EqualsVerifier
+        .forClass(Supporter.class)
+        .suppress(Warning.NONFINAL_FIELDS)
+        .verify();
+
   }
 
 }
