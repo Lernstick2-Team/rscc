@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Created by François Martin on 25.05.17.
+ * Tests the SupporterHelper class.
  */
 public class SupporterHelperTest {
 
