@@ -1,12 +1,17 @@
 package ch.imedias.rsccfx.model.xml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import ch.imedias.rsccfx.model.Rscc;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.UnmarshalException;
+import javax.xml.bind.Unmarshaller;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -71,15 +76,25 @@ public class SupporterHelperTest {
    */
   @Test
   public void testLoadSupporters() throws Exception {
-    // test if preferences are null
+    // if preferences are null, test if default supporters are returned
     supporterHelper.setSupportersInPreferences(null);
-    testGetDefaultSupporters();
-    // testif preferenes are not null
-    supporterHelper.setSupportersInPreferences(supportersXml);
     List<Supporter> actualSupporters = supporterHelper.loadSupporters();
+    verifyDefaultSupporters(actualSupporters);
+    actualSupporters = null;
+
+    // if preferences are not null
+    supporterHelper.setSupportersInPreferences(supportersXml);
+    actualSupporters = supporterHelper.loadSupporters();
     assertEquals(2, actualSupporters.size());
     assertEquals(supporter1, actualSupporters.get(0));
     assertEquals(supporter2, actualSupporters.get(1));
+    actualSupporters = null;
+
+    // if preferences contain invalid xml
+    String invalidXml = "<test>this is not a correctly formatted xml</not test>";
+    supporterHelper.setSupportersInPreferences(invalidXml);
+    actualSupporters = supporterHelper.loadSupporters();
+    verifyDefaultSupporters(actualSupporters);
   }
 
   /**
@@ -98,6 +113,14 @@ public class SupporterHelperTest {
   @Test
   public void testGetDefaultSupporters() throws Exception {
     List<Supporter> actualSupporters = supporterHelper.getDefaultSupporters();
+    verifyDefaultSupporters(actualSupporters);
+  }
+
+  /**
+   * Verifies that the supporters list is actually the list of default supporters.
+   * Not marked with a @Test annotation because it is indirectly called in other tests.
+   */
+  private void verifyDefaultSupporters(List<Supporter> actualSupporters) {
     assertEquals(DEFAULT_SUPPORTER_SIZE, actualSupporters.size());
     assertEquals(supporter1, actualSupporters.get(0));
     assertEquals(supporter2, actualSupporters.get(1));

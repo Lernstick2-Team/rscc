@@ -2,9 +2,13 @@ package ch.imedias.rsccfx.model.xml;
 
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.model.Rscc;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -68,18 +72,7 @@ public class SupporterHelper {
   }
 
   private List<Supporter> getSupportersFromXml(File file) {
-    List<Supporter> supportersList = null;
-    try {
-      JAXBContext jaxbContext = JAXBContext.newInstance(Supporters.class);
-
-      Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-      Supporters supporters = (Supporters) jaxbUnmarshaller.unmarshal(file);
-
-      supportersList = supporters.getSupporters();
-    } catch (JAXBException e) {
-      LOGGER.warning(e.getMessage());
-    }
-    return supportersList;
+    return getSupportersFromXml(fileToString(file));
   }
 
   private List<Supporter> getSupportersFromXml(String string) {
@@ -123,19 +116,14 @@ public class SupporterHelper {
     return string;
   }
 
-  private void supportersToXml(List<Supporter> supporters, File file) {
+  private String fileToString(File file) {
+    String output = null;
     try {
-      JAXBContext jaxbContext = JAXBContext.newInstance(Supporters.class);
-      Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-      Supporters supportersWrapper = new Supporters();
-      supportersWrapper.setSupporters(supporters);
-
-      jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-      jaxbMarshaller.marshal(supportersWrapper, file);
-    } catch (JAXBException e) {
-      LOGGER.warning(e.getMessage());
+      return Files.toString(file, Charsets.UTF_8);
+    } catch (IOException e) {
+      LOGGER.warning("IOException during conversion of file to string! " + e.getMessage());
     }
+    return output;
   }
 
   /**
