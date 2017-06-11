@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;

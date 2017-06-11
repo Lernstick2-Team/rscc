@@ -133,7 +133,7 @@ public class SupporterHelperTest {
    * Tests what happens when the default supporters path is either non-existent or null.
    */
   @Test
-  public void testInvalidDefaultSupportersPath(){
+  public void testInvalidDefaultSupportersPath() {
     // should not throw any exceptions but cause logger entries
     when(mockModel.getPathToDefaultSupporters()).thenReturn("/dev/null/nonexistentpath");
     assertEquals(null, supporterHelper.getDefaultSupporters());
