@@ -70,6 +70,7 @@ public class SupporterHelper {
     try {
       supportersXmlFile = new File(model.getPathToDefaultSupporters());
     } catch (NullPointerException e) {
+      LOGGER.warning("Path to default supporters file is null! Returning null.");
       return null;
     }
     return getSupportersFromXml(supportersXmlFile);
@@ -82,7 +83,7 @@ public class SupporterHelper {
   private List<Supporter> getSupportersFromXml(String string) {
     List<Supporter> supportersList = null;
     if (string == null) {
-      LOGGER.info("String to create a list of supporters from is null!");
+      LOGGER.warning("String to create a list of supporters from is null! Returning null.");
       return null;
     }
     StringReader reader = new StringReader(string);
