@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import ch.imedias.rsccfx.model.Rscc;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.UnmarshalException;
@@ -102,6 +103,7 @@ public class SupporterHelperTest {
    */
   @Test
   public void testSaveSupporters() throws Exception {
+    // standard case
     supporterHelper.setSupportersInPreferences(null);
     supporterHelper.saveSupporters(expectedSupporters);
     assertEquals(supportersXml, supporterHelper.getSupportersXmlFromPreferences());
@@ -126,5 +128,12 @@ public class SupporterHelperTest {
     assertEquals(supporter2, actualSupporters.get(1));
     assertEquals(supporterLast, actualSupporters.get(DEFAULT_SUPPORTER_SIZE - 1));
   }
+
+  @Test
+  public void testFileToStringException(){
+    when(mockModel.getPathToDefaultSupporters()).thenReturn(null);
+    supporterHelper.getDefaultSupporters();
+  }
+
 
 }
