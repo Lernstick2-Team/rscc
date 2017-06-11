@@ -129,11 +129,17 @@ public class SupporterHelperTest {
     assertEquals(supporterLast, actualSupporters.get(DEFAULT_SUPPORTER_SIZE - 1));
   }
 
+  /**
+   * Tests what happens when the default supporters path is either non-existent or null.
+   */
   @Test
-  public void testFileToStringException(){
+  public void testInvalidDefaultSupportersPath(){
     // should not throw any exceptions but cause logger entries
-    when(mockModel.getPathToDefaultSupporters()).thenReturn("/dev/null/nonexistantpath");
-    supporterHelper.getDefaultSupporters();
+    when(mockModel.getPathToDefaultSupporters()).thenReturn("/dev/null/nonexistentpath");
+    assertEquals(null, supporterHelper.getDefaultSupporters());
+
+    when(mockModel.getPathToDefaultSupporters()).thenReturn(null);
+    assertEquals(null, supporterHelper.getDefaultSupporters());
   }
 
 
