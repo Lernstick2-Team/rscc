@@ -1,8 +1,6 @@
 package ch.imedias.rsccfx.model.xml;
 
-import static com.sun.javaws.JnlpxArgs.verify;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
