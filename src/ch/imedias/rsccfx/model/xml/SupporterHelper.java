@@ -119,7 +119,7 @@ public class SupporterHelper {
   private String fileToString(File file) {
     String output = null;
     try {
-      return Files.toString(file, Charsets.UTF_8);
+      output = Files.toString(file, Charsets.UTF_8);
     } catch (IOException e) {
       LOGGER.warning("IOException during conversion of file to string! " + e.getMessage());
     }
