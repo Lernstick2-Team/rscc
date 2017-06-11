@@ -78,8 +78,8 @@ public class SupporterHelper {
   private List<Supporter> getSupportersFromXml(String string) {
     List<Supporter> supportersList = null;
     if (string == null) {
-      LOGGER.info("String to create a list of supporters from is null! Returning default list.");
-      return getDefaultSupporters();
+      LOGGER.info("String to create a list of supporters from is null!");
+      return null;
     }
     StringReader reader = new StringReader(string);
 
