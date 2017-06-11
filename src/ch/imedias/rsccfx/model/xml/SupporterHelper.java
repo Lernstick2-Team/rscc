@@ -66,8 +66,12 @@ public class SupporterHelper {
    */
   public List<Supporter> getDefaultSupporters() {
     LOGGER.info("Loading default supporter list");
-    File supportersXmlFile =
-        new File(model.getPathToDefaultSupporters());
+    File supportersXmlFile;
+    try {
+      supportersXmlFile = new File(model.getPathToDefaultSupporters());
+    } catch (NullPointerException e) {
+      return null;
+    }
     return getSupportersFromXml(supportersXmlFile);
   }
 
