@@ -2,11 +2,7 @@ package ch.imedias.rsccfx.model.xml;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import ch.imedias.rsccfx.model.Rscc;
-import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
