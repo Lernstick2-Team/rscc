@@ -131,7 +131,8 @@ public class SupporterHelperTest {
 
   @Test
   public void testFileToStringException(){
-    when(mockModel.getPathToDefaultSupporters()).thenReturn(null);
+    // should not throw any exceptions but cause logger entries
+    when(mockModel.getPathToDefaultSupporters()).thenReturn("/dev/null/nonexistantpath");
     supporterHelper.getDefaultSupporters();
   }
 
