@@ -77,7 +77,7 @@ public class SupporterHelper {
 
       supportersList = supporters.getSupporters();
     } catch (JAXBException e) {
-      e.printStackTrace();
+      LOGGER.warning(e.getMessage());
     }
     return supportersList;
   }
@@ -96,7 +96,7 @@ public class SupporterHelper {
       // gets thrown when the format is invalid, in this case return default
       supportersList = getDefaultSupporters();
     } catch (JAXBException e) {
-      e.printStackTrace();
+      LOGGER.warning(e.getMessage());
     }
     return supportersList;
   }
@@ -118,7 +118,7 @@ public class SupporterHelper {
 
       string = writer.toString();
     } catch (JAXBException e) {
-      e.printStackTrace();
+      LOGGER.warning(e.getMessage());
     }
     return string;
   }
@@ -134,7 +134,7 @@ public class SupporterHelper {
       jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
       jaxbMarshaller.marshal(supportersWrapper, file);
     } catch (JAXBException e) {
-      e.printStackTrace();
+      LOGGER.warning(e.getMessage());
     }
   }
 
