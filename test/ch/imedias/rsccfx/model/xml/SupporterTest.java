@@ -24,6 +24,9 @@ public class SupporterTest {
     supporter = new Supporter();
   }
 
+  /**
+   * Test for {@link Supporter#toString()}.
+   */
   @Test
   public void testToString() throws Exception {
     // if description is empty, the toString representation should be a '+'
