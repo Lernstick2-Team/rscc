@@ -42,7 +42,8 @@ public class SupporterTest {
    */
   @Test
   public void testEqualsContract() {
-
+    // suppressed warning about fields not being final - since this class is mutable and
+    // will not be used in context with a HashMap or HashSet
     EqualsVerifier
         .forClass(Supporter.class)
         .suppress(Warning.NONFINAL_FIELDS)
