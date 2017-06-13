@@ -1,12 +1,13 @@
 package ch.imedias.rsccfx.localization;
 
 /**
- *  Code generated at 10:14:06 27.05.2017
+ *  Code generated at 14:17:59 13.06.2017
  *  by generateStringsClass.py version 0.3.4
  *  based on properties file with hash:
- *  1c957b243d54b6655cd0ab5dbf157162786c22cca4630e3d3f1a2fccd883c905
+ *  afcbfd3a5e9ba922f960c30a520a744e65708b65a2f25628509aa9d8a6fd85b7
  */
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Strings {
@@ -59,6 +60,7 @@ public class Strings {
   public String requestPredefinedAdressessPane;
   public String requestStatusLblWaiting;
   public String requestStatusLblReady;
+  public String requestSupporterDescriptionLbl;
   public String supportTitleLbl;
   public String supportDescriptionLbl;
   public String supportConnectBtn;
@@ -66,14 +68,13 @@ public class Strings {
   public String supportAdressBookPane;
   public String supportStatusLblWaiting;
   public String supportStatusLblReady;
-  public String requestSupporterDescriptionLbl;
   public String startServiceDescpriptionLbl;
   public String statusBoxServiceIdle;
   public String statusBoxServiceStarted;
   public String statusBoxServiceStopped;
+  public String homeHelpLbl;
   public String supportHelpLbl;
   public String requestHelpLbl;
-  public String homeHelpLbl;
   public String dialogTitleText;
   public String dialogNameText;
   public String dialogAddressText;
@@ -150,6 +151,7 @@ public class Strings {
     requestPredefinedAdressessPane = rscBndl.getString("requestPredefinedAdressessPane");
     requestStatusLblWaiting = rscBndl.getString("requestStatusLblWaiting");
     requestStatusLblReady = rscBndl.getString("requestStatusLblReady");
+    requestSupporterDescriptionLbl = rscBndl.getString("requestSupporterDescriptionLbl");
     supportTitleLbl = rscBndl.getString("supportTitleLbl");
     supportDescriptionLbl = rscBndl.getString("supportDescriptionLbl");
     supportConnectBtn = rscBndl.getString("supportConnectBtn");
@@ -157,14 +159,13 @@ public class Strings {
     supportAdressBookPane = rscBndl.getString("supportAdressBookPane");
     supportStatusLblWaiting = rscBndl.getString("supportStatusLblWaiting");
     supportStatusLblReady = rscBndl.getString("supportStatusLblReady");
-    requestSupporterDescriptionLbl = rscBndl.getString("requestSupporterDescriptionLbl");
     startServiceDescpriptionLbl = rscBndl.getString("startServiceDescpriptionLbl");
     statusBoxServiceIdle = rscBndl.getString("statusBoxServiceIdle");
     statusBoxServiceStarted = rscBndl.getString("statusBoxServiceStarted");
     statusBoxServiceStopped = rscBndl.getString("statusBoxServiceStopped");
+    homeHelpLbl = rscBndl.getString("homeHelpLbl");
     supportHelpLbl = rscBndl.getString("supportHelpLbl");
     requestHelpLbl = rscBndl.getString("requestHelpLbl");
-    homeHelpLbl = rscBndl.getString("homeHelpLbl");
     dialogTitleText = rscBndl.getString("dialogTitleText");
     dialogNameText = rscBndl.getString("dialogNameText");
     dialogAddressText = rscBndl.getString("dialogAddressText");
