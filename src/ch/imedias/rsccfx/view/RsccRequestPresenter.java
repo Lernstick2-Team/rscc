@@ -200,7 +200,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
     supporterBtn.setOnAction(event -> {
       // Open Dialog to modify data
       SupporterAttributesDialog supporterAttributesDialog =
-          new SupporterAttributesDialog(supporter);
+          new SupporterAttributesDialog(supporter, this.model);
       boolean supporterSaved = supporterAttributesDialog.show();
       Supporter lastSupporter = supporters.get(supporters.size() - 1);
       if (supporterSaved) {
@@ -255,7 +255,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
     editMenuItem.setOnAction(event -> {
       // Open Dialog to modify data
       SupporterAttributesDialog supporterAttributesDialog =
-          new SupporterAttributesDialog(supporter);
+          new SupporterAttributesDialog(supporter, this.model);
       boolean supporterSaved = supporterAttributesDialog.show();
       if (supporterSaved) {
         // Update data in button name and save to preferences

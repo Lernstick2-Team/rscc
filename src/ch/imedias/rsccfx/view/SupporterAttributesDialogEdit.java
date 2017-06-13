@@ -2,7 +2,6 @@ package ch.imedias.rsccfx.view;
 
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
-import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.xml.Supporter;
 import ch.imedias.rsccfx.view.util.NumberTextField;
 import java.util.Optional;
@@ -10,7 +9,6 @@ import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
@@ -23,10 +21,10 @@ import javafx.scene.layout.Priority;
 /**
  * Creates the DialogPane by SupporterButton click.
  */
-public class SupporterAttributesDialog extends DialogPane {
+public class SupporterAttributesDialogEdit extends DialogPane {
 
   private static final Logger LOGGER =
-      Logger.getLogger(SupporterAttributesDialog.class.getName());
+      Logger.getLogger(SupporterAttributesDialogEdit.class.getName());
 
   private static final int DEFAULT_PORT = 5500;
 
@@ -38,18 +36,16 @@ public class SupporterAttributesDialog extends DialogPane {
   final Label pictureLbl = new Label();
   final Label chargeableLbl = new Label();
   final Label encryptedLbl = new Label();
-  final Label nameFld = new Label();
-  final Label addressFld = new Label();
-  final Label portFld = new Label();
-  final Label pictureFld = new Label();
+  final TextField nameFld = new TextField();
+  final TextField addressFld = new TextField();
+  final NumberTextField portFld = new NumberTextField();
+  final TextField pictureFld = new TextField();
+  final ButtonType applyBtnType = ButtonType.OK;
   final ButtonType cancelBtnType = ButtonType.CANCEL;
-  final ButtonType editBtnType = new ButtonType("Edit");
-  final ButtonType callBtnType = new ButtonType("Call");
   final CheckBox chargeableCBox = new CheckBox();
   final CheckBox encryptedCBox = new CheckBox();
   Strings strings = new Strings();
   private Supporter supporter;
-  private Rscc model;
 
   BooleanProperty nameValid = new SimpleBooleanProperty(false);
 
@@ -58,13 +54,13 @@ public class SupporterAttributesDialog extends DialogPane {
    *
    * @param supporter the supporter for the dialog.
    */
-  public SupporterAttributesDialog(Supporter supporter, Rscc model) {
-    this.model = model;
+  public SupporterAttributesDialogEdit(Supporter supporter) {
     this.getStylesheets().add(RsccApp.styleSheet);
     this.supporter = supporter;
     initFieldData();
     layoutForm();
     attachEventListeners();
+    setupBindings();
   }
 
   private void initFieldData() {
@@ -87,6 +83,16 @@ public class SupporterAttributesDialog extends DialogPane {
     encryptedCBox.setSelected(supporter.isEncrypted());
   }
 
+  private void saveData() {
+    supporter.setDescription(nameFld.getText());
+    supporter.setAddress(addressFld.getText());
+    if (isEmpty(portFld.getText())) {
+      portFld.setText(String.valueOf(DEFAULT_PORT));
+    }
+    supporter.setPort(portFld.getText());
+    supporter.setEncrypted(encryptedCBox.isSelected());
+    supporter.setChargeable(chargeableCBox.isSelected());
+  }
 
   private void layoutForm() {
     // Set Hgrow for TextField
@@ -104,9 +110,6 @@ public class SupporterAttributesDialog extends DialogPane {
     dialog.setWidth(500);
     attributePane.setId("dialogAttributePane");
 
-    encryptedCBox.setDisable(true);
-    chargeableCBox.setDisable(true);
-
     attributePane.add(nameLbl, 0, 0);
     attributePane.add(nameFld, 1, 0);
     attributePane.add(addressLbl, 0, 1);
@@ -120,7 +123,7 @@ public class SupporterAttributesDialog extends DialogPane {
     attributePane.add(encryptedLbl, 0, 5);
     attributePane.add(encryptedCBox, 1, 5);
 
-    this.getButtonTypes().addAll(callBtnType, editBtnType, cancelBtnType);
+    this.getButtonTypes().addAll(cancelBtnType, applyBtnType);
 
     this.setContent(attributePane);
     dialog.setDialogPane(this);
@@ -132,6 +135,11 @@ public class SupporterAttributesDialog extends DialogPane {
     );
   }
 
+  private void setupBindings() {
+    dialog.getDialogPane().lookupButton(applyBtnType).disableProperty().bind(
+        nameValidProperty().not()
+    );
+  }
 
   private boolean isEmpty(String string) {
     return "".equals(string.trim());
@@ -143,19 +151,13 @@ public class SupporterAttributesDialog extends DialogPane {
    * @return true, if the apply button was pressed
    */
   public boolean show() {
-    Optional userChoice = dialog.showAndWait();
-
-    if (userChoice.isPresent()) {
-      if (userChoice.get() == editBtnType) {
-        SupporterAttributesDialogEdit editDialog = new SupporterAttributesDialogEdit(this.supporter);
-        return editDialog.show();
-      }
-      if (userChoice.get() == callBtnType) {
-        model.callSupporterDirect(supporter.getAddress(), supporter.getPort(), supporter.isEncrypted());
-      }
+    Optional applyButton = dialog.showAndWait()
+        .filter(response -> response == applyBtnType);
+    boolean applyButtonPressed = applyButton.isPresent();
+    if (applyButtonPressed) {
+      saveData();
     }
-
-    return false;
+    return applyButtonPressed;
   }
 
   private boolean getNameValid() {
