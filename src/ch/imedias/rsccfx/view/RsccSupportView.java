@@ -33,13 +33,8 @@ public class RsccSupportView extends BorderPane {
 
   final Label titleLbl = new Label();
   final Label descriptionLbl = new Label();
-  //  final Label statusLbl = new Label();
-//  final Label keyInputStatusLbl = new Label();
   final Label startServiceDescriptionLbl = new Label();
   final Label startServiceTitleLbl = new Label();
-
-//  final HBox statusBox = new HBox();
-//  final HBox keyInputStatusBox = new HBox();
 
   final StatusBar statusBarKeyInput = new StatusBar();
   final StatusBar statusBarStartService = new StatusBar();

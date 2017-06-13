@@ -40,7 +40,6 @@ public class RsccRequestView extends BorderPane {
   final Label titleLbl = new Label();
   final Label descriptionLbl = new Label();
   final Label supporterDescriptionLbl = new Label();
-  final Label statusLbl = new Label();
 
   final GridPane keyGenerationInnerPane = new GridPane();
   final GridPane supporterInnerPane = new GridPane();
@@ -94,7 +93,6 @@ public class RsccRequestView extends BorderPane {
     supporterDescriptionLbl.setText(strings.requestSupporterDescriptionLbl);
     keyGenerationTitledPane.setText(strings.requestKeyGeneratorPane);
     supporterTitledPane.setText(strings.requestPredefinedAdressessPane);
-    statusLbl.setText("");
 
     FontAwesomeIconView refreshIcon = new FontAwesomeIconView(FontAwesomeIcon.REFRESH);
     refreshIcon.setGlyphSize(ICON_SIZE);

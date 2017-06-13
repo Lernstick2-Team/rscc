@@ -73,11 +73,10 @@ public class RsccHomePresenter implements ControlledPresenter {
 
   private void attachEvents() {
     view.supportViewBtn.setOnAction(event -> {
-      model.setConnectionStatus("Please enter the Key", 0);
+      model.setStatusBarKeyInput("Please enter the Key", model.STATUS_BAR_STYLE_INITIALIZE);
       viewParent.setView(RsccApp.SUPPORT_VIEW);
     });
     view.requestViewBtn.setOnAction(event -> {
-      model.setConnectionStatus("", 0);
       Thread thread = new Thread(model::requestKeyFromServer);
       thread.start();
       viewParent.setView(RsccApp.REQUEST_VIEW);

@@ -135,13 +135,13 @@ public class VncServerHandler {
               LOGGER.info("Client has connected");
               model.setVncSessionRunning(true);
               if (model.getRudp() != null) {
-                model.setConnectionStatus("VNC-Connection established using ICE", 2);
+                model.setStatusBarKeyGeneration("VNC-Connection established using ICE",
+                    model.STATUS_BAR_STYLE_SUCCESS);
               } else {
-                model.setConnectionStatus("VNC-Connection established over Server", 2);
+                model.setStatusBarKeyGeneration("VNC-Connection established over Server",
+                    model.STATUS_BAR_STYLE_SUCCESS);
               }
-
             }
-
           }
 
           LOGGER.info("VNC - Server process has ended");

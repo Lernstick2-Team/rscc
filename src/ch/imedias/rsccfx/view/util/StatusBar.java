@@ -12,19 +12,28 @@ public class StatusBar extends HBox {
 
   final Label statusLbl = new Label();
 
+  /**
+   * Constructor for a ne StatusBar.
+   */
   public StatusBar() {
     this.getStyleClass().add("statusBar");
     this.getChildren().add(statusLbl);
     statusLbl.getStyleClass().add("statusLbl");
   }
 
-  public void setStatusProperties(StringProperty status, StringProperty styleClass){
-    status.addListener((observable, oldValue, newValue) -> {
+  /**
+   * Sets Listeners on properties to have the StatusBar updated.
+   *
+   * @param textProperty       property containing the text to display.
+   * @param styleClassProperty proprty containing the style to display.
+   */
+  public void setStatusProperties(StringProperty textProperty, StringProperty styleClassProperty) {
+    textProperty.addListener((observable, oldValue, newValue) -> {
       Platform.runLater(() -> {
         statusLbl.textProperty().set(newValue);
       });
     });
-    styleClass.addListener((observable, oldValue, newValue) -> {
+    styleClassProperty.addListener((observable, oldValue, newValue) -> {
       if (oldValue != newValue) {
         Platform.runLater(() -> {
           this.getStyleClass().clear();

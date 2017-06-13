@@ -135,7 +135,6 @@ public class Rscccfp extends Thread {
    */
   private void runIceMagic() throws Throwable {
     //Exchange isServermode?
-    model.setConnectionStatus("ICE running...", 1);
 
     LOGGER.info("RSCCCFP: Handling ServerMode");
     outputStream.writeBoolean(model.isForcingServerMode());
@@ -178,11 +177,9 @@ public class Rscccfp extends Thread {
       model.setRemoteClientIpAddress(iceComponent
           .getSelectedPair().getRemoteCandidate().getTransportAddress().getAddress());
       model.setLocalIceSuccessful(true);
-      model.setConnectionStatus("ICE sucessful...", 1);
 
     } else {
       model.setLocalIceSuccessful(false);
-      model.setConnectionStatus("ICE unsucessful...", 1);
     }
 
     agent.free();

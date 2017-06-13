@@ -8,8 +8,6 @@ import ch.imedias.rsccfx.model.util.KeyUtil;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -28,7 +26,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
   private final RsccSupportView view;
   private final HeaderPresenter headerPresenter;
   private final KeyUtil keyUtil;
-  private final BooleanProperty serviceRunning = new SimpleBooleanProperty(false);
   private String validImage =
       getClass().getClassLoader().getResource("images/valid.svg").toExternalForm();
   private String invalidImage =
@@ -105,7 +102,7 @@ public class RsccSupportPresenter implements ControlledPresenter {
               view.startServiceTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.startServiceInnerPane);
               view.contentBox.getChildren().add(1, view.keyInputInnerPane);
-              model.setConnectionStatus("", 0);
+              model.setStatusBarKeyInput("", model.STATUS_BAR_STYLE);
             }
           }
         }
@@ -117,7 +114,8 @@ public class RsccSupportPresenter implements ControlledPresenter {
               view.keyInputTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.keyInputInnerPane);
               view.contentBox.getChildren().add(2, view.startServiceInnerPane);
-              model.setConnectionStatus(view.strings.statusBoxServiceIdle, 0);
+              model.setStatusBarStartService(view.strings.statusBoxServiceIdle,
+                  model.STATUS_BAR_STYLE);
             }
           }
         }

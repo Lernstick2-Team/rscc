@@ -87,18 +87,10 @@ public class Rscc {
   private final SystemCommander systemCommander;
 
 
-  //StatusBox Handling
-  private final StringProperty connectionStatusText = new SimpleStringProperty();
-  private final StringProperty connectionStatusStyle = new SimpleStringProperty();
-  private final String[] connectionStatusStyles = {
-      "statusBox", "statusBoxInitialize", "statusBoxSuccess", "statusBoxFail"};
-
-
-  private static final String STATUS_BAR_STYLE_STATUSBAR = "statusBar";
-  private static final String STATUS_BAR_STYLE_STATUSBAR_INITIALIZE = "statusBarInitialize";
-  private static final String STATUS_BAR_STYLE_STATUSBAR_SUCCESS = "statusBarSuccess";
-  private static final String STATUS_BAR_STYLE_STATUSBAR_FAIL = "statusBarFail";
-
+  public static final String STATUS_BAR_STYLE = "statusBar";
+  public static final String STATUS_BAR_STYLE_INITIALIZE = "statusBarInitialize";
+  public static final String STATUS_BAR_STYLE_SUCCESS = "statusBarSuccess";
+  public static final String STATUS_BAR_STYLE_FAIL = "statusBarFail";
 
   private final StringProperty statusBarTextKeyGeneration = new SimpleStringProperty();
   private final StringProperty statusBarStyleClassKeyGeneration = new SimpleStringProperty();
@@ -109,11 +101,6 @@ public class Rscc {
   private final StringProperty statusBarTextStartService = new SimpleStringProperty();
   private final StringProperty statusBarStyleClassStartService = new SimpleStringProperty();
 
-
-  public void setStatusbar(StringProperty textProperty, String text, StringProperty styleClassProperty, String styleClass) {
-    textProperty.setValue(text);
-    styleClassProperty.setValue(styleClass);
-  }
 
   private final StringProperty keyServerIp = new SimpleStringProperty();
   private final StringProperty keyServerHttpPort = new SimpleStringProperty();
@@ -365,11 +352,13 @@ public class Rscc {
    */
   public void requestKeyFromServer() {
     setConnectionEstablishmentRunning(true);
-    setConnectionStatus("Setting keyserver...", 1);
+    setStatusBarKeyGeneration("Setting keyserver...", STATUS_BAR_STYLE_INITIALIZE);
 
     keyServerSetup();
 
-    setConnectionStatus("Requesting key from server...", 1);
+
+    setStatusBarKeyGeneration("Requesting key from server...", STATUS_BAR_STYLE_INITIALIZE);
+
 
     String command = systemCommander.commandStringGenerator(
         pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()));
@@ -385,7 +374,8 @@ public class Rscc {
     rscccfp = new Rscccfp(this, true);
     rscccfp.setDaemon(true);
     rscccfp.start();
-    setConnectionStatus("Key successfully generated", 1);
+
+    setStatusBarKeyGeneration("Key successfully generated", STATUS_BAR_STYLE_INITIALIZE);
 
     try {
       rscccfp.join();
@@ -418,7 +408,9 @@ public class Rscc {
           rudp.start();
         }
 
-        setConnectionStatus("VNC-Server waits for incoming connection", 2);
+        setStatusBarKeyGeneration("VNC-Server waits for incoming connection",
+            STATUS_BAR_STYLE_SUCCESS);
+
         setRscccfpHasTalkedToOtherClient(false);
       }
 
@@ -429,20 +421,51 @@ public class Rscc {
     setConnectionEstablishmentRunning(false);
   }
 
+  /**
+   * Updates StatusBar on KeyGeneration.
+   *
+   * @param text       The Text to set.
+   * @param styleClass The StyleClass to set to.
+   */
+  public void setStatusBarKeyGeneration(String text, String styleClass) {
+    statusBarTextKeyGenerationProperty().set(text);
+    statusBarStyleClassKeyGenerationProperty().set(styleClass);
+  }
 
   /**
-   * Sets the Status of the connection establishment.
+   * Updates StatusBar on KeyInput.
    *
-   * @param text             Text to show for the connection status.
-   * @param statusStyleIndex Index of the connectionStatusStyles.
+   * @param text  The Text to set.
+   * @param styleClass  The StyleClass to set to.
    */
-  public void setConnectionStatus(String text, int statusStyleIndex) {
-    if (statusStyleIndex < 0 || statusStyleIndex >= connectionStatusStyles.length || text == null) {
-      throw new IllegalArgumentException();
-    }
-    setConnectionStatusText(text);
-    setConnectionStatusStyle(getConnectionStatusStyles(statusStyleIndex));
+  public void setStatusBarKeyInput(String text, String styleClass) {
+    statusBarTextKeyInputProperty().set(text);
+    statusBarStyleClassKeyInputProperty().set(styleClass);
   }
+
+  /**
+   * Updates StatusBar on StartService.
+   *
+   * @param text       The Text to set.
+   * @param styleClass The StyleClass to set to.
+   */
+  public void setStatusBarStartService(String text, String styleClass) {
+    statusBarTextStartServiceProperty().set(text);
+    statusBarStyleClassStartServiceProperty().set(styleClass);
+  }
+
+  /**
+   * Updates StatusBar on KeyInput.
+   *
+   * @param text       The Text to set.
+   * @param styleClass The StyleClass to set to.
+   */
+  public void setStatusBarSupporter(String text, String styleClass) {
+    statusBarTextSupporterProperty().set(text);
+    statusBarStyleClassSupporterProperty().set(styleClass);
+  }
+
+
 
 
   /**
@@ -451,21 +474,23 @@ public class Rscc {
   public void connectToUser() {
     setConnectionEstablishmentRunning(true);
 
-    setConnectionStatus("Get key from keyserver...", 1);
+    setStatusBarKeyInput("Get key from keyserver...", STATUS_BAR_STYLE_INITIALIZE);
 
     keyServerSetup();
 
     String command = systemCommander.commandStringGenerator(pathToResourceDocker,
         "port_connect.sh", Integer.toString(getVncPort()), keyUtil.getKey());
 
-    setConnectionStatus("Connected to keyserver.", 1);
+    setStatusBarKeyInput("Connected to keyserver.", STATUS_BAR_STYLE_INITIALIZE);
 
     SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
 
     if (returnValues.getExitCode() != 0) {
       LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
-      setConnectionStatus(
-          "Key " + getKeyUtil().getKey() + " could not be verified by the server.", 3);
+      setStatusBarKeyInput(
+          "Key " + getKeyUtil().getKey() + " could not be verified by the server.",
+          STATUS_BAR_STYLE_FAIL);
+
       setConnectionEstablishmentRunning(false);
       return;
     }
@@ -496,7 +521,7 @@ public class Rscc {
     }
 
     LOGGER.info("RSCC: Starting VNCViewer");
-    setConnectionStatus("Starting VNC Viewer...", 1);
+    setStatusBarKeyInput("Starting VNC Viewer...", STATUS_BAR_STYLE_INITIALIZE);
 
     int i = 0;
     while (!isVncSessionRunning() && i < 10) {
@@ -513,10 +538,10 @@ public class Rscc {
 
     if (isVncSessionRunning()) {
       if (rudp != null) {
-        setConnectionStatus("VNC-Connection established using ICE", 2);
+        setStatusBarKeyInput("VNC-Connection established using ICE", STATUS_BAR_STYLE_SUCCESS);
       } else {
 
-        setConnectionStatus("VNC-Connection established over Server", 2);
+        setStatusBarKeyInput("VNC-Connection established over Server", STATUS_BAR_STYLE_SUCCESS);
       }
 
     }
@@ -530,7 +555,6 @@ public class Rscc {
    * again.
    */
   public void refreshKey() {
-    setConnectionStatus("Refreshing key...", 1);
     killConnection();
     requestKeyFromServer();
   }
@@ -558,7 +582,8 @@ public class Rscc {
    */
   public void callSupporterDirect(String address, String port, boolean isEncrypted) {
     setConnectionEstablishmentRunning(true);
-    setConnectionStatus("Connecting to " + address + ":" + port, 1);
+    setStatusBarSupporter("Connecting to " + address + ":" + port,
+        STATUS_BAR_STYLE_INITIALIZE);
     int portValue = -1;
     if (!port.equals("")) {
       portValue = Integer.valueOf(port);
@@ -567,9 +592,9 @@ public class Rscc {
     boolean connectionSuccess = vncServer
         .startVncServerReverse(address, portValue > 0 ? portValue : 5500, isEncrypted);
     if (connectionSuccess) {
-      setConnectionStatus("Connected", 2);
+      setStatusBarSupporter("Connected", STATUS_BAR_STYLE_SUCCESS);
     } else {
-      setConnectionStatus("Connection failed", 3);
+      setStatusBarSupporter("Connection failed", STATUS_BAR_STYLE_FAIL);
     }
     setConnectionEstablishmentRunning(false);
   }
@@ -579,10 +604,10 @@ public class Rscc {
    */
   public void startVncViewerAsService() {
     setConnectionEstablishmentRunning(true);
-    setConnectionStatus("Starting VNC Viewer as service...", 1);
+    setStatusBarStartService("Starting VNC Viewer as service...", STATUS_BAR_STYLE_INITIALIZE);
     vncViewer = new VncViewerHandler(this);
     vncViewer.startVncViewerListening();
-    setConnectionStatus("VNC Viewer service is running", 2);
+    setStatusBarStartService("VNC Viewer service is running", STATUS_BAR_STYLE_SUCCESS);
 
     setConnectionEstablishmentRunning(false);
   }
@@ -593,7 +618,7 @@ public class Rscc {
   public void stopVncViewerAsService() {
     setConnectionEstablishmentRunning(true);
     vncViewer.killVncViewerProcess();
-    setConnectionStatus("VNC Viewer service is stopped", 1);
+    setStatusBarStartService("VNC Viewer service is stopped", STATUS_BAR_STYLE_INITIALIZE);
 
     setConnectionEstablishmentRunning(false);
   }
@@ -691,33 +716,6 @@ public class Rscc {
     return keyUtil;
   }
 
-  public String getConnectionStatusText() {
-    return connectionStatusText.get();
-  }
-
-  public void setConnectionStatusText(String connectionStatusText) {
-    this.connectionStatusText.set(connectionStatusText);
-  }
-
-  public StringProperty connectionStatusTextProperty() {
-    return connectionStatusText;
-  }
-
-  public String getConnectionStatusStyle() {
-    return connectionStatusStyle.get();
-  }
-
-  public void setConnectionStatusStyle(String connectionStatusStyle) {
-    this.connectionStatusStyle.set(connectionStatusStyle);
-  }
-
-  public StringProperty connectionStatusStyleProperty() {
-    return connectionStatusStyle;
-  }
-
-  public String getConnectionStatusStyles(int i) {
-    return connectionStatusStyles[i];
-  }
 
   public InetAddress getRemoteClientIpAddress() {
     return remoteClientIpAddress;
@@ -903,20 +901,20 @@ public class Rscc {
     return rudp;
   }
 
-  public static String getStatusBarStyleStatusbar() {
-    return STATUS_BAR_STYLE_STATUSBAR;
+  public static String getStatusBarStyle() {
+    return STATUS_BAR_STYLE;
   }
 
-  public static String getStatusBarStyleStatusbarInitialize() {
-    return STATUS_BAR_STYLE_STATUSBAR_INITIALIZE;
+  public static String getStatusBarStyleInitialize() {
+    return STATUS_BAR_STYLE_INITIALIZE;
   }
 
-  public static String getStatusBarStyleStatusbarSuccess() {
-    return STATUS_BAR_STYLE_STATUSBAR_SUCCESS;
+  public static String getStatusBarStyleSuccess() {
+    return STATUS_BAR_STYLE_SUCCESS;
   }
 
-  public static String getStatusBarStyleStatusbarFail() {
-    return STATUS_BAR_STYLE_STATUSBAR_FAIL;
+  public static String getStatusBarStyleFail() {
+    return STATUS_BAR_STYLE_FAIL;
   }
 
   public String getStatusBarTextKeyGeneration() {
