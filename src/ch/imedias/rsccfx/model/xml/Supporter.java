@@ -165,23 +165,23 @@ public final class Supporter implements Serializable {
 
   /**
    * Tests for equality on a Supporter object.
-   * @param o the other object
+   * @param other the other object
    * @return true if both objects are equal by their parameters
    */
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
+  public boolean equals(Object other) {
+    if (this == other) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (other == null || this.getClass() != other.getClass()) {
       return false;
     }
-    Supporter supporter = (Supporter) o;
+    Supporter supporter = (Supporter) other;
     return encrypted == supporter.encrypted
         && chargeable == supporter.chargeable
-        && Objects.equals(description, supporter.description)
-        && Objects.equals(address, supporter.address)
-        && Objects.equals(port, supporter.port);
+        && Objects.equals(this.description, supporter.description)
+        && Objects.equals(this.address, supporter.address)
+        && Objects.equals(this.port, supporter.port);
   }
 
   /**
