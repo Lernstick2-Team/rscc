@@ -5,6 +5,7 @@ import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.util.KeyUtil;
 import ch.imedias.rsccfx.view.util.KeyTextField;
+import ch.imedias.rsccfx.view.util.StatusBar;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.util.logging.Logger;
@@ -44,7 +45,8 @@ public class RsccRequestView extends BorderPane {
   final GridPane keyGenerationInnerPane = new GridPane();
   final GridPane supporterInnerPane = new GridPane();
 
-  final HBox statusBox = new HBox();
+  final StatusBar supporterStatusBar = new StatusBar();
+  final StatusBar keyGenerationStatusBar = new StatusBar();
 
   final HBox supporterInnerBox = new HBox();
 
@@ -116,10 +118,6 @@ public class RsccRequestView extends BorderPane {
 
     supporterDescriptionLbl.getStyleClass().add("supporterDescriptionLbl");
 
-    statusBox.getStyleClass().add("statusBox");
-    statusBox.getChildren().addAll(statusLbl);
-    statusLbl.getStyleClass().add("statusLbl");
-
     generatedKeyFld.setEditable(false);
     generatedKeyFld.getStyleClass().add("keyFld");
 
@@ -172,14 +170,14 @@ public class RsccRequestView extends BorderPane {
     GridPane.setConstraints(reloadKeyBtn, 1, 1);
     GridPane.setConstraints(titleLbl, 2, 0);
     GridPane.setConstraints(descriptionLbl, 2, 1);
-    GridPane.setConstraints(statusBox, 0, 3);
+    GridPane.setConstraints(keyGenerationStatusBar, 0, 3);
     GridPane.setConstraints(disconnectBtn, 0, 2);
-    GridPane.setColumnSpan(statusBox, 3);
+    GridPane.setColumnSpan(keyGenerationStatusBar, 3);
 
     keyGenerationInnerPane.setAlignment(Pos.CENTER);
 
     keyGenerationInnerPane.getChildren().addAll(generatedKeyFld, disconnectBtn,  reloadKeyBtn,
-        titleLbl, descriptionLbl, statusBox);
+        titleLbl, descriptionLbl, keyGenerationStatusBar);
 
     // initial styling
     keyGenerationInnerPane.getChildren().stream()
@@ -198,8 +196,8 @@ public class RsccRequestView extends BorderPane {
     keyGenerationInnerPane.getColumnConstraints().addAll(col1);
 
     // special styling
-    GridPane.setVgrow(statusBox, Priority.NEVER);
-    GridPane.setValignment(statusBox, VPos.BOTTOM);
+    GridPane.setVgrow(keyGenerationStatusBar, Priority.NEVER);
+    GridPane.setValignment(keyGenerationStatusBar, VPos.BOTTOM);
     GridPane.setHalignment(titleLbl, HPos.LEFT);
     GridPane.setValignment(titleLbl, VPos.BOTTOM);
     GridPane.setHalignment(descriptionLbl, HPos.LEFT);
