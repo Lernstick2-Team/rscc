@@ -459,6 +459,7 @@
             <version>4.7.0-5</version>
         </dependency>
 
+        <!-- EqualsVerifier library for easy equals & hashCode testing -->
         <!-- http://jqno.nl/equalsverifier -->
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
