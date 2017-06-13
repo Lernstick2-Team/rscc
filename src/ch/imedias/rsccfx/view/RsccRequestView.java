@@ -45,10 +45,11 @@ public class RsccRequestView extends BorderPane {
   final GridPane keyGenerationInnerPane = new GridPane();
   final GridPane supporterInnerPane = new GridPane();
 
-  final StatusBar supporterStatusBar = new StatusBar();
-  final StatusBar keyGenerationStatusBar = new StatusBar();
+  final StatusBar statusBarSupporter = new StatusBar();
+  final StatusBar statusBarKeyGeneration = new StatusBar();
 
   final HBox supporterInnerBox = new HBox();
+  final VBox supporterOuterBox = new VBox();
 
   final VBox contentBox = new VBox();
 
@@ -136,12 +137,16 @@ public class RsccRequestView extends BorderPane {
     keyGenerationInnerPane.getStyleClass().add("contentRequest");
     VBox.setVgrow(supporterInnerBox, Priority.ALWAYS);
     supporterInnerBox.getStyleClass().add("contentRequest");
+    VBox.setVgrow(supporterOuterBox, Priority.ALWAYS);
+
+    supporterOuterBox.setMargin(statusBarSupporter, new Insets(15, 12, 15, 12));
 
     setTop(headerView);
     setCenter(contentBox);
   }
 
   private void layoutSupporterPane() {
+    supporterOuterBox.getChildren().addAll(supporterInnerBox, statusBarSupporter);
     supporterInnerBox.getChildren().addAll(scrollPane, supporterDescriptionLbl);
 
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -170,14 +175,14 @@ public class RsccRequestView extends BorderPane {
     GridPane.setConstraints(reloadKeyBtn, 1, 1);
     GridPane.setConstraints(titleLbl, 2, 0);
     GridPane.setConstraints(descriptionLbl, 2, 1);
-    GridPane.setConstraints(keyGenerationStatusBar, 0, 3);
+    GridPane.setConstraints(statusBarKeyGeneration, 0, 3);
     GridPane.setConstraints(disconnectBtn, 0, 2);
-    GridPane.setColumnSpan(keyGenerationStatusBar, 3);
+    GridPane.setColumnSpan(statusBarKeyGeneration, 3);
 
     keyGenerationInnerPane.setAlignment(Pos.CENTER);
 
     keyGenerationInnerPane.getChildren().addAll(generatedKeyFld, disconnectBtn,  reloadKeyBtn,
-        titleLbl, descriptionLbl, keyGenerationStatusBar);
+        titleLbl, descriptionLbl, statusBarKeyGeneration);
 
     // initial styling
     keyGenerationInnerPane.getChildren().stream()
@@ -196,8 +201,8 @@ public class RsccRequestView extends BorderPane {
     keyGenerationInnerPane.getColumnConstraints().addAll(col1);
 
     // special styling
-    GridPane.setVgrow(keyGenerationStatusBar, Priority.NEVER);
-    GridPane.setValignment(keyGenerationStatusBar, VPos.BOTTOM);
+    GridPane.setVgrow(statusBarKeyGeneration, Priority.NEVER);
+    GridPane.setValignment(statusBarKeyGeneration, VPos.BOTTOM);
     GridPane.setHalignment(titleLbl, HPos.LEFT);
     GridPane.setValignment(titleLbl, VPos.BOTTOM);
     GridPane.setHalignment(descriptionLbl, HPos.LEFT);

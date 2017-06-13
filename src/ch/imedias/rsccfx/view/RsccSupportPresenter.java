@@ -123,20 +123,11 @@ public class RsccSupportPresenter implements ControlledPresenter {
         }
     );
 
-    // handles statusBox updates from connectionStatus property in model
-    model.connectionStatusStyleProperty().addListener((observable, oldValue, newValue) -> {
-      view.statusBox.getStyleClass().clear();
-      view.statusBox.getStyleClass().add(newValue);
-      view.keyInputStatusBox.getStyleClass().clear();
-      view.keyInputStatusBox.getStyleClass().add(newValue);
-    });
+    view.statusBarKeyInput.setStatusProperties(model.statusBarTextKeyInputProperty(),
+        model.statusBarStyleClassKeyInputProperty());
 
-    model.connectionStatusTextProperty().addListener((observable, oldValue, newValue) -> {
-      Platform.runLater(() -> {
-        view.statusLbl.textProperty().set(newValue);
-        view.keyInputStatusLbl.textProperty().set(newValue);
-      });
-    });
+    view.statusBarStartService.setStatusProperties(model.statusBarTextStartServiceProperty(),
+        model.statusBarStyleClassStartServiceProperty());
 
     // make it possible to connect by pressing enter
     view.keyFld.setOnKeyPressed(ke -> {
