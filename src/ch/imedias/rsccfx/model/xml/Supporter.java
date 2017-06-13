@@ -1,6 +1,7 @@
 package ch.imedias.rsccfx.model.xml;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -8,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * the address of a VNX supporter.
  */
 @XmlRootElement(name = "supporter")
-public class Supporter implements Serializable {
+public final class Supporter implements Serializable {
 
   private String description;
   private String address;
@@ -160,5 +161,35 @@ public class Supporter implements Serializable {
       string = description;
     }
     return string;
+  }
+
+  /**
+   * Tests for equality on a Supporter object.
+   * @param other the other object
+   * @return true if both objects are equal by their parameters
+   */
+  @Override
+  public boolean equals(Object other) {
+    if (this == other) {
+      return true;
+    }
+    if (other == null || this.getClass() != other.getClass()) {
+      return false;
+    }
+    Supporter supporter = (Supporter) other;
+    return encrypted == supporter.encrypted
+        && chargeable == supporter.chargeable
+        && Objects.equals(this.description, supporter.description)
+        && Objects.equals(this.address, supporter.address)
+        && Objects.equals(this.port, supporter.port);
+  }
+
+  /**
+   * Calculates the hashcode of this object.
+   * @return the hashcode of this object
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(description, address, port, encrypted, chargeable);
   }
 }

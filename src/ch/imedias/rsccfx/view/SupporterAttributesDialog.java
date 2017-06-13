@@ -4,19 +4,16 @@ import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.xml.Supporter;
-import ch.imedias.rsccfx.view.util.NumberTextField;
 import java.util.Optional;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
@@ -35,7 +32,6 @@ public class SupporterAttributesDialog extends DialogPane {
   final Label nameLbl = new Label();
   final Label addressLbl = new Label();
   final Label portLbl = new Label();
-  final Label pictureLbl = new Label();
   final Label chargeableLbl = new Label();
   final Label encryptedLbl = new Label();
   final Label nameFld = new Label();
@@ -73,7 +69,6 @@ public class SupporterAttributesDialog extends DialogPane {
     nameLbl.setText(strings.dialogNameText);
     addressLbl.setText(strings.dialogAddressText);
     portLbl.setText(strings.dialogPortText);
-    pictureLbl.setText(strings.dialogImageText);
     chargeableLbl.setText(strings.dialogChargeableLbl);
     encryptedLbl.setText(strings.dialogEncryptedLbl);
 
@@ -82,7 +77,6 @@ public class SupporterAttributesDialog extends DialogPane {
 
     addressFld.setText(supporter.getAddress());
     portFld.setText(String.valueOf(supporter.getPort()));
-    pictureFld.setText("/images/sup.jpg");
     chargeableCBox.setSelected(supporter.isChargeable());
     encryptedCBox.setSelected(supporter.isEncrypted());
   }
@@ -113,8 +107,6 @@ public class SupporterAttributesDialog extends DialogPane {
     attributePane.add(addressFld, 1, 1);
     attributePane.add(portLbl, 0, 2);
     attributePane.add(portFld, 1, 2);
-    attributePane.add(pictureLbl, 0, 3);
-    attributePane.add(pictureFld, 1, 3);
     attributePane.add(chargeableLbl, 0, 4);
     attributePane.add(chargeableCBox, 1, 4);
     attributePane.add(encryptedLbl, 0, 5);
