@@ -1,10 +1,10 @@
 package ch.imedias.rsccfx.localization;
 
 /**
- *  Code generated at 17:24:31 10.06.2017
+ *  Code generated at 17:17:10 13.06.2017
  *  by generateStringsClass.py version 0.3.4
  *  based on properties file with hash:
- *  afcbfd3a5e9ba922f960c30a520a744e65708b65a2f25628509aa9d8a6fd85b7
+ *  89ea804fde8d7964375bff870db4f8d4736a07ec4d38b4414fecf374fbc6f290
  */
 
 import java.util.ResourceBundle;
@@ -68,9 +68,9 @@ public class Strings {
   public String supportStatusLblWaiting;
   public String supportStatusLblReady;
   public String startServiceDescpriptionLbl;
-  public String statusBoxServiceIdle;
-  public String statusBoxServiceStarted;
-  public String statusBoxServiceStopped;
+  public String statusBarServiceIdle;
+  public String statusBarServiceStarted;
+  public String statusBarServiceStopped;
   public String homeHelpLbl;
   public String supportHelpLbl;
   public String requestHelpLbl;
@@ -159,9 +159,9 @@ public class Strings {
     supportStatusLblWaiting = rscBndl.getString("supportStatusLblWaiting");
     supportStatusLblReady = rscBndl.getString("supportStatusLblReady");
     startServiceDescpriptionLbl = rscBndl.getString("startServiceDescpriptionLbl");
-    statusBoxServiceIdle = rscBndl.getString("statusBoxServiceIdle");
-    statusBoxServiceStarted = rscBndl.getString("statusBoxServiceStarted");
-    statusBoxServiceStopped = rscBndl.getString("statusBoxServiceStopped");
+    statusBarServiceIdle = rscBndl.getString("statusBarServiceIdle");
+    statusBarServiceStarted = rscBndl.getString("statusBarServiceStarted");
+    statusBarServiceStopped = rscBndl.getString("statusBarServiceStopped");
     homeHelpLbl = rscBndl.getString("homeHelpLbl");
     supportHelpLbl = rscBndl.getString("supportHelpLbl");
     requestHelpLbl = rscBndl.getString("requestHelpLbl");

@@ -114,7 +114,7 @@ public class RsccSupportPresenter implements ControlledPresenter {
               view.keyInputTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.keyInputInnerPane);
               view.contentBox.getChildren().add(2, view.startServiceInnerPane);
-              model.setStatusBarStartService(view.strings.statusBoxServiceIdle,
+              model.setStatusBarStartService(view.strings.statusBarServiceIdle,
                   model.STATUS_BAR_STYLE);
             }
           }
