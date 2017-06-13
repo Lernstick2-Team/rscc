@@ -3,6 +3,7 @@ package ch.imedias.rsccfx.view;
 import ch.imedias.rsccfx.ControlledPresenter;
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.ViewController;
+import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.xml.Supporter;
 import ch.imedias.rsccfx.model.xml.SupporterHelper;
@@ -38,6 +39,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
   private ViewController viewParent;
   private PopOverHelper popOverHelper;
   private int buttonSize = 0;
+  Strings strings = new Strings();
+
 
   /**
    * Initializes a new RsccRequestPresenter with the matching view.
@@ -250,13 +253,13 @@ public class RsccRequestPresenter implements ControlledPresenter {
     // Create ContextMenu
     final ContextMenu contextMenu = new ContextMenu();
 
-    MenuItem editMenuItem = new MenuItem("Edit");
+    MenuItem editMenuItem = new MenuItem(strings.dialogEditButtonText);
 
     editMenuItem.setOnAction(event -> {
       // Open Dialog to modify data
-      SupporterAttributesDialog supporterAttributesDialog =
-          new SupporterAttributesDialog(supporter, this.model);
-      boolean supporterSaved = supporterAttributesDialog.show();
+      SupporterAttributesDialogEdit supporterAttributesDialogEdit =
+          new SupporterAttributesDialogEdit(supporter);
+      boolean supporterSaved = supporterAttributesDialogEdit.show();
       if (supporterSaved) {
         // Update data in button name and save to preferences
         button.setText(supporter.toString());
@@ -264,13 +267,13 @@ public class RsccRequestPresenter implements ControlledPresenter {
       }
     });
 
-    MenuItem connectMenuItem = new MenuItem("Call");
+    MenuItem connectMenuItem = new MenuItem(strings.dialogCallButtonText);
     connectMenuItem.setOnAction(event -> {
       model.callSupporterDirect(supporter.getAddress(), supporter.getPort(),
           supporter.isEncrypted());
     });
 
-    MenuItem deleteMenuItem = new MenuItem("Delete");
+    MenuItem deleteMenuItem = new MenuItem(strings.dialogDeleteButtonText);
     deleteMenuItem.setOnAction(event -> deleteSupporterBtn(button, supporter));
 
     // Add MenuItem to ContextMenu
