@@ -1,5 +1,6 @@
 package ch.imedias.rsccfx.view.util;
 
+import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -18,11 +19,17 @@ public class StatusBar extends HBox {
   }
 
   public void setStatusProperties(StringProperty status, StringProperty styleClass){
-    statusLbl.textProperty().bind(status);
+    status.addListener((observable, oldValue, newValue) -> {
+      Platform.runLater(() -> {
+        statusLbl.textProperty().set(newValue);
+      });
+    });
     styleClass.addListener((observable, oldValue, newValue) -> {
       if (oldValue != newValue) {
-        this.getStyleClass().clear();
-        this.getStyleClass().add(newValue);
+        Platform.runLater(() -> {
+          this.getStyleClass().clear();
+          this.getStyleClass().add(newValue);
+        });
       }
     });
   }
