@@ -33,13 +33,11 @@ public class SupporterAttributesDialogEdit extends DialogPane {
   final Label nameLbl = new Label();
   final Label addressLbl = new Label();
   final Label portLbl = new Label();
-  final Label pictureLbl = new Label();
   final Label chargeableLbl = new Label();
   final Label encryptedLbl = new Label();
   final TextField nameFld = new TextField();
   final TextField addressFld = new TextField();
   final NumberTextField portFld = new NumberTextField();
-  final TextField pictureFld = new TextField();
   final ButtonType applyBtnType = ButtonType.OK;
   final ButtonType cancelBtnType = ButtonType.CANCEL;
   final CheckBox chargeableCBox = new CheckBox();
@@ -69,7 +67,6 @@ public class SupporterAttributesDialogEdit extends DialogPane {
     nameLbl.setText(strings.dialogNameText);
     addressLbl.setText(strings.dialogAddressText);
     portLbl.setText(strings.dialogPortText);
-    pictureLbl.setText(strings.dialogImageText);
     chargeableLbl.setText(strings.dialogChargeableLbl);
     encryptedLbl.setText(strings.dialogEncryptedLbl);
 
@@ -78,7 +75,6 @@ public class SupporterAttributesDialogEdit extends DialogPane {
 
     addressFld.setText(supporter.getAddress());
     portFld.setText(String.valueOf(supporter.getPort()));
-    pictureFld.setText("/images/sup.jpg");
     chargeableCBox.setSelected(supporter.isChargeable());
     encryptedCBox.setSelected(supporter.isEncrypted());
   }
@@ -116,8 +112,6 @@ public class SupporterAttributesDialogEdit extends DialogPane {
     attributePane.add(addressFld, 1, 1);
     attributePane.add(portLbl, 0, 2);
     attributePane.add(portFld, 1, 2);
-    attributePane.add(pictureLbl, 0, 3);
-    attributePane.add(pictureFld, 1, 3);
     attributePane.add(chargeableLbl, 0, 4);
     attributePane.add(chargeableCBox, 1, 4);
     attributePane.add(encryptedLbl, 0, 5);

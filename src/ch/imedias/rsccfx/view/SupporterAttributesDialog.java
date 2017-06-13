@@ -29,6 +29,7 @@ public class SupporterAttributesDialog extends DialogPane {
 
   final Dialog dialog = new Dialog();
   final GridPane attributePane = new GridPane();
+  Strings strings = new Strings();
   final Label nameLbl = new Label();
   final Label addressLbl = new Label();
   final Label portLbl = new Label();
@@ -37,13 +38,11 @@ public class SupporterAttributesDialog extends DialogPane {
   final Label nameFld = new Label();
   final Label addressFld = new Label();
   final Label portFld = new Label();
-  final Label pictureFld = new Label();
   final ButtonType cancelBtnType = ButtonType.CANCEL;
-  final ButtonType editBtnType = new ButtonType("Edit");
-  final ButtonType callBtnType = new ButtonType("Call");
+  final ButtonType editBtnType = new ButtonType(strings.dialogEditButtonText);
+  final ButtonType callBtnType = new ButtonType(strings.dialogCallButtonText);
   final CheckBox chargeableCBox = new CheckBox();
   final CheckBox encryptedCBox = new CheckBox();
-  Strings strings = new Strings();
   private Supporter supporter;
   private Rscc model;
 
@@ -139,11 +138,13 @@ public class SupporterAttributesDialog extends DialogPane {
 
     if (userChoice.isPresent()) {
       if (userChoice.get() == editBtnType) {
-        SupporterAttributesDialogEdit editDialog = new SupporterAttributesDialogEdit(this.supporter);
+        SupporterAttributesDialogEdit editDialog =
+            new SupporterAttributesDialogEdit(this.supporter);
         return editDialog.show();
       }
       if (userChoice.get() == callBtnType) {
-        model.callSupporterDirect(supporter.getAddress(), supporter.getPort(), supporter.isEncrypted());
+        model.callSupporterDirect(supporter.getAddress(),
+            supporter.getPort(), supporter.isEncrypted());
       }
     }
 
