@@ -14,12 +14,35 @@ public class StatusBar extends HBox {
 
   final Label statusLbl = new Label();
 
-  public StatusBar(StringProperty status, StringProperty cssTag) {
-    this.status = status;
-    this.cssTag = cssTag;
+  public StatusBar() {
     this.getStyleClass().add("statusBar");
     this.getChildren().add(statusLbl);
     statusLbl.getStyleClass().add("statusLbl");
+    setupBindings();
+    attachEvents();
+  }
+
+  public void setupBindings(){
+    statusLbl.textProperty().bind(status);
+  }
+
+  public void attachEvents(){
+    cssTag.addListener((observable, oldValue, newValue) -> {
+      if (oldValue != newValue) {
+        this.getStyleClass().clear();
+        this.getStyleClass().add(newValue);
+      }
+    });
+  }
+
+  public void setStatus(StringProperty status){
+    this.status.unbind();
+    this.status.bind(status);
+  }
+
+  public void setCssTag(StringProperty cssTag){
+    this.cssTag.unbind();
+    this.cssTag.bind(cssTag);
   }
 
 
