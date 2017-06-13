@@ -194,51 +194,30 @@ public class RsccTest {
   //  }
 
   /**
-   * Test for {@link Rscc#setConnectionStatus(String, int)}.
+   * Test for all StatusBar setters.
    */
   @Test
   public void testSetConnectionStatus() {
-    int styleIndexToTest = 0;
     String statusText = "test";
-    model.setConnectionStatus(statusText, styleIndexToTest);
-    String currentStatus = model.getConnectionStatusStyle();
-    assertEquals(model.getConnectionStatusStyles(styleIndexToTest), currentStatus);
-    assertEquals(model.getConnectionStatusText(), statusText);
+    model.setStatusBarKeyGeneration(statusText, model.STATUS_BAR_STYLE);
+    assertEquals(model.statusBarStyleClassKeyGenerationProperty().getValue(),
+        model.STATUS_BAR_STYLE);
+    assertEquals(model.statusBarTextKeyGenerationProperty().getValue(), statusText);
 
-    styleIndexToTest = 1;
-    model.setConnectionStatus(statusText, styleIndexToTest);
-    currentStatus = model.getConnectionStatusStyle();
-    assertEquals(model.getConnectionStatusStyles(styleIndexToTest), currentStatus);
-    assertEquals(model.getConnectionStatusText(), statusText);
+    model.setStatusBarKeyInput(statusText, model.STATUS_BAR_STYLE);
+    assertEquals(model.statusBarStyleClassKeyInputProperty().getValue(),
+        model.STATUS_BAR_STYLE);
+    assertEquals(model.statusBarTextKeyInputProperty().getValue(), statusText);
+
+    model.setStatusBarStartService(statusText, model.STATUS_BAR_STYLE);
+    assertEquals(model.statusBarStyleClassStartServiceProperty().getValue(),
+        model.STATUS_BAR_STYLE);
+    assertEquals(model.statusBarTextStartServiceProperty().getValue(), statusText);
+
+    model.setStatusBarSupporter(statusText, model.STATUS_BAR_STYLE);
+    assertEquals(model.statusBarStyleClassSupporterProperty().getValue(),
+        model.STATUS_BAR_STYLE);
+    assertEquals(model.statusBarTextSupporterProperty().getValue(), statusText);
   }
 
-  /**
-   * Test for {@link Rscc#setConnectionStatus(String, int)}.
-   */
-  @Test
-  public void testSetConnectionStatusFailing() {
-    try {
-      int styleIndexToTest = -1;
-      String statusText = "test";
-      model.setConnectionStatus(statusText, styleIndexToTest);
-    } catch (IllegalArgumentException e) {
-      // expected behavior
-    }
-
-    try {
-      int styleIndexToTest = 52;
-      String statusText = "test";
-      model.setConnectionStatus(statusText, styleIndexToTest);
-    } catch (IllegalArgumentException e) {
-      // expected behavior
-    }
-
-    try {
-      int styleIndexToTest = 0;
-      String statusText = null;
-      model.setConnectionStatus(statusText, styleIndexToTest);
-    } catch (IllegalArgumentException e) {
-      // expected behavior
-    }
-  }
 }
