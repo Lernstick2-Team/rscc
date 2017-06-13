@@ -86,6 +86,35 @@ public class Rscc {
       string -> string.replaceFirst("file:", "");
   private final SystemCommander systemCommander;
 
+
+  //StatusBox Handling
+  private final StringProperty connectionStatusText = new SimpleStringProperty();
+  private final StringProperty connectionStatusStyle = new SimpleStringProperty();
+  private final String[] connectionStatusStyles = {
+      "statusBox", "statusBoxInitialize", "statusBoxSuccess", "statusBoxFail"};
+
+
+  private static final String STATUS_BAR_STYLE_STATUSBAR = "statusBar";
+  private static final String STATUS_BAR_STYLE_STATUSBAR_INITIALIZE = "statusBarInitialize";
+  private static final String STATUS_BAR_STYLE_STATUSBAR_SUCCESS = "statusBarSuccess";
+  private static final String STATUS_BAR_STYLE_STATUSBAR_FAIL = "statusBarFail";
+
+
+  private final StringProperty statusBarTextKeyGeneration = new SimpleStringProperty();
+  private final StringProperty statusBarStyleClassKeyGeneration = new SimpleStringProperty();
+  private final StringProperty statusBarTextSupporter = new SimpleStringProperty();
+  private final StringProperty statusBarStyleClassSupporter = new SimpleStringProperty();
+  private final StringProperty statusBarTextKeyInput = new SimpleStringProperty();
+  private final StringProperty statusBarStyleClassKeyInput = new SimpleStringProperty();
+  private final StringProperty statusBarTextStartService = new SimpleStringProperty();
+  private final StringProperty statusBarStyleClassStartService = new SimpleStringProperty();
+
+
+  public void setStatusbar(StringProperty textProperty, String text, StringProperty styleClassProperty, String styleClass) {
+    textProperty.setValue(text);
+    styleClassProperty.setValue(styleClass);
+  }
+
   private final StringProperty keyServerIp = new SimpleStringProperty();
   private final StringProperty keyServerHttpPort = new SimpleStringProperty();
   private final IntegerProperty vncPort = new SimpleIntegerProperty();
@@ -94,14 +123,11 @@ public class Rscc {
   private final DoubleProperty vncQuality = new SimpleDoubleProperty();
   private final DoubleProperty vncCompression = new SimpleDoubleProperty();
   private final BooleanProperty vncBgr233 = new SimpleBooleanProperty();
-  private final StringProperty connectionStatusText = new SimpleStringProperty();
-  private final StringProperty connectionStatusStyle = new SimpleStringProperty();
   private final IntegerProperty udpPackageSize = new SimpleIntegerProperty(
       getUdpPackageSizeStatic());
   private final IntegerProperty proxyPort = new SimpleIntegerProperty();
   private final IntegerProperty stunServerPort = new SimpleIntegerProperty();
-  private final String[] connectionStatusStyles = {
-      "statusBox", "statusBoxInitialize", "statusBoxSuccess", "statusBoxFail"};
+
   private final StringProperty terminalOutput = new SimpleStringProperty();
 
   private final BooleanProperty forcingServerMode = new SimpleBooleanProperty(false);
