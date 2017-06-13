@@ -36,7 +36,6 @@ public class VncServerHandler {
    *
    * @param hostAddress   Address to connect to.
    * @param vncViewerPort Port to connect to.
-   * @return true when conneting did not fail.
    */
   public void startVncServerReverse(String hostAddress, Integer vncViewerPort,
                                     boolean isEncrypted) {
