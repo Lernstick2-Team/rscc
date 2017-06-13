@@ -1,6 +1,5 @@
 package ch.imedias.rsccfx.model;
 
-import ch.imedias.rsccfx.localization.Strings;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +17,6 @@ public class VncServerHandler {
   private final Rscc model;
   private final String vncServerName = "x11vnc";
   private Process process;
-  private final Strings strings = new Strings();
 
   /**
    * Constructor to instantiate a VNCServer.
@@ -66,7 +64,7 @@ public class VncServerHandler {
 
             if (errorString != null && errorString.contains("failed to connect")) {
               LOGGER.info("Detected: failed to connect");
-              model.setStatusBarSupporter(strings.statusBarConnectionFailed,
+              model.setStatusBarSupporter(model.strings.statusBarConnectionFailed,
                   model.STATUS_BAR_STYLE_FAIL);
               killVncServerProcess();
             }
@@ -75,14 +73,14 @@ public class VncServerHandler {
                 && errorString.contains("OK")) {
               LOGGER.info("Detected: Reverse connect OK");
               model.setVncSessionRunning(true);
-              model.setStatusBarSupporter(strings.statusBarConnected,
+              model.setStatusBarSupporter(model.strings.statusBarConnected,
                   model.STATUS_BAR_STYLE_SUCCESS);
             }
           }
 
           LOGGER.info("VNC - Server process has ended");
           if (model.isVncSessionRunning()) {
-            model.setStatusBarSupporter(strings.statusBarConnectionClosed,
+            model.setStatusBarSupporter(model.strings.statusBarConnectionClosed,
                 model.STATUS_BAR_STYLE_INITIALIZE);
           }
           model.setVncSessionRunning(false);
@@ -137,10 +135,11 @@ public class VncServerHandler {
               LOGGER.info("Client has connected");
               model.setVncSessionRunning(true);
               if (model.getRudp() != null) {
-                model.setStatusBarKeyGeneration(strings.statusBarVncConnectionEstablishedICE,
+                model.setStatusBarKeyGeneration(model.strings.statusBarVncConnectionEstablishedICE,
                     model.STATUS_BAR_STYLE_SUCCESS);
               } else {
-                model.setStatusBarKeyGeneration(strings.statusBarVncConnectionEstablishedServer,
+                model.setStatusBarKeyGeneration(
+                    model.strings.statusBarVncConnectionEstablishedServer,
                     model.STATUS_BAR_STYLE_SUCCESS);
               }
             }
@@ -149,6 +148,9 @@ public class VncServerHandler {
           LOGGER.info("VNC - Server process has ended");
           errorStream.close();
           model.setVncSessionRunning(false);
+          model.setStatusBarKeyGeneration(model.strings.statusBarConnectionClosed,
+              model.STATUS_BAR_STYLE_INITIALIZE);
+
           model.setVncServerProcessRunning(false);
 
         } catch (IOException e) {

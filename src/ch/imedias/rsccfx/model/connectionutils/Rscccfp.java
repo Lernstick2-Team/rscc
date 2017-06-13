@@ -87,6 +87,8 @@ public class Rscccfp extends Thread {
 
     //Wait for connection
     LOGGER.info("RSCCCFP: wait for client");
+    model.setStatusBarKeyGeneration(model.strings.statusBarConnectionWaitForIncoming,
+        model.STATUS_BAR_STYLE_INITIALIZE);
 
     try {
       connectionSocket = serverSocket.accept();
@@ -94,6 +96,9 @@ public class Rscccfp extends Thread {
       inputStream = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
       outputStream = new DataOutputStream(connectionSocket.getOutputStream());
       LOGGER.info("RSCCCFP: Client connected");
+      model.setStatusBarKeyGeneration(model.strings.statusBarArrangingConnection,
+          model.STATUS_BAR_STYLE_INITIALIZE);
+
 
       runIceMagic();
 
@@ -119,7 +124,10 @@ public class Rscccfp extends Thread {
       outputStream = new DataOutputStream(connectionSocket.getOutputStream());
       inputStream = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 
+      model.setStatusBarKeyInput(model.strings.statusBarArrangingConnection,
+          model.STATUS_BAR_STYLE_INITIALIZE);
       runIceMagic();
+
     } catch (IOException e) {
       e.printStackTrace();
     } catch (Throwable throwable) {

@@ -128,7 +128,7 @@ public class Rscc {
 
   private final Preferences preferences = Preferences.userNodeForPackage(Rscc.class);
 
-  private final Strings strings = new Strings();
+  public final Strings strings = new Strings();
   private final KeyUtil keyUtil;
   private String pathToResources;
   private String pathToResourceDocker;
@@ -544,6 +544,9 @@ public class Rscc {
         setStatusBarKeyInput(strings.statusBarVncConnectionEstablishedServer,
             STATUS_BAR_STYLE_SUCCESS);
       }
+    } else if (i == 10) {
+      setStatusBarKeyInput(strings.statusBarConnectionFailed,
+          STATUS_BAR_STYLE_SUCCESS);
     }
     setConnectionEstablishmentRunning(false);
   }

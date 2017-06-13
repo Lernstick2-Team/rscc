@@ -1,10 +1,10 @@
 package ch.imedias.rsccfx.localization;
 
 /**
- *  Code generated at 22:33:17 13.06.2017
+ *  Code generated at 23:07:42 13.06.2017
  *  by generateStringsClass.py version 0.3.4
  *  based on properties file with hash:
- *  e0df3422bb6937416d3ef64cecd07e12267f2c2110afee5eea780213887e7b34
+ *  aad5c3b9f94459a9cf295c9d2f93485221507a532a78e9970c69d56687d8d670
  */
 
 import java.util.ResourceBundle;
@@ -116,6 +116,8 @@ public class Strings {
   public String statusBarVncConnectionEstablishedServer;
   public String statusBarVncViewerServiceStopped;
   public String statusBarConnectionClosed;
+  public String statusBarArrangingConnection;
+  public String statusBarConnectionWaitForIncoming;
 
   public Strings() {
 
@@ -224,5 +226,7 @@ public class Strings {
     statusBarVncConnectionEstablishedServer = rscBndl.getString("statusBarVncConnectionEstablishedServer");
     statusBarVncViewerServiceStopped = rscBndl.getString("statusBarVncViewerServiceStopped");
     statusBarConnectionClosed = rscBndl.getString("statusBarConnectionClosed");
+    statusBarArrangingConnection = rscBndl.getString("statusBarArrangingConnection");
+    statusBarConnectionWaitForIncoming = rscBndl.getString("statusBarConnectionWaitForIncoming");
   }
 }
