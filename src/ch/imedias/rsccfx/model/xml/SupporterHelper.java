@@ -2,7 +2,10 @@ package ch.imedias.rsccfx.model.xml;
 
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.model.Rscc;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
@@ -65,28 +68,26 @@ public class SupporterHelper {
    */
   public List<Supporter> getDefaultSupporters() {
     LOGGER.info("Loading default supporter list");
-    File supportersXmlFile =
-        new File(model.getPathToDefaultSupporters());
+    File supportersXmlFile;
+    try {
+      supportersXmlFile = new File(model.getPathToDefaultSupporters());
+    } catch (NullPointerException e) {
+      LOGGER.warning("Path to default supporters file is null! Returning null.");
+      return null;
+    }
     return getSupportersFromXml(supportersXmlFile);
   }
 
   private List<Supporter> getSupportersFromXml(File file) {
-    List<Supporter> supportersList = null;
-    try {
-      JAXBContext jaxbContext = JAXBContext.newInstance(Supporters.class);
-
-      Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-      Supporters supporters = (Supporters) jaxbUnmarshaller.unmarshal(file);
-
-      supportersList = supporters.getSupporters();
-    } catch (JAXBException e) {
-      e.printStackTrace();
-    }
-    return supportersList;
+    return getSupportersFromXml(fileToString(file));
   }
 
   private List<Supporter> getSupportersFromXml(String string) {
     List<Supporter> supportersList = null;
+    if (string == null) {
+      LOGGER.warning("String to create a list of supporters from is null! Returning null.");
+      return null;
+    }
     StringReader reader = new StringReader(string);
 
     try {
@@ -99,7 +100,7 @@ public class SupporterHelper {
       // gets thrown when the format is invalid, in this case return default
       supportersList = getDefaultSupporters();
     } catch (JAXBException e) {
-      e.printStackTrace();
+      LOGGER.warning(e.getMessage());
     }
     return supportersList;
   }
@@ -121,31 +122,34 @@ public class SupporterHelper {
 
       string = writer.toString();
     } catch (JAXBException e) {
-      e.printStackTrace();
+      LOGGER.warning(e.getMessage());
     }
     return string;
   }
 
-  private void supportersToXml(List<Supporter> supporters, File file) {
+  private String fileToString(File file) {
+    String output = null;
     try {
-      JAXBContext jaxbContext = JAXBContext.newInstance(Supporters.class);
-      Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-      Supporters supportersWrapper = new Supporters();
-      supportersWrapper.setSupporters(supporters);
-
-      jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-      jaxbMarshaller.marshal(supportersWrapper, file);
-    } catch (JAXBException e) {
-      e.printStackTrace();
+      output = Files.toString(file, Charsets.UTF_8);
+    } catch (IOException e) {
+      LOGGER.warning("IOException during conversion of file to string! " + e.getMessage());
     }
+    return output;
   }
 
-  private String getSupportersXmlFromPreferences() {
+  /**
+   * Gets the supporters from the saved preferences.
+   * @return saved preferences
+   */
+  public String getSupportersXmlFromPreferences() {
     return preferences.get(SUPPORTER_PREFERENCES, null);
   }
 
-  private void setSupportersInPreferences(String supportersXmlString) {
+  /**
+   * Saves the preferences.
+   * @param supportersXmlString supporters which need to be saved
+   */
+  public void setSupportersInPreferences(String supportersXmlString) {
     if (supportersXmlString != null) {
       preferences.put(SUPPORTER_PREFERENCES, supportersXmlString);
     } else {
