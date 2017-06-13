@@ -33,37 +33,39 @@ import javafx.beans.property.StringProperty;
  */
 public class Rscc {
 
-  public static final String PREFERENCES_KEY_SERVER_IP = "keyServerIp";
+  //Default stettings
   public static final String DEFAULT_KEY_SERVER_IP = "86.119.39.89";
-  public static final String PREFERENCES_KEY_SERVER_HTTP_PORT = "keyServerHttpPort";
   public static final String DEFAULT_KEY_SERVER_HTTP_PORT = "800";
-  public static final String PREFERENCES_VNC_PORT = "vncPort";
   public static final int DEFAULT_VNC_PORT = 5900;
-  public static final String PREFERENCES_ICE_PORT = "icePort";
-  public static final int DEFAULT_ICE_PORT = 5050;
-  public static final String PREFERENCES_UDP_PACKAGE_SIZE = "udpPackageSize";
-  public static final int DEFAULT_UDP_PACKAGE_SIZE = 10000;
-  public static final String PREFERENCES_PROXY_PORT = "proxyPort";
-  public static final int DEFAULT_PROXY_PORT = 2601;
-  public static final String PREFERENCES_STUN_SERVER_PORT = "stunServerPort";
-  public static final int DEFAULT_STUN_SERVER_PORT = 3478;
-  public static final String PREFERENCES_FORCING_SERVER_MODE = "forcingServerMode";
-  public static final boolean DEFAULT_FORCING_SERVER_MODE = false;
-  public static final String PREFERENCES_VNC_VIEW_ONLY = "vncViewOnly";
-  public static final boolean DEFAULT_VNC_VIEW_ONLY = false;
-  public static final String PREFERENCES_VNC_BGR_233 = "vncBgr233";
-  public static final boolean DEFAULT_VNC_BGR_233 = false;
-  public static final String PREFERENCES_VNC_COMPRESSION = "vncCompression";
-  public static final int DEFAULT_VNC_COMPRESSION = 6;
-  public static final String PREFERENCES_VNC_QUALITY = "vncQuality";
   public static final int DEFAULT_VNC_QUALITY = 6;
-  public static final String PREFERENCES_STUN_SERVERS = "STUNServers";
+  public static final int DEFAULT_VNC_COMPRESSION = 6;
+  public static final int DEFAULT_ICE_PORT = 5050;
+  public static final int DEFAULT_PROXY_PORT = 2601;
+  public static final int DEFAULT_UDP_PACKAGE_SIZE = 10000;
+  public static final boolean DEFAULT_FORCING_SERVER_MODE = false;
+  public static final boolean DEFAULT_VNC_VIEW_ONLY = false;
+  public static final boolean DEFAULT_VNC_BGR_233 = false;
+  public static final int DEFAULT_STUN_SERVER_PORT = 3478;
   public static final String DEFAULT_STUN_SERVERS = "numb.viagenie.ca;"
       + "stun.ekiga.net;stun.gmx.net;stun.1und1.de";
+
+  //PreferencesNames
+  public static final String PREFERENCES_KEY_SERVER_IP = "keyServerIp";
+  public static final String PREFERENCES_KEY_SERVER_HTTP_PORT = "keyServerHttpPort";
+  public static final String PREFERENCES_VNC_PORT = "vncPort";
+  public static final String PREFERENCES_ICE_PORT = "icePort";
+  public static final String PREFERENCES_UDP_PACKAGE_SIZE = "udpPackageSize";
+  public static final String PREFERENCES_PROXY_PORT = "proxyPort";
+  public static final String PREFERENCES_STUN_SERVER_PORT = "stunServerPort";
+  public static final String PREFERENCES_FORCING_SERVER_MODE = "forcingServerMode";
+  public static final String PREFERENCES_VNC_VIEW_ONLY = "vncViewOnly";
+  public static final String PREFERENCES_VNC_BGR_233 = "vncBgr233";
+  public static final String PREFERENCES_VNC_COMPRESSION = "vncCompression";
+  public static final String PREFERENCES_VNC_QUALITY = "vncQuality";
+  public static final String PREFERENCES_STUN_SERVERS = "STUNServers";
   public static final String DELIMITER = ";";
 
-  private static String[] STUN_SERVERS = {
-      "numb.viagenie.ca", "stun.ekiga.net", "stun.gmx.net", "stun.1und1.de"};
+  private static String[] STUN_SERVERS;
   private static final int PACKAGE_SIZE = 10000; // needed, since a static method access it.
   // TODO: make access depend on current setting
   private static final Logger LOGGER =
@@ -86,12 +88,11 @@ public class Rscc {
       string -> string.replaceFirst("file:", "");
   private final SystemCommander systemCommander;
 
-
+  //StatusBar
   public static final String STATUS_BAR_STYLE = "statusBar";
   public static final String STATUS_BAR_STYLE_INITIALIZE = "statusBarInitialize";
   public static final String STATUS_BAR_STYLE_SUCCESS = "statusBarSuccess";
   public static final String STATUS_BAR_STYLE_FAIL = "statusBarFail";
-
   private final StringProperty statusBarTextKeyGeneration = new SimpleStringProperty();
   private final StringProperty statusBarStyleClassKeyGeneration = new SimpleStringProperty();
   private final StringProperty statusBarTextSupporter = new SimpleStringProperty();
@@ -101,7 +102,7 @@ public class Rscc {
   private final StringProperty statusBarTextStartService = new SimpleStringProperty();
   private final StringProperty statusBarStyleClassStartService = new SimpleStringProperty();
 
-
+  //Settings
   private final StringProperty keyServerIp = new SimpleStringProperty();
   private final StringProperty keyServerHttpPort = new SimpleStringProperty();
   private final IntegerProperty vncPort = new SimpleIntegerProperty();
@@ -114,19 +115,14 @@ public class Rscc {
       getUdpPackageSizeStatic());
   private final IntegerProperty proxyPort = new SimpleIntegerProperty();
   private final IntegerProperty stunServerPort = new SimpleIntegerProperty();
-
-  private final StringProperty terminalOutput = new SimpleStringProperty();
-
   private final BooleanProperty forcingServerMode = new SimpleBooleanProperty(false);
+
+  //States
   private final BooleanProperty vncSessionRunning = new SimpleBooleanProperty(false);
-  private final BooleanProperty vncServerProcessRunning
-      = new SimpleBooleanProperty(false);
-  private final BooleanProperty vncViewerProcessRunning
-      = new SimpleBooleanProperty(false);
-  private final BooleanProperty connectionEstablishmentRunning
-      = new SimpleBooleanProperty(false);
-  private final BooleanProperty rscccfpHasTalkedToOtherClient
-      = new SimpleBooleanProperty(false);
+  private final BooleanProperty vncServerProcessRunning = new SimpleBooleanProperty(false);
+  private final BooleanProperty vncViewerProcessRunning = new SimpleBooleanProperty(false);
+  private final BooleanProperty connectionEstablishmentRunning = new SimpleBooleanProperty(false);
+  private final BooleanProperty rscccfpHasTalkedToOtherClient = new SimpleBooleanProperty(false);
   private final BooleanProperty isSshRunning = new SimpleBooleanProperty(false);
 
   private final Preferences preferences = Preferences.userNodeForPackage(Rscc.class);
@@ -190,6 +186,7 @@ public class Rscc {
     LOGGER.info("Loaded UserPrefs");
   }
 
+
   /**
    * Loads the UserPreferences.
    */
@@ -214,6 +211,7 @@ public class Rscc {
   public static int getUdpPackageSizeStatic() {
     return PACKAGE_SIZE;
   }
+
 
   /**
    * Sets resource path, according to the application running either as a JAR or in the IDE.
@@ -248,6 +246,7 @@ public class Rscc {
       );
     }
   }
+
 
   /**
    * Extracts files from running JAR to folder.
@@ -299,6 +298,7 @@ public class Rscc {
     }
   }
 
+
   /**
    * Sets up the server with use.sh.
    */
@@ -313,6 +313,7 @@ public class Rscc {
     }
     isSshRunning.setValue(true);
   }
+
 
   /**
    * Kills the connection to the keyserver.
@@ -346,6 +347,7 @@ public class Rscc {
     keyUtil.setKey("");
     LOGGER.info("Everything should be closed");
   }
+
 
   /**
    * Requests a key from the key server.
@@ -421,6 +423,7 @@ public class Rscc {
     setConnectionEstablishmentRunning(false);
   }
 
+
   /**
    * Updates StatusBar on KeyGeneration.
    *
@@ -431,6 +434,7 @@ public class Rscc {
     statusBarTextKeyGenerationProperty().set(text);
     statusBarStyleClassKeyGenerationProperty().set(styleClass);
   }
+
 
   /**
    * Updates StatusBar on KeyInput.
@@ -443,6 +447,7 @@ public class Rscc {
     statusBarStyleClassKeyInputProperty().set(styleClass);
   }
 
+
   /**
    * Updates StatusBar on StartService.
    *
@@ -454,6 +459,7 @@ public class Rscc {
     statusBarStyleClassStartServiceProperty().set(styleClass);
   }
 
+
   /**
    * Updates StatusBar on KeyInput.
    *
@@ -464,8 +470,6 @@ public class Rscc {
     statusBarTextSupporterProperty().set(text);
     statusBarStyleClassSupporterProperty().set(styleClass);
   }
-
-
 
 
   /**
@@ -498,7 +502,6 @@ public class Rscc {
     rscccfp = new Rscccfp(this, false);
     rscccfp.setDaemon(true);
     rscccfp.start();
-
 
     try {
       rscccfp.join();
@@ -535,17 +538,13 @@ public class Rscc {
       }
     }
 
-
     if (isVncSessionRunning()) {
       if (rudp != null) {
         setStatusBarKeyInput("VNC-Connection established using ICE", STATUS_BAR_STYLE_SUCCESS);
       } else {
-
         setStatusBarKeyInput("VNC-Connection established over Server", STATUS_BAR_STYLE_SUCCESS);
       }
-
     }
-
     setConnectionEstablishmentRunning(false);
   }
 
@@ -599,6 +598,7 @@ public class Rscc {
     setConnectionEstablishmentRunning(false);
   }
 
+
   /**
    * Starts the VNC Viewer as in listening mode.
    */
@@ -612,6 +612,7 @@ public class Rscc {
     setConnectionEstablishmentRunning(false);
   }
 
+
   /**
    * Stops the VNC Viewer.
    */
@@ -623,7 +624,7 @@ public class Rscc {
     setConnectionEstablishmentRunning(false);
   }
 
-
+  // Getters and Setters from here
   public String getKeyServerIp() {
     return keyServerIp.get();
   }
@@ -767,10 +768,6 @@ public class Rscc {
 
   public void setRemoteIceSuccessful(boolean remoteIceSuccessful) {
     isRemoteIceSuccessful = remoteIceSuccessful;
-  }
-
-  public void setTerminalOutput(String terminalOutput) {
-    this.terminalOutput.set(terminalOutput);
   }
 
   public boolean isForcingServerMode() {
