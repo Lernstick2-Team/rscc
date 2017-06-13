@@ -91,28 +91,28 @@
     -fx-font-weight: bold;
 }
 
-.statusBox{
+.statusBar {
     -fx-alignment: center;
     -fx-background-color: darkgray;
     -fx-background-radius: 0.308em;
     -fx-border-radius: 0.308em;
 }
 
-.statusBoxInitialize{
+.statusBarInitialize {
     -fx-background-color: rgb(240, 173, 78);
     -fx-alignment: center;
     -fx-background-radius: 0.308em;
     -fx-border-radius: 0.308em;
 }
 
-.statusBoxSuccess{
+.statusBarSuccess {
     -fx-background-color: rgb(92, 184, 92);
     -fx-alignment: center;
     -fx-background-radius: 0.308em;
     -fx-border-radius: 0.308em;
 }
 
-.statusBoxFail{
+.statusBarFail {
     -fx-background-color: rgb(217, 83, 79);
     -fx-alignment: center;
 }
