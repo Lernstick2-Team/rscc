@@ -902,4 +902,84 @@ public class Rscc {
   public RunRudp getRudp() {
     return rudp;
   }
+
+  public static String getStatusBarStyleStatusbar() {
+    return STATUS_BAR_STYLE_STATUSBAR;
+  }
+
+  public static String getStatusBarStyleStatusbarInitialize() {
+    return STATUS_BAR_STYLE_STATUSBAR_INITIALIZE;
+  }
+
+  public static String getStatusBarStyleStatusbarSuccess() {
+    return STATUS_BAR_STYLE_STATUSBAR_SUCCESS;
+  }
+
+  public static String getStatusBarStyleStatusbarFail() {
+    return STATUS_BAR_STYLE_STATUSBAR_FAIL;
+  }
+
+  public String getStatusBarTextKeyGeneration() {
+    return statusBarTextKeyGeneration.get();
+  }
+
+  public StringProperty statusBarTextKeyGenerationProperty() {
+    return statusBarTextKeyGeneration;
+  }
+
+  public String getStatusBarStyleClassKeyGeneration() {
+    return statusBarStyleClassKeyGeneration.get();
+  }
+
+  public StringProperty statusBarStyleClassKeyGenerationProperty() {
+    return statusBarStyleClassKeyGeneration;
+  }
+
+  public String getStatusBarTextSupporter() {
+    return statusBarTextSupporter.get();
+  }
+
+  public StringProperty statusBarTextSupporterProperty() {
+    return statusBarTextSupporter;
+  }
+
+  public String getStatusBarStyleClassSupporter() {
+    return statusBarStyleClassSupporter.get();
+  }
+
+  public StringProperty statusBarStyleClassSupporterProperty() {
+    return statusBarStyleClassSupporter;
+  }
+
+  public String getStatusBarTextKeyInput() {
+    return statusBarTextKeyInput.get();
+  }
+
+  public StringProperty statusBarTextKeyInputProperty() {
+    return statusBarTextKeyInput;
+  }
+
+  public String getStatusBarStyleClassKeyInput() {
+    return statusBarStyleClassKeyInput.get();
+  }
+
+  public StringProperty statusBarStyleClassKeyInputProperty() {
+    return statusBarStyleClassKeyInput;
+  }
+
+  public String getStatusBarTextStartService() {
+    return statusBarTextStartService.get();
+  }
+
+  public StringProperty statusBarTextStartServiceProperty() {
+    return statusBarTextStartService;
+  }
+
+  public String getStatusBarStyleClassStartService() {
+    return statusBarStyleClassStartService.get();
+  }
+
+  public StringProperty statusBarStyleClassStartServiceProperty() {
+    return statusBarStyleClassStartService;
+  }
 }
