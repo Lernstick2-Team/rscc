@@ -1,12 +1,11 @@
 package ch.imedias.rsccfx.model;
 
+import ch.imedias.rsccfx.localization.Strings;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 
 
 /**
@@ -19,6 +18,7 @@ public class VncServerHandler {
   private final Rscc model;
   private final String vncServerName = "x11vnc";
   private Process process;
+  private final Strings strings = new Strings();
 
   /**
    * Constructor to instantiate a VNCServer.
@@ -38,9 +38,8 @@ public class VncServerHandler {
    * @param vncViewerPort Port to connect to.
    * @return true when conneting did not fail.
    */
-  public boolean startVncServerReverse(String hostAddress, Integer vncViewerPort,
-                                       boolean isEncrypted) {
-    final BooleanProperty connectionSucceed = new SimpleBooleanProperty(true);
+  public void startVncServerReverse(String hostAddress, Integer vncViewerPort,
+                                    boolean isEncrypted) {
 
     Thread startServerProcessThread = new Thread() {
       public void run() {
@@ -68,19 +67,25 @@ public class VncServerHandler {
 
             if (errorString != null && errorString.contains("failed to connect")) {
               LOGGER.info("Detected: failed to connect");
-              connectionSucceed.setValue(false);
+              model.setStatusBarSupporter(strings.statusBarConnectionFailed,
+                  model.STATUS_BAR_STYLE_FAIL);
               killVncServerProcess();
             }
 
             if (errorString != null && errorString.contains("reverse_connect")
                 && errorString.contains("OK")) {
               LOGGER.info("Detected: Reverse connect OK");
-              connectionSucceed.setValue(true);
               model.setVncSessionRunning(true);
+              model.setStatusBarSupporter(strings.statusBarConnected,
+                  model.STATUS_BAR_STYLE_SUCCESS);
             }
           }
 
           LOGGER.info("VNC - Server process has ended");
+          if (model.isVncSessionRunning()) {
+            model.setStatusBarSupporter(strings.statusBarConnectionClosed,
+                model.STATUS_BAR_STYLE_INITIALIZE);
+          }
           model.setVncSessionRunning(false);
           model.setVncServerProcessRunning(false);
 
@@ -96,8 +101,6 @@ public class VncServerHandler {
     };
 
     startServerProcessThread.start();
-
-    return connectionSucceed.getValue();
   }
 
 
@@ -135,10 +138,10 @@ public class VncServerHandler {
               LOGGER.info("Client has connected");
               model.setVncSessionRunning(true);
               if (model.getRudp() != null) {
-                model.setStatusBarKeyGeneration("VNC-Connection established using ICE",
+                model.setStatusBarKeyGeneration(strings.statusBarVncConnectionEstablishedICE,
                     model.STATUS_BAR_STYLE_SUCCESS);
               } else {
-                model.setStatusBarKeyGeneration("VNC-Connection established over Server",
+                model.setStatusBarKeyGeneration(strings.statusBarVncConnectionEstablishedServer,
                     model.STATUS_BAR_STYLE_SUCCESS);
               }
             }

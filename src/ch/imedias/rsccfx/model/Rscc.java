@@ -1,5 +1,6 @@
 package ch.imedias.rsccfx.model;
 
+import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.connectionutils.Rscccfp;
 import ch.imedias.rsccfx.model.connectionutils.RunRudp;
 import ch.imedias.rsccfx.model.util.KeyUtil;
@@ -127,6 +128,7 @@ public class Rscc {
 
   private final Preferences preferences = Preferences.userNodeForPackage(Rscc.class);
 
+  private final Strings strings = new Strings();
   private final KeyUtil keyUtil;
   private String pathToResources;
   private String pathToResourceDocker;
@@ -354,13 +356,11 @@ public class Rscc {
    */
   public void requestKeyFromServer() {
     setConnectionEstablishmentRunning(true);
-    setStatusBarKeyGeneration("Setting keyserver...", STATUS_BAR_STYLE_INITIALIZE);
+    setStatusBarKeyGeneration(strings.statusBarSettingKeyserver, STATUS_BAR_STYLE_INITIALIZE);
 
     keyServerSetup();
 
-
-    setStatusBarKeyGeneration("Requesting key from server...", STATUS_BAR_STYLE_INITIALIZE);
-
+    setStatusBarKeyGeneration(strings.statusBarRequestingKey, STATUS_BAR_STYLE_INITIALIZE);
 
     String command = systemCommander.commandStringGenerator(
         pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()));
@@ -377,7 +377,7 @@ public class Rscc {
     rscccfp.setDaemon(true);
     rscccfp.start();
 
-    setStatusBarKeyGeneration("Key successfully generated", STATUS_BAR_STYLE_INITIALIZE);
+    setStatusBarKeyGeneration(strings.statusBarKeyGeneratedSuccess, STATUS_BAR_STYLE_INITIALIZE);
 
     try {
       rscccfp.join();
@@ -410,8 +410,7 @@ public class Rscc {
           rudp.start();
         }
 
-        setStatusBarKeyGeneration("VNC-Server waits for incoming connection",
-            STATUS_BAR_STYLE_SUCCESS);
+        setStatusBarKeyGeneration(strings.statusBarVncServerWaiting, STATUS_BAR_STYLE_SUCCESS);
 
         setRscccfpHasTalkedToOtherClient(false);
       }
@@ -478,21 +477,20 @@ public class Rscc {
   public void connectToUser() {
     setConnectionEstablishmentRunning(true);
 
-    setStatusBarKeyInput("Get key from keyserver...", STATUS_BAR_STYLE_INITIALIZE);
+    setStatusBarKeyInput(strings.statusBarSettingKeyserver, STATUS_BAR_STYLE_INITIALIZE);
 
     keyServerSetup();
 
     String command = systemCommander.commandStringGenerator(pathToResourceDocker,
         "port_connect.sh", Integer.toString(getVncPort()), keyUtil.getKey());
 
-    setStatusBarKeyInput("Connected to keyserver.", STATUS_BAR_STYLE_INITIALIZE);
+    setStatusBarKeyInput(strings.statusBarKeyserverConnected, STATUS_BAR_STYLE_INITIALIZE);
 
     SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
 
     if (returnValues.getExitCode() != 0) {
       LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
-      setStatusBarKeyInput(
-          "Key " + getKeyUtil().getKey() + " could not be verified by the server.",
+      setStatusBarKeyInput(strings.statusBarKeyNotVerified + getKeyUtil().getKey(),
           STATUS_BAR_STYLE_FAIL);
 
       setConnectionEstablishmentRunning(false);
@@ -524,7 +522,7 @@ public class Rscc {
     }
 
     LOGGER.info("RSCC: Starting VNCViewer");
-    setStatusBarKeyInput("Starting VNC Viewer...", STATUS_BAR_STYLE_INITIALIZE);
+    setStatusBarKeyInput(strings.statusBarVncViewerStarting, STATUS_BAR_STYLE_INITIALIZE);
 
     int i = 0;
     while (!isVncSessionRunning() && i < 10) {
@@ -540,9 +538,11 @@ public class Rscc {
 
     if (isVncSessionRunning()) {
       if (rudp != null) {
-        setStatusBarKeyInput("VNC-Connection established using ICE", STATUS_BAR_STYLE_SUCCESS);
+        setStatusBarKeyInput(strings.statusBarVncConnectionEstablishedICE,
+            STATUS_BAR_STYLE_SUCCESS);
       } else {
-        setStatusBarKeyInput("VNC-Connection established over Server", STATUS_BAR_STYLE_SUCCESS);
+        setStatusBarKeyInput(strings.statusBarVncConnectionEstablishedServer,
+            STATUS_BAR_STYLE_SUCCESS);
       }
     }
     setConnectionEstablishmentRunning(false);
@@ -581,20 +581,14 @@ public class Rscc {
    */
   public void callSupporterDirect(String address, String port, boolean isEncrypted) {
     setConnectionEstablishmentRunning(true);
-    setStatusBarSupporter("Connecting to " + address + ":" + port,
+    setStatusBarSupporter(strings.statusBarConnectingTo + address + ":" + port,
         STATUS_BAR_STYLE_INITIALIZE);
     int portValue = -1;
     if (!port.equals("")) {
       portValue = Integer.valueOf(port);
     }
     vncServer = new VncServerHandler(this);
-    boolean connectionSuccess = vncServer
-        .startVncServerReverse(address, portValue > 0 ? portValue : 5500, isEncrypted);
-    if (connectionSuccess) {
-      setStatusBarSupporter("Connected", STATUS_BAR_STYLE_SUCCESS);
-    } else {
-      setStatusBarSupporter("Connection failed", STATUS_BAR_STYLE_FAIL);
-    }
+    vncServer.startVncServerReverse(address, portValue > 0 ? portValue : 5500, isEncrypted);
     setConnectionEstablishmentRunning(false);
   }
 
@@ -604,10 +598,12 @@ public class Rscc {
    */
   public void startVncViewerAsService() {
     setConnectionEstablishmentRunning(true);
-    setStatusBarStartService("Starting VNC Viewer as service...", STATUS_BAR_STYLE_INITIALIZE);
+    setStatusBarStartService(strings.statusBarVncViewerServiceStarting,
+        STATUS_BAR_STYLE_INITIALIZE);
     vncViewer = new VncViewerHandler(this);
     vncViewer.startVncViewerListening();
-    setStatusBarStartService("VNC Viewer service is running", STATUS_BAR_STYLE_SUCCESS);
+    setStatusBarStartService(strings.statusBarVncViewerServiceRunning,
+        STATUS_BAR_STYLE_SUCCESS);
 
     setConnectionEstablishmentRunning(false);
   }
@@ -619,7 +615,8 @@ public class Rscc {
   public void stopVncViewerAsService() {
     setConnectionEstablishmentRunning(true);
     vncViewer.killVncViewerProcess();
-    setStatusBarStartService("VNC Viewer service is stopped", STATUS_BAR_STYLE_INITIALIZE);
+    setStatusBarStartService(strings.statusBarVncViewerServiceStopped,
+        STATUS_BAR_STYLE_INITIALIZE);
 
     setConnectionEstablishmentRunning(false);
   }

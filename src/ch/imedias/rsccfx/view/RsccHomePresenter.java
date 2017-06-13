@@ -3,6 +3,7 @@ package ch.imedias.rsccfx.view;
 import ch.imedias.rsccfx.ControlledPresenter;
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.ViewController;
+import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import java.util.logging.Logger;
 import javafx.scene.Scene;
@@ -19,6 +20,7 @@ public class RsccHomePresenter implements ControlledPresenter {
   private static final Double VIEW_BTN_HEIGHT_DIVISOR = 2.5d;
   private static final Double VIEW_BTN_WIDTH_DIVISOR = 1.5d;
 
+  private final Strings strings = new Strings();
   private final Rscc model;
   private final RsccHomeView view;
   private final HeaderPresenter headerPresenter;
@@ -73,7 +75,8 @@ public class RsccHomePresenter implements ControlledPresenter {
 
   private void attachEvents() {
     view.supportViewBtn.setOnAction(event -> {
-      model.setStatusBarKeyInput("Please enter the Key", model.STATUS_BAR_STYLE_INITIALIZE);
+      model.setStatusBarKeyInput(view.strings.statusBarPleaseEnterKey,
+          model.STATUS_BAR_STYLE_INITIALIZE);
       viewParent.setView(RsccApp.SUPPORT_VIEW);
     });
     view.requestViewBtn.setOnAction(event -> {

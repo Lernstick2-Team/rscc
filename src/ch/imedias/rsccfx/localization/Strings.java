@@ -1,10 +1,10 @@
 package ch.imedias.rsccfx.localization;
 
 /**
- *  Code generated at 17:17:10 13.06.2017
+ *  Code generated at 22:11:49 13.06.2017
  *  by generateStringsClass.py version 0.3.4
  *  based on properties file with hash:
- *  89ea804fde8d7964375bff870db4f8d4736a07ec4d38b4414fecf374fbc6f290
+ *  ade4c7e58c1b4be00594ae04481cb2552d8225e8f78e456f470d1e8661a9bc76
  */
 
 import java.util.ResourceBundle;
@@ -68,9 +68,6 @@ public class Strings {
   public String supportStatusLblWaiting;
   public String supportStatusLblReady;
   public String startServiceDescpriptionLbl;
-  public String statusBarServiceIdle;
-  public String statusBarServiceStarted;
-  public String statusBarServiceStopped;
   public String homeHelpLbl;
   public String supportHelpLbl;
   public String requestHelpLbl;
@@ -99,6 +96,26 @@ public class Strings {
   public String expertSettingsBtn;
   public String settingsTitleLbl;
   public String supporterNameInformationDialog;
+  public String statusBarServiceIdle;
+  public String statusBarVncViewerServiceStarting;
+  public String statusBarVncViewerServiceRunning;
+  public String statusBarServiceStarted;
+  public String statusBarServiceStopped;
+  public String statusBarSettingKeyserver;
+  public String statusBarRequestingKey;
+  public String statusBarKeyGeneratedSuccess;
+  public String statusBarVncServerWaiting;
+  public String statusBarKeyserverConnected;
+  public String statusBarKeyNotVerified;
+  public String statusBarConnected;
+  public String statusBarConnectionFailed;
+  public String statusBarConnectingTo;
+  public String statusBarVncViewerStarting;
+  public String statusBarVncConnectionEstablishedICE;
+  public String statusBarPleaseEnterKey;
+  public String statusBarVncConnectionEstablishedServer;
+  public String statusBarVncViewerServiceStopped;
+  public String statusBarConnectionClosed;
 
   public Strings() {
 
@@ -159,9 +176,6 @@ public class Strings {
     supportStatusLblWaiting = rscBndl.getString("supportStatusLblWaiting");
     supportStatusLblReady = rscBndl.getString("supportStatusLblReady");
     startServiceDescpriptionLbl = rscBndl.getString("startServiceDescpriptionLbl");
-    statusBarServiceIdle = rscBndl.getString("statusBarServiceIdle");
-    statusBarServiceStarted = rscBndl.getString("statusBarServiceStarted");
-    statusBarServiceStopped = rscBndl.getString("statusBarServiceStopped");
     homeHelpLbl = rscBndl.getString("homeHelpLbl");
     supportHelpLbl = rscBndl.getString("supportHelpLbl");
     requestHelpLbl = rscBndl.getString("requestHelpLbl");
@@ -190,5 +204,25 @@ public class Strings {
     expertSettingsBtn = rscBndl.getString("expertSettingsBtn");
     settingsTitleLbl = rscBndl.getString("settingsTitleLbl");
     supporterNameInformationDialog = rscBndl.getString("supporterNameInformationDialog");
+    statusBarServiceIdle = rscBndl.getString("statusBarServiceIdle");
+    statusBarVncViewerServiceStarting = rscBndl.getString("statusBarVncViewerServiceStarting");
+    statusBarVncViewerServiceRunning = rscBndl.getString("statusBarVncViewerServiceRunning");
+    statusBarServiceStarted = rscBndl.getString("statusBarServiceStarted");
+    statusBarServiceStopped = rscBndl.getString("statusBarServiceStopped");
+    statusBarSettingKeyserver = rscBndl.getString("statusBarSettingKeyserver");
+    statusBarRequestingKey = rscBndl.getString("statusBarRequestingKey");
+    statusBarKeyGeneratedSuccess = rscBndl.getString("statusBarKeyGeneratedSuccess");
+    statusBarVncServerWaiting = rscBndl.getString("statusBarVncServerWaiting");
+    statusBarKeyserverConnected = rscBndl.getString("statusBarKeyserverConnected");
+    statusBarKeyNotVerified = rscBndl.getString("statusBarKeyNotVerified");
+    statusBarConnected = rscBndl.getString("statusBarConnected");
+    statusBarConnectionFailed = rscBndl.getString("statusBarConnectionFailed");
+    statusBarConnectingTo = rscBndl.getString("statusBarConnectingTo");
+    statusBarVncViewerStarting = rscBndl.getString("statusBarVncViewerStarting");
+    statusBarVncConnectionEstablishedICE = rscBndl.getString("statusBarVncConnectionEstablishedICE");
+    statusBarPleaseEnterKey = rscBndl.getString("statusBarPleaseEnterKey");
+    statusBarVncConnectionEstablishedServer = rscBndl.getString("statusBarVncConnectionEstablishedServer");
+    statusBarVncViewerServiceStopped = rscBndl.getString("statusBarVncViewerServiceStopped");
+    statusBarConnectionClosed = rscBndl.getString("statusBarConnectionClosed");
   }
 }
