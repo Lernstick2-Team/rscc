@@ -1,18 +1,12 @@
 package ch.imedias.rsccfx.model.xml;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import ch.imedias.rsccfx.model.Rscc;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.UnmarshalException;
-import javax.xml.bind.Unmarshaller;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -119,17 +113,6 @@ public class SupporterHelperTest {
   }
 
   /**
-   * Verifies that the supporters list is actually the list of default supporters.
-   * Not marked with a @Test annotation because it is indirectly called in other tests.
-   */
-  private void verifyDefaultSupporters(List<Supporter> actualSupporters) {
-    assertEquals(DEFAULT_SUPPORTER_SIZE, actualSupporters.size());
-    assertEquals(supporter1, actualSupporters.get(0));
-    assertEquals(supporter2, actualSupporters.get(1));
-    assertEquals(supporterLast, actualSupporters.get(DEFAULT_SUPPORTER_SIZE - 1));
-  }
-
-  /**
    * Tests what happens when the default supporters path is either non-existent or null.
    */
   @Test
@@ -142,5 +125,15 @@ public class SupporterHelperTest {
     assertEquals(null, supporterHelper.getDefaultSupporters());
   }
 
+  /**
+   * Verifies that the supporters list is actually the list of default supporters.
+   * Not marked with a @Test annotation because it is indirectly called in other tests.
+   */
+  private void verifyDefaultSupporters(List<Supporter> actualSupporters) {
+    assertEquals(DEFAULT_SUPPORTER_SIZE, actualSupporters.size());
+    assertEquals(supporter1, actualSupporters.get(0));
+    assertEquals(supporter2, actualSupporters.get(1));
+    assertEquals(supporterLast, actualSupporters.get(DEFAULT_SUPPORTER_SIZE - 1));
+  }
 
 }
