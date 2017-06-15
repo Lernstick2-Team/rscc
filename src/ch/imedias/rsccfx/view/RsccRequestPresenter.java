@@ -10,7 +10,6 @@ import ch.imedias.rsccfx.model.xml.SupporterHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -54,7 +53,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
     headerPresenter = new HeaderPresenter(model, view.headerView);
     supporterHelper = new SupporterHelper(model);
     initHeader();
-    initBindings();
     initSupporterList();
     attachEvents();
     setupBindings();
@@ -71,10 +69,12 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
   private void attachEvents() {
     //Disconnects session on button click
-    view.disconnectBtn.setOnAction(event -> {
-      model.killConnection();
-      view.disconnectBtn.setDisable(true);
-    });
+    view.disconnectBtn.setOnAction(
+        event -> {
+          Thread thread = new Thread(model::killConnection);
+          thread.start();
+        }
+    );
 
     view.reloadKeyBtn.setOnAction(
         event -> {
@@ -89,36 +89,25 @@ public class RsccRequestPresenter implements ControlledPresenter {
           if (oldValue != newValue) {
             if (newValue) {
               view.supporterTitledPane.setExpanded(false);
-              view.contentBox.getChildren().removeAll(view.supporterInnerBox);
+              view.contentBox.getChildren().removeAll(view.supporterOuterBox);
               view.contentBox.getChildren().add(1, view.keyGenerationInnerPane);
             }
           }
         }
     );
+
     view.supporterTitledPane.expandedProperty().addListener(
         (observable, oldValue, newValue) -> {
           if (oldValue != newValue) {
             if (newValue) {
               view.keyGenerationTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.keyGenerationInnerPane);
-              view.contentBox.getChildren().add(2, view.supporterInnerBox);
+              view.contentBox.getChildren().add(2, view.supporterOuterBox);
             }
           }
         }
     );
 
-    model.connectionStatusStyleProperty().addListener((observable, oldValue, newValue) -> {
-      Platform.runLater(() -> {
-        view.statusBox.getStyleClass().clear();
-        view.statusBox.getStyleClass().add(newValue);
-      });
-    });
-
-    model.connectionStatusTextProperty().addListener((observable, oldValue, newValue) -> {
-      Platform.runLater(() -> {
-        view.statusLbl.textProperty().set(newValue);
-      });
-    });
 
     model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
           if (oldValue && !newValue
@@ -127,6 +116,12 @@ public class RsccRequestPresenter implements ControlledPresenter {
           }
         }
     );
+
+    view.statusBarKeyGeneration.setStatusProperties(model.statusBarTextKeyGenerationProperty(),
+        model.statusBarStyleClassKeyGenerationProperty());
+
+    view.statusBarSupporter.setStatusProperties(model.statusBarTextSupporterProperty(),
+        model.statusBarStyleClassSupporterProperty());
   }
 
   /**
@@ -164,13 +159,10 @@ public class RsccRequestPresenter implements ControlledPresenter {
    */
   private void setupBindings() {
     headerPresenter.getSettingsBtnDisableProperty().bind(model.vncServerProcessRunningProperty());
-  }
 
-
-  private void initBindings() {
     // disable disconnect button if no session is started
     view.disconnectBtn.disableProperty().bind(model.vncSessionRunningProperty().not());
-
+    view.reloadKeyBtn.disableProperty().bind(model.vncSessionRunningProperty());
   }
 
   /**
