@@ -84,7 +84,7 @@ public class ExpertSettingsDialog extends DialogPane {
   }
 
   private void attachEvents() {
-    addServer.setOnAction(e -> stunServersList.add("new Stun Server"));
+    addServer.setOnAction(e -> stunServersList.add("new Stunserver"));
     removeServer.setOnAction(e -> stunServersList
         .removeAll(stunServersListView.getSelectionModel().getSelectedItems()));
     loadDefaults.setOnAction(e -> defaultUserPreferences());
@@ -161,6 +161,7 @@ public class ExpertSettingsDialog extends DialogPane {
     dialog.setHeight(500);
     dialog.setWidth(500);
     dialog.setTitle(strings.expertSettingsDialogTitle);
+    dialog.setResizable(false);
     addRemoveServerBox.setSpacing(50);
 
     settingsPane.getStyleClass().add("settingsPane");
