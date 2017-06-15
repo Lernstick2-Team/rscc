@@ -248,14 +248,14 @@ public class RsccRequestPresenter implements ControlledPresenter {
    * Resets the supporter buttons to the default.
    */
   public void resetSupporter() {
-    view.supporterInnerPane.getChildren().remove(0, view.supporterInnerPane.getChildren().size());
+    view.supporterInnerPane.getChildren().clear();
+
     buttonSize = 0;
 
     supporters.clear();
 
-    supporterHelper.getDefaultSupporters().stream().forEachOrdered(supporter -> {
-      createNewSupporterBtn(supporter);
-    });
+    supporterHelper.getDefaultSupporters().stream()
+        .forEachOrdered(supporter -> createNewSupporterBtn(supporter));
 
     supporterHelper.saveSupporters(supporters);
   }
