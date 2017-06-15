@@ -90,7 +90,7 @@ public class Rscc {
   private final SystemCommander systemCommander;
 
   //StatusBar
-  public static final String STATUS_BAR_STYLE = "statusBar";
+  public static final String STATUS_BAR_STYLE_IDLE = "statusBar";
   public static final String STATUS_BAR_STYLE_INITIALIZE = "statusBarInitialize";
   public static final String STATUS_BAR_STYLE_SUCCESS = "statusBarSuccess";
   public static final String STATUS_BAR_STYLE_FAIL = "statusBarFail";
@@ -161,11 +161,20 @@ public class Rscc {
     this.keyUtil = keyUtil;
     defineResourcePath();
     loadUserPreferences();
+    initStatusBars();
   }
 
+  /**
+   * Initializes the status of the status bars upon startup of the application.
+   */
+  private void initStatusBars() {
+    setStatusBarStartService(strings.statusBarServiceIdle, STATUS_BAR_STYLE_IDLE);
+    setStatusBarKeyInput(strings.statusBarPleaseEnterKey, STATUS_BAR_STYLE_INITIALIZE);
+    setStatusBarSupporter(strings.supportStatusLblReady, STATUS_BAR_STYLE_IDLE);
+  }
 
   /**
-   * Saves the UserPreferences.
+   * Loads the UserPreferences.
    */
   private void loadUserPreferences() {
     setKeyServerIp(preferences.get(PREFERENCES_KEY_SERVER_IP, DEFAULT_KEY_SERVER_IP));
@@ -190,7 +199,7 @@ public class Rscc {
 
 
   /**
-   * Loads the UserPreferences.
+   * Saves the UserPreferences.
    */
   public void saveUserPreferences() {
     preferences.put(PREFERENCES_KEY_SERVER_IP, getKeyServerIp());
@@ -898,8 +907,8 @@ public class Rscc {
     return rudp;
   }
 
-  public static String getStatusBarStyle() {
-    return STATUS_BAR_STYLE;
+  public static String getStatusBarStyleIdle() {
+    return STATUS_BAR_STYLE_IDLE;
   }
 
   public static String getStatusBarStyleInitialize() {

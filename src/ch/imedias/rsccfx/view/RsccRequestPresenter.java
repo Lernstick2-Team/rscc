@@ -113,11 +113,11 @@ public class RsccRequestPresenter implements ControlledPresenter {
         }
     );
 
-    view.statusBarSupporter.setStatusProperties(model.statusBarTextSupporterProperty(),
-        model.statusBarStyleClassSupporterProperty());
-
     view.statusBarKeyGeneration.setStatusProperties(model.statusBarTextKeyGenerationProperty(),
         model.statusBarStyleClassKeyGenerationProperty());
+
+    view.statusBarSupporter.setStatusProperties(model.statusBarTextSupporterProperty(),
+        model.statusBarStyleClassSupporterProperty());
   }
 
   /**

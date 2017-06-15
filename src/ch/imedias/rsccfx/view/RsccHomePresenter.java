@@ -75,8 +75,6 @@ public class RsccHomePresenter implements ControlledPresenter {
 
   private void attachEvents() {
     view.supportViewBtn.setOnAction(event -> {
-      model.setStatusBarKeyInput(view.strings.statusBarPleaseEnterKey,
-          model.STATUS_BAR_STYLE_INITIALIZE);
       viewParent.setView(RsccApp.SUPPORT_VIEW);
     });
     view.requestViewBtn.setOnAction(event -> {

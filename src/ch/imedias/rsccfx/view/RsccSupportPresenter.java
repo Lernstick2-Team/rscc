@@ -102,7 +102,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
               view.startServiceTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.startServiceInnerPane);
               view.contentBox.getChildren().add(1, view.keyInputInnerPane);
-              model.setStatusBarKeyInput("", model.STATUS_BAR_STYLE);
             }
           }
         }
@@ -114,8 +113,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
               view.keyInputTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.keyInputInnerPane);
               view.contentBox.getChildren().add(2, view.startServiceInnerPane);
-              model.setStatusBarStartService(view.strings.statusBarServiceIdle,
-                  model.STATUS_BAR_STYLE);
             }
           }
         }

@@ -44,8 +44,8 @@ public class RsccRequestView extends BorderPane {
   final GridPane keyGenerationInnerPane = new GridPane();
   final GridPane supporterInnerPane = new GridPane();
 
-  final StatusBar statusBarSupporter = new StatusBar();
   final StatusBar statusBarKeyGeneration = new StatusBar();
+  final StatusBar statusBarSupporter = new StatusBar();
 
   final HBox supporterInnerBox = new HBox();
   final VBox supporterOuterBox = new VBox();
@@ -143,30 +143,6 @@ public class RsccRequestView extends BorderPane {
     setCenter(contentBox);
   }
 
-  private void layoutSupporterPane() {
-    supporterOuterBox.getChildren().addAll(supporterInnerBox, statusBarSupporter);
-    supporterInnerBox.getChildren().addAll(scrollPane, supporterDescriptionLbl);
-
-    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-    scrollPane.setContent(supporterInnerPane);
-    scrollPane.setId("scrollPane");
-
-    // add column constraints
-    ColumnConstraints col1 = new ColumnConstraints();
-    ColumnConstraints col2 = new ColumnConstraints();
-    ColumnConstraints col3 = new ColumnConstraints();
-
-    supporterInnerPane.getColumnConstraints().addAll(col1, col2, col3);
-
-    int amountOfColumns = supporterInnerPane.getColumnConstraints().size();
-    int columnPercentWidth = 100 / amountOfColumns;
-
-    col1.setPercentWidth(columnPercentWidth);
-    col2.setPercentWidth(columnPercentWidth);
-    col3.setPercentWidth(columnPercentWidth);
-  }
-
   private void layoutKeyGenerationPane() {
     // set elements
     GridPane.setConstraints(generatedKeyFld, 0, 1);
@@ -212,6 +188,30 @@ public class RsccRequestView extends BorderPane {
     GridPane.setMargin(disconnectBtn, new Insets(0));
     keyGenerationInnerPane.setPadding(new Insets(10 * scalingFactor));
 
+  }
+
+  private void layoutSupporterPane() {
+    supporterOuterBox.getChildren().addAll(supporterInnerBox, statusBarSupporter);
+    supporterInnerBox.getChildren().addAll(scrollPane, supporterDescriptionLbl);
+
+    scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+    scrollPane.setContent(supporterInnerPane);
+    scrollPane.setId("scrollPane");
+
+    // add column constraints
+    ColumnConstraints col1 = new ColumnConstraints();
+    ColumnConstraints col2 = new ColumnConstraints();
+    ColumnConstraints col3 = new ColumnConstraints();
+
+    supporterInnerPane.getColumnConstraints().addAll(col1, col2, col3);
+
+    int amountOfColumns = supporterInnerPane.getColumnConstraints().size();
+    int columnPercentWidth = 100 / amountOfColumns;
+
+    col1.setPercentWidth(columnPercentWidth);
+    col2.setPercentWidth(columnPercentWidth);
+    col3.setPercentWidth(columnPercentWidth);
   }
 
   private void bindFieldsToModel() {

@@ -199,24 +199,24 @@ public class RsccTest {
   @Test
   public void testSetConnectionStatus() {
     String statusText = "test";
-    model.setStatusBarKeyGeneration(statusText, model.STATUS_BAR_STYLE);
+    model.setStatusBarKeyGeneration(statusText, model.STATUS_BAR_STYLE_IDLE);
     assertEquals(model.statusBarStyleClassKeyGenerationProperty().getValue(),
-        model.STATUS_BAR_STYLE);
+        model.STATUS_BAR_STYLE_IDLE);
     assertEquals(model.statusBarTextKeyGenerationProperty().getValue(), statusText);
 
-    model.setStatusBarKeyInput(statusText, model.STATUS_BAR_STYLE);
+    model.setStatusBarKeyInput(statusText, model.STATUS_BAR_STYLE_IDLE);
     assertEquals(model.statusBarStyleClassKeyInputProperty().getValue(),
-        model.STATUS_BAR_STYLE);
+        model.STATUS_BAR_STYLE_IDLE);
     assertEquals(model.statusBarTextKeyInputProperty().getValue(), statusText);
 
-    model.setStatusBarStartService(statusText, model.STATUS_BAR_STYLE);
+    model.setStatusBarStartService(statusText, model.STATUS_BAR_STYLE_IDLE);
     assertEquals(model.statusBarStyleClassStartServiceProperty().getValue(),
-        model.STATUS_BAR_STYLE);
+        model.STATUS_BAR_STYLE_IDLE);
     assertEquals(model.statusBarTextStartServiceProperty().getValue(), statusText);
 
-    model.setStatusBarSupporter(statusText, model.STATUS_BAR_STYLE);
+    model.setStatusBarSupporter(statusText, model.STATUS_BAR_STYLE_IDLE);
     assertEquals(model.statusBarStyleClassSupporterProperty().getValue(),
-        model.STATUS_BAR_STYLE);
+        model.STATUS_BAR_STYLE_IDLE);
     assertEquals(model.statusBarTextSupporterProperty().getValue(), statusText);
   }
 
