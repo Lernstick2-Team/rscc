@@ -201,25 +201,30 @@ public class RsccRequestPresenter implements ControlledPresenter {
     attachContextMenu(supporterBtn, supporter);
 
     supporterBtn.setOnAction(event -> {
-      // Open Dialog to modify data
-      SupporterAttributesDialog supporterAttributesDialog =
-          new SupporterAttributesDialog(supporter, this.model);
-      boolean supporterSaved = supporterAttributesDialog.show();
-      Supporter lastSupporter = supporters.get(supporters.size() - 1);
-      if (supporterSaved) {
-        if (lastSupporter == supporter) {
-          createNewSupporterBtn(new Supporter());
-        }
-        // Update data in button name and save to preferences
-        supporterBtn.setText(supporter.toString());
-        supporterHelper.saveSupporters(supporters);
-      }
+      openDialog(supporter, supporterBtn, false);
+
     });
 
     int row = buttonSize / GRID_MAXIMUM_COLUMNS;
     int column = buttonSize % GRID_MAXIMUM_COLUMNS;
     view.supporterInnerPane.add(supporterBtn, column, row);
     buttonSize++;
+  }
+
+  private void openDialog(Supporter supporter, Button supporterBtn, boolean editMode) {
+    // Open Dialog to modify data
+    SupporterAttributesDialog supporterAttributesDialog =
+        new SupporterAttributesDialog(supporter, this.model, editMode);
+    boolean supporterSaved = supporterAttributesDialog.show();
+    Supporter lastSupporter = supporters.get(supporters.size() - 1);
+    if (supporterSaved) {
+      if (lastSupporter == supporter) {
+        createNewSupporterBtn(new Supporter());
+      }
+      // Update data in button name and save to preferences
+      supporterBtn.setText(supporter.toString());
+      supporterHelper.saveSupporters(supporters);
+    }
   }
 
   /**
@@ -256,15 +261,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
     MenuItem editMenuItem = new MenuItem(strings.dialogEditButtonText);
 
     editMenuItem.setOnAction(event -> {
-      // Open Dialog to modify data
-      SupporterAttributesDialogEdit supporterAttributesDialogEdit =
-          new SupporterAttributesDialogEdit(supporter);
-      boolean supporterSaved = supporterAttributesDialogEdit.show();
-      if (supporterSaved) {
-        // Update data in button name and save to preferences
-        button.setText(supporter.toString());
-        supporterHelper.saveSupporters(supporters);
-      }
+      openDialog(supporter, button, true);
     });
 
     MenuItem connectMenuItem = new MenuItem(strings.dialogConnectButtonText);

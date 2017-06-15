@@ -59,13 +59,19 @@ public class SupporterAttributesDialog extends DialogPane {
   final ButtonType connectBtnType = new ButtonType(strings.dialogConnectButtonText);
   final ButtonType okBtnType = ButtonType.OK;
   final ButtonType applyBtnType = ButtonType.APPLY;
+  final ButtonType cancelBtnType = ButtonType.CANCEL;
   Button editBtn;
   Button applyBtn;
+  Button cancelBtn;
 
+  /**
+   * Monitors if data was saved, so we can return if data was changed or not.
+   */
+  private boolean wasSaved = false;
 
   private Supporter supporter;
   private Rscc model;
-  private BooleanProperty editMode = new SimpleBooleanProperty(false);
+  private final BooleanProperty editMode = new SimpleBooleanProperty();
 
   BooleanProperty nameValid = new SimpleBooleanProperty(false);
 
@@ -74,10 +80,13 @@ public class SupporterAttributesDialog extends DialogPane {
    *
    * @param supporter the supporter for the dialog.
    */
-  public SupporterAttributesDialog(Supporter supporter, Rscc model) {
+  public SupporterAttributesDialog(Supporter supporter, Rscc model, boolean editMode) {
     this.model = model;
     this.getStylesheets().add(RsccApp.styleSheet);
     this.supporter = supporter;
+    // if a new supporter was opened, start in edit mode
+    System.out.println("Edit Mode: " + (editMode || supporter.toString().equals("+")));
+    setEditMode(editMode || supporter.toString().equals("+"));
     initFieldData();
     layoutForm();
     attachEventListeners();
@@ -85,24 +94,24 @@ public class SupporterAttributesDialog extends DialogPane {
   }
 
   private void setupBindings() {
-    // if edit mode is off, the edit button should be visible
-    // and the apply button invisible
-    editBtn.visibleProperty().bind(editModeProperty().not());
-    applyBtn.visibleProperty().bind(editModeProperty());
+    // bind edit fields and read labels
+    addressReadLbl.textProperty().bind(addressEditFld.textProperty());
+    nameReadLbl.textProperty().bind(nameEditFld.textProperty());
+    portReadLbl.textProperty().bind(portEditFld.textProperty());
 
     // what should be shown in the read mode
     addressReadLbl.visibleProperty().bind(editModeProperty().not());
     nameReadLbl.visibleProperty().bind(editModeProperty().not());
     portReadLbl.visibleProperty().bind(editModeProperty().not());
-    chargeableCBox.disableProperty().bind(editModeProperty().not());
-    encryptedCBox.disableProperty().bind(editModeProperty().not());
+    chargeableCBox.disableProperty().bind(editModeProperty());
+    encryptedCBox.disableProperty().bind(editModeProperty());
 
     // what should be shown in edit mode
     addressEditFld.visibleProperty().bind(editModeProperty());
     nameEditFld.visibleProperty().bind(editModeProperty());
     portEditFld.visibleProperty().bind(editModeProperty());
-    chargeableCBox.disableProperty().bind(editModeProperty());
-    encryptedCBox.disableProperty().bind(editModeProperty());
+    chargeableCBox.disableProperty().bind(editModeProperty().not());
+    encryptedCBox.disableProperty().bind(editModeProperty().not());
   }
 
   private void initFieldData() {
@@ -122,7 +131,6 @@ public class SupporterAttributesDialog extends DialogPane {
     chargeableCBox.setSelected(supporter.isChargeable());
     encryptedCBox.setSelected(supporter.isEncrypted());
   }
-
 
   private void layoutForm() {
     // Set Hgrow for TextField
@@ -157,7 +165,11 @@ public class SupporterAttributesDialog extends DialogPane {
     attributePane.add(encryptedLbl, 0, 5);
     attributePane.add(encryptedCBox, 1, 5);
 
-    this.getButtonTypes().addAll(connectBtnType, applyBtnType ,editBtnType, okBtnType);
+    if (!isEditMode()) {
+      this.getButtonTypes().addAll(cancelBtnType, applyBtnType);
+    }else{
+      getButtonTypes().addAll(editBtnType, okBtnType, connectBtnType);
+    }
 
     this.setContent(attributePane);
     dialog.setDialogPane(this);
@@ -168,6 +180,50 @@ public class SupporterAttributesDialog extends DialogPane {
         (observable, oldValue, newValue) -> validateName()
     );
 
+    layoutReadMode();
+
+    editModeProperty().addListener((observable, oldIsEditMode, newIsEditMode) -> {
+      if (oldIsEditMode != newIsEditMode) {
+        if (newIsEditMode) {
+          layoutEditMode();
+        } else {
+          layoutReadMode();
+        }
+      }
+    });
+  }
+
+  private void layoutEditMode() {
+    getButtonTypes().removeAll(editBtnType, okBtnType, connectBtnType);
+    getButtonTypes().addAll(applyBtnType, cancelBtnType);
+
+    // Set Read mode upon pressing the apply button
+    applyBtn = (Button)lookupButton(applyBtnType);
+    applyBtn.addEventFilter(
+        ActionEvent.ACTION,
+        event -> {
+          event.consume(); // stops the window from closing
+          saveData();
+          setEditMode(false);
+        }
+    );
+
+    // Set Read mode upon pressing the cancel button
+    cancelBtn = (Button)lookupButton(cancelBtnType);
+    cancelBtn.addEventFilter(
+        ActionEvent.ACTION,
+        event -> {
+          event.consume(); // stops the window from closing
+          initFieldData();
+          setEditMode(false);
+        }
+    );
+  }
+
+  private void layoutReadMode() {
+    getButtonTypes().removeAll(applyBtnType, cancelBtnType);
+    getButtonTypes().addAll(connectBtnType, editBtnType, okBtnType);
+
     // Set Edit mode upon pressing the edit button
     editBtn = (Button)lookupButton(editBtnType);
     editBtn.addEventFilter(
@@ -177,16 +233,19 @@ public class SupporterAttributesDialog extends DialogPane {
           setEditMode(true);
         }
     );
+  }
 
-    // Set Read mode upon pressing the apply button
-    applyBtn = (Button)lookupButton(applyBtnType);
-    applyBtn.addEventFilter(
-        ActionEvent.ACTION,
-        event -> {
-          event.consume(); // stops the window from closing
-          setEditMode(false);
-        }
-    );
+  private void saveData() {
+    supporter.setDescription(nameEditFld.getText());
+    supporter.setAddress(addressEditFld.getText());
+    if (isEmpty(portEditFld.getText())) {
+      portEditFld.setText(String.valueOf(DEFAULT_PORT));
+    }
+    supporter.setPort(portEditFld.getText());
+    supporter.setEncrypted(encryptedCBox.isSelected());
+    supporter.setChargeable(chargeableCBox.isSelected());
+
+    wasSaved = true;
   }
 
   private boolean isEmpty(String string) {
@@ -200,12 +259,12 @@ public class SupporterAttributesDialog extends DialogPane {
    */
   public boolean show() {
     Optional userChoice = dialog.showAndWait();
-
     if (userChoice.isPresent()) {
       if (userChoice.get() == connectBtnType) {
         model.callSupporterDirect(supporter.getAddress(),
             supporter.getPort(), supporter.isEncrypted());
       }
+      return wasSaved;
     }
 
     return false;
