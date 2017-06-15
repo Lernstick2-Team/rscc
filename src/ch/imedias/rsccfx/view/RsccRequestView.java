@@ -63,6 +63,7 @@ public class RsccRequestView extends BorderPane {
   private final KeyUtil keyUtil;
 
   Button reloadKeyBtn = new Button();
+  Button resetBtn = new Button();
   final Button disconnectBtn = new Button();
 
 
@@ -96,6 +97,7 @@ public class RsccRequestView extends BorderPane {
     FontAwesomeIconView refreshIcon = new FontAwesomeIconView(FontAwesomeIcon.REFRESH);
     refreshIcon.setGlyphSize(ICON_SIZE);
     reloadKeyBtn.setGraphic(refreshIcon);
+    resetBtn.setText("reset"); //TODO localisation
 
   }
 

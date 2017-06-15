@@ -80,6 +80,9 @@ public class RsccRequestPresenter implements ControlledPresenter {
         }
     );
 
+    view.resetBtn.setOnAction(
+        event -> resetSupporter());
+
     // handles TitledPane switching between the two TitledPanes
     view.keyGenerationTitledPane.expandedProperty().addListener(
         (observable, oldValue, newValue) -> {
@@ -244,6 +247,13 @@ public class RsccRequestPresenter implements ControlledPresenter {
     // remove the supporter and save list.
     supporters.remove(supporter);
     supporterHelper.saveSupporters(supporters);
+  }
+
+  /**
+   * Resets the supporter buttons to the default.
+   */
+  public void resetSupporter() {
+    supporterHelper.saveSupporters(supporterHelper.getDefaultSupporters());
   }
 
   private void attachContextMenu(Button button, Supporter supporter) {
