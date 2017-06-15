@@ -4,6 +4,8 @@ import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.view.util.NumberTextField;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -56,8 +58,8 @@ public class ExpertSettingsDialog extends DialogPane {
   final NumberTextField udpPackageSizeFld = new NumberTextField();
   final NumberTextField proxyPortFld = new NumberTextField();
   final NumberTextField stunServerPortFld = new NumberTextField();
-  final Button addServer = new Button("+");
-  final Button removeServer = new Button("-");
+  final Button addServer = new Button();
+  final Button removeServer = new Button();
   final Region spacer = new Region();
   final HBox addRemoveServerBox = new HBox(addServer, spacer, removeServer);
   final Button loadDefaults = new Button();
@@ -66,6 +68,8 @@ public class ExpertSettingsDialog extends DialogPane {
 
   final Dialog dialog = new Dialog();
   final GridPane settingsPane = new GridPane();
+  final FontAwesomeIconView plusIcon = new FontAwesomeIconView(FontAwesomeIcon.PLUS);
+  final FontAwesomeIconView minusIcon = new FontAwesomeIconView(FontAwesomeIcon.MINUS);
 
   private final Strings strings = new Strings();
   private final Rscc model;
@@ -142,6 +146,8 @@ public class ExpertSettingsDialog extends DialogPane {
     stunServerPortLbl.setText(strings.expertStunServerPortLbl);
     loadDefaults.setText(strings.editDialogDefaultButtonToolTipText);
 
+
+
     setFieldValues(
         model.isForcingServerMode(),
         model.getKeyServerIp(),
@@ -156,7 +162,6 @@ public class ExpertSettingsDialog extends DialogPane {
 
     stunServersListView.setEditable(true);
     stunServersListView.setCellFactory(TextFieldListCell.forListView());
-
   }
 
   private void layoutForm() {
@@ -171,7 +176,7 @@ public class ExpertSettingsDialog extends DialogPane {
     dialog.setResizable(false);
     addRemoveServerBox.setSpacing(50);
 
-    stunServersListView.setPrefHeight(200);
+    stunServersListView.setPrefHeight(150);
 
     settingsPane.getStyleClass().add("settingsPane");
 
@@ -184,6 +189,8 @@ public class ExpertSettingsDialog extends DialogPane {
     addServer.getStyleClass().add("addRemoveDefaultsBtn");
     removeServer.getStyleClass().add("addRemoveDefaultsBtn");
     loadDefaults.getStyleClass().add("addRemoveDefaultsBtn");
+    addServer.setGraphic(plusIcon);
+    removeServer.setGraphic(minusIcon);
 
     settingsPane.add(forceConnectOverServerLbl, 0, 1);
     settingsPane.add(forceConnectOverServerTgl, 1, 1);
