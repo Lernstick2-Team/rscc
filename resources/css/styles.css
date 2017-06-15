@@ -277,6 +277,7 @@
 
 .toggles {
     -fx-alignment: baseline-center;
+    -thumb-move-animation-time: 150;
 }
 
 .toggles .thumb-area {
@@ -296,7 +297,8 @@
 }
 
 .toggles:selected .thumb-area {
-    -fx-background-color: #A7A7A7;
+    -fx-background-color: linear-gradient(to bottom, derive(-fx-text-box-border, -20%), derive(-fx-text-box-border, -30%)),
+    linear-gradient(to bottom, derive(#0b99c9, 30%), #0b99c9);
 }
 
 .toggles .thumb:hover {
