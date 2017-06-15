@@ -62,7 +62,6 @@ public class ExpertSettingsDialog extends DialogPane {
   private final Strings strings = new Strings();
   private final Rscc model;
 
-
   /**
    * Initializes all the GUI components needed in the DialogPane.
    *
@@ -166,6 +165,8 @@ public class ExpertSettingsDialog extends DialogPane {
     settingsPane.getStyleClass().add("settingsPane");
 
     forceConnectOverServerTgl.getStyleClass().add("toggles");
+
+    this.getStyleClass().add("expertDialog");
 
     addServer.getStyleClass().add("addRemoveDefaultsBtn");
     removeServer.getStyleClass().add("addRemoveDefaultsBtn");
