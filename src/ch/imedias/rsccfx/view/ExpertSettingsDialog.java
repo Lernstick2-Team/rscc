@@ -51,6 +51,7 @@ public class ExpertSettingsDialog extends DialogPane {
   final NumberTextField stunServerPortFld = new NumberTextField();
   final Button addServer = new Button("+");
   final Button removeServer = new Button("-");
+  final HBox addRemoveServerBox = new HBox(addServer, removeServer);
   final Button loadDefaults = new Button();
   final ObservableList<String> stunServersList = FXCollections.observableArrayList();
   final ListView<String> stunServersListView = new ListView<>(stunServersList);
@@ -160,6 +161,7 @@ public class ExpertSettingsDialog extends DialogPane {
     dialog.setHeight(500);
     dialog.setWidth(500);
     dialog.setTitle(strings.expertSettingsDialogTitle);
+    addRemoveServerBox.setSpacing(50);
 
     settingsPane.getStyleClass().add("settingsPane");
 
@@ -187,8 +189,8 @@ public class ExpertSettingsDialog extends DialogPane {
     settingsPane.add(stunServerPortFld, 1, 8);
     settingsPane.add(stunServersLbl, 0, 9);
     settingsPane.add(stunServersListView, 1, 9);
-    settingsPane.add(new HBox(addServer, removeServer), 1, 10);
-    settingsPane.add(loadDefaults, 0, 11);
+    settingsPane.add(loadDefaults, 0, 10);
+    settingsPane.add(addRemoveServerBox, 1, 10);
 
     this.getButtonTypes().add(ButtonType.APPLY);
     this.getButtonTypes().add(ButtonType.CANCEL);
