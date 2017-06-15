@@ -49,6 +49,7 @@ public class RsccRequestView extends BorderPane {
 
   final HBox supporterInnerBox = new HBox();
   final VBox supporterOuterBox = new VBox();
+  final VBox supporterInnerInnerBox = new VBox();
 
   final VBox contentBox = new VBox();
 
@@ -98,7 +99,7 @@ public class RsccRequestView extends BorderPane {
     FontAwesomeIconView refreshIcon = new FontAwesomeIconView(FontAwesomeIcon.REFRESH);
     refreshIcon.setGlyphSize(ICON_SIZE);
     reloadKeyBtn.setGraphic(refreshIcon);
-    resetBtn.setText("reset"); //TODO localisation
+    resetBtn.setText("reset supporter"); //TODO localisation
 
   }
 
@@ -138,6 +139,7 @@ public class RsccRequestView extends BorderPane {
     VBox.setVgrow(supporterInnerBox, Priority.ALWAYS);
     supporterInnerBox.getStyleClass().add("contentRequest");
     VBox.setVgrow(supporterOuterBox, Priority.ALWAYS);
+    VBox.setVgrow(supporterInnerInnerBox, Priority.ALWAYS);
 
     supporterOuterBox.setMargin(statusBarSupporter, new Insets(15, 12, 15, 12));
 
@@ -194,7 +196,8 @@ public class RsccRequestView extends BorderPane {
 
   private void layoutSupporterPane() {
     supporterOuterBox.getChildren().addAll(supporterInnerBox, statusBarSupporter);
-    supporterInnerBox.getChildren().addAll(scrollPane, supporterDescriptionLbl, resetBtn);
+    supporterInnerBox.getChildren().addAll(scrollPane, supporterInnerInnerBox);
+    supporterInnerInnerBox.getChildren().addAll(supporterDescriptionLbl, resetBtn);
 
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
