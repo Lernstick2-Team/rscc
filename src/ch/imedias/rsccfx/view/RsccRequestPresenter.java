@@ -50,7 +50,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
     headerPresenter = new HeaderPresenter(model, view.headerView);
     supporterHelper = new SupporterHelper(model);
     initHeader();
-    initBindings();
     initSupporterList();
     attachEvents();
     setupBindings();
@@ -157,13 +156,10 @@ public class RsccRequestPresenter implements ControlledPresenter {
    */
   private void setupBindings() {
     headerPresenter.getSettingsBtnDisableProperty().bind(model.vncServerProcessRunningProperty());
-  }
 
-
-  private void initBindings() {
     // disable disconnect button if no session is started
     view.disconnectBtn.disableProperty().bind(model.vncSessionRunningProperty().not());
-
+    view.reloadKeyBtn.disableProperty().bind(model.vncSessionRunningProperty());
   }
 
   /**
