@@ -277,10 +277,11 @@
 
 .toggles {
     -fx-alignment: baseline-center;
+    -thumb-move-animation-time: 150;
 }
 
 .toggles .thumb-area {
-    /*-fx-background-color: #EAEAEA;*/
+    -fx-background-color: #EAEAEA;
     -fx-pref-width: 5.385em;
     -fx-pref-height: 2.308em;
     -fx-padding: 1.538em;
@@ -292,11 +293,12 @@
     -fx-background-radius: 2.308em;
     -fx-border-radius: 2.308em;
     -fx-border-color:#A7A7A7;
-    /*-fx-background-color: #EAEAEA;*/
+    -fx-background-color: #EAEAEA;
 }
 
 .toggles:selected .thumb-area {
-    -fx-background-color: #A7A7A7;
+    -fx-background-color: linear-gradient(to bottom, derive(-fx-text-box-border, -20%), derive(-fx-text-box-border, -30%)),
+    linear-gradient(to bottom, derive(#0b99c9, 30%), #0b99c9);
 }
 
 .toggles .thumb:hover {
