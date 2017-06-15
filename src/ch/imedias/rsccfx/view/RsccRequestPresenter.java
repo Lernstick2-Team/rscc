@@ -143,10 +143,20 @@ public class RsccRequestPresenter implements ControlledPresenter {
       model.killConnection();
       viewParent.setView(RsccApp.HOME_VIEW);
     });
-    headerPresenter.setHelpBtnAction(event ->
-        popOverHelper.helpPopOver.show(view.headerView.helpBtn));
-    headerPresenter.setSettingsBtnAction(event ->
-        popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
+    headerPresenter.setHelpBtnAction(event -> {
+      if (popOverHelper.helpPopOver.isShowing()) {
+        popOverHelper.helpPopOver.hide();
+      } else {
+        popOverHelper.helpPopOver.show(view.headerView.helpBtn);
+      }
+    });
+    headerPresenter.setSettingsBtnAction(event -> {
+      if (popOverHelper.settingsPopOver.isShowing()) {
+        popOverHelper.settingsPopOver.hide();
+      } else {
+        popOverHelper.settingsPopOver.show(view.headerView.settingsBtn);
+      }
+    });
   }
 
   /**

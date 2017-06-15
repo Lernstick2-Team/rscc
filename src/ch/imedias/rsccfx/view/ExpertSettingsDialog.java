@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -35,6 +36,8 @@ public class ExpertSettingsDialog extends DialogPane {
   private static final Logger LOGGER =
       Logger.getLogger(ExpertSettingsDialog.class.getName());
 
+  private final Strings strings = new Strings();
+
   final Label keyserverIpLbl = new Label();
   final Label forceConnectOverServerLbl = new Label();
   final Label keyServerHttpPortLbl = new Label();
@@ -47,7 +50,6 @@ public class ExpertSettingsDialog extends DialogPane {
 
   Separator upperSeperator = new Separator();
   Separator underSeperator = new Separator();
-
 
   final ToggleSwitch forceConnectOverServerTgl = new ToggleSwitch();
 
@@ -62,7 +64,8 @@ public class ExpertSettingsDialog extends DialogPane {
   final Button removeServer = new Button();
   final Region spacer = new Region();
   final HBox addRemoveServerBox = new HBox(addServer, spacer, removeServer);
-  final Button loadDefaults = new Button();
+  final ButtonType loadDefaultsBtnType = new ButtonType(strings.editDialogDefaultButtonToolTipText);
+
   final ObservableList<String> stunServersList = FXCollections.observableArrayList();
   final ListView<String> stunServersListView = new ListView<>(stunServersList);
 
@@ -71,7 +74,6 @@ public class ExpertSettingsDialog extends DialogPane {
   final FontAwesomeIconView plusIcon = new FontAwesomeIconView(FontAwesomeIcon.PLUS);
   final FontAwesomeIconView minusIcon = new FontAwesomeIconView(FontAwesomeIcon.MINUS);
 
-  private final Strings strings = new Strings();
   private final Rscc model;
 
   /**
@@ -98,7 +100,16 @@ public class ExpertSettingsDialog extends DialogPane {
     addServer.setOnAction(e -> stunServersList.add("new Stunserver"));
     removeServer.setOnAction(e -> stunServersList
         .removeAll(stunServersListView.getSelectionModel().getSelectedItems()));
-    loadDefaults.setOnAction(e -> defaultUserPreferences());
+
+    final Button loadDefaultsBtn = (Button) lookupButton(loadDefaultsBtnType);
+    loadDefaultsBtn.addEventFilter(
+        ActionEvent.ACTION,
+        event -> {
+          // stops the dialog window from closing
+          event.consume();
+          defaultUserPreferences();
+        }
+    );
   }
 
   private void setFieldValues(boolean forcingServerMode, String keyServerIp,
@@ -144,7 +155,6 @@ public class ExpertSettingsDialog extends DialogPane {
     proxyPortLbl.setText(strings.expertProxyPortLbl);
     stunServersLbl.setText(strings.expertStunserverLbl);
     stunServerPortLbl.setText(strings.expertStunServerPortLbl);
-    loadDefaults.setText(strings.editDialogDefaultButtonToolTipText);
 
 
 
@@ -188,7 +198,6 @@ public class ExpertSettingsDialog extends DialogPane {
 
     addServer.getStyleClass().add("addRemoveDefaultsBtn");
     removeServer.getStyleClass().add("addRemoveDefaultsBtn");
-    loadDefaults.getStyleClass().add("addRemoveDefaultsBtn");
     addServer.setGraphic(plusIcon);
     removeServer.setGraphic(minusIcon);
 
@@ -211,17 +220,10 @@ public class ExpertSettingsDialog extends DialogPane {
     settingsPane.add(stunServersLbl, 0, 9);
     settingsPane.add(stunServersListView, 1, 9);
     settingsPane.add(addRemoveServerBox, 1, 10);
-    settingsPane.add(underSeperator, 0,11);
-    settingsPane.add(loadDefaults, 0, 12);
-    settingsPane.add(upperSeperator, 0,13);
-
-    loadDefaults.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     GridPane.setColumnSpan(upperSeperator,2);
     GridPane.setColumnSpan(underSeperator,2);
-    GridPane.setColumnSpan(loadDefaults,2);
 
-    this.getButtonTypes().add(ButtonType.APPLY);
-    this.getButtonTypes().add(ButtonType.CANCEL);
+    this.getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL, loadDefaultsBtnType);
     this.setContent(settingsPane);
     dialog.setDialogPane(this);
   }
