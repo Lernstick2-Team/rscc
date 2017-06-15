@@ -162,18 +162,6 @@ public class Rscc {
     this.keyUtil = keyUtil;
     defineResourcePath();
     loadUserPreferences();
-    initStatusBars();
-  }
-
-  /**
-   * Initializes the status of the status bars upon startup of the application.
-   */
-  private void initStatusBars() {
-    Platform.runLater(() -> {
-      setStatusBarStartService(strings.statusBarServiceIdle, STATUS_BAR_STYLE_IDLE);
-      setStatusBarKeyInput(strings.statusBarPleaseEnterKey, STATUS_BAR_STYLE_INITIALIZE);
-      setStatusBarSupporter(strings.supportStatusLblReady, STATUS_BAR_STYLE_IDLE);
-    });
   }
 
   /**

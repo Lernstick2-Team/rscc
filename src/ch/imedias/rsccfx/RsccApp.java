@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -117,6 +118,13 @@ public class RsccApp extends Application {
     SystemCommander systemCommander = new SystemCommander();
     model = new Rscc(systemCommander, new KeyUtil());
     ViewController mainView = new ViewController();
+
+    // Initialize StatusBars
+    Platform.runLater(() -> {
+      model.setStatusBarStartService(model.strings.statusBarServiceIdle, model.STATUS_BAR_STYLE_IDLE);
+      model.setStatusBarKeyInput(model.strings.statusBarPleaseEnterKey, model.STATUS_BAR_STYLE_INITIALIZE);
+      model.setStatusBarSupporter(model.strings.supportStatusLblReady, model.STATUS_BAR_STYLE_IDLE);
+    });
 
     // Set root font size, everything adapts to it afterwards
     mainView.setStyle("-fx-font-size: " + rootTextSize + "px;");
