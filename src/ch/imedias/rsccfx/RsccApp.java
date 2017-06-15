@@ -121,9 +121,12 @@ public class RsccApp extends Application {
 
     // Initialize StatusBars
     Platform.runLater(() -> {
-      model.setStatusBarStartService(model.strings.statusBarServiceIdle, model.STATUS_BAR_STYLE_IDLE);
-      model.setStatusBarKeyInput(model.strings.statusBarPleaseEnterKey, model.STATUS_BAR_STYLE_INITIALIZE);
-      model.setStatusBarSupporter(model.strings.supportStatusLblReady, model.STATUS_BAR_STYLE_IDLE);
+      model.setStatusBarStartService(
+          model.strings.statusBarServiceIdle, model.STATUS_BAR_STYLE_IDLE);
+      model.setStatusBarKeyInput(
+          model.strings.statusBarPleaseEnterKey, model.STATUS_BAR_STYLE_INITIALIZE);
+      model.setStatusBarSupporter(
+          model.strings.supportStatusLblReady, model.STATUS_BAR_STYLE_IDLE);
     });
 
     // Set root font size, everything adapts to it afterwards
