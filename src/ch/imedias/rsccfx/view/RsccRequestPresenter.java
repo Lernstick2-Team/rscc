@@ -267,7 +267,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
       }
     });
 
-    MenuItem connectMenuItem = new MenuItem(strings.dialogCallButtonText);
+    MenuItem connectMenuItem = new MenuItem(strings.dialogConnectButtonText);
     connectMenuItem.setOnAction(event -> {
       model.callSupporterDirect(supporter.getAddress(), supporter.getPort(),
           supporter.isEncrypted());

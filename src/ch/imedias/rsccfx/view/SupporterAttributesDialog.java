@@ -45,7 +45,7 @@ public class SupporterAttributesDialog extends DialogPane {
   // Read mode fields
   final Label nameReadLbl = new Label();
   final Label addressReadLbl = new Label();
-  final Label portReadFld = new Label();
+  final Label portReadLbl = new Label();
 
   // Edit mode fields
   final TextField nameEditFld = new TextField();
@@ -85,7 +85,24 @@ public class SupporterAttributesDialog extends DialogPane {
   }
 
   private void setupBindings() {
+    // if edit mode is off, the edit button should be visible
+    // and the apply button invisible
+    editBtn.visibleProperty().bind(editModeProperty().not());
+    applyBtn.visibleProperty().bind(editModeProperty());
 
+    // what should be shown in the read mode
+    addressReadLbl.visibleProperty().bind(editModeProperty().not());
+    nameReadLbl.visibleProperty().bind(editModeProperty().not());
+    portReadLbl.visibleProperty().bind(editModeProperty().not());
+    chargeableCBox.disableProperty().bind(editModeProperty().not());
+    encryptedCBox.disableProperty().bind(editModeProperty().not());
+
+    // what should be shown in edit mode
+    addressEditFld.visibleProperty().bind(editModeProperty());
+    nameEditFld.visibleProperty().bind(editModeProperty());
+    portEditFld.visibleProperty().bind(editModeProperty());
+    chargeableCBox.disableProperty().bind(editModeProperty());
+    encryptedCBox.disableProperty().bind(editModeProperty());
   }
 
   private void initFieldData() {
@@ -127,10 +144,13 @@ public class SupporterAttributesDialog extends DialogPane {
     chargeableCBox.setDisable(true);
 
     attributePane.add(nameLbl, 0, 0);
+    attributePane.add(nameReadLbl, 1, 0);
     attributePane.add(nameEditFld, 1, 0);
     attributePane.add(addressLbl, 0, 1);
+    attributePane.add(addressReadLbl, 1, 1);
     attributePane.add(addressEditFld, 1, 1);
     attributePane.add(portLbl, 0, 2);
+    attributePane.add(portReadLbl, 1, 2);
     attributePane.add(portEditFld, 1, 2);
     attributePane.add(chargeableLbl, 0, 4);
     attributePane.add(chargeableCBox, 1, 4);
