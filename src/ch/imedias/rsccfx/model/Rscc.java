@@ -188,7 +188,6 @@ public class Rscc {
     LOGGER.info("Loaded UserPrefs");
   }
 
-
   /**
    * Saves the UserPreferences.
    */

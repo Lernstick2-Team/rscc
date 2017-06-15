@@ -1,6 +1,6 @@
 package ch.imedias.rsccfx.view;
 
-import ch.imedias.rsccfx.model.SystemCommander;
+import ch.imedias.rsccfx.RsccApp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.concurrent.Worker;
@@ -39,8 +39,8 @@ public class HeaderWebView extends VBox {
     // with progress property of Worker
     progressBar.progressProperty().bind(worker.progressProperty());
     progressBar.setPrefWidth(BROWSER_WIDTH);
-    versionLbl.setText(new SystemCommander().executeTerminalCommand("dpkg -s rscc | grep Version").getOutputString());
-
+//    versionLbl.setText(new SystemCommander().executeTerminalCommand("dpkg -s rscc | grep Version").getOutputString());
+    versionLbl.setText(RsccApp.APP_VERSION);
 
     this.getChildren().addAll(browser, versionLbl, progressBar);
 
