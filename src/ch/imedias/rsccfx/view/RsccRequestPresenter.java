@@ -67,10 +67,12 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
   private void attachEvents() {
     //Disconnects session on button click
-    view.disconnectBtn.setOnAction(event -> {
-      model.killConnection();
-      view.disconnectBtn.setDisable(true);
-    });
+    view.disconnectBtn.setOnAction(
+        event -> {
+          Thread thread = new Thread(model::killConnection);
+          thread.start();
+        }
+    );
 
     view.reloadKeyBtn.setOnAction(
         event -> {
@@ -181,6 +183,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
   /**
    * Creates new SupporterButton and adds it to the GridPane.
+   *
    * @param supporter the supporter which a button should be created for.
    */
   public void createNewSupporterBtn(Supporter supporter) {
