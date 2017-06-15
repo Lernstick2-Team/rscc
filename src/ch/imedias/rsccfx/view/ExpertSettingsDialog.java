@@ -97,7 +97,10 @@ public class ExpertSettingsDialog extends DialogPane {
   }
 
   private void attachEvents() {
-    addServer.setOnAction(e -> stunServersList.add("new Stunserver"));
+    addServer.setOnAction(e -> {
+      stunServersList.add("new Stunserver");
+      stunServersListView.scrollTo(stunServersList.size());
+    });
     removeServer.setOnAction(e -> stunServersList
         .removeAll(stunServersListView.getSelectionModel().getSelectedItems()));
 
@@ -155,8 +158,6 @@ public class ExpertSettingsDialog extends DialogPane {
     proxyPortLbl.setText(strings.expertProxyPortLbl);
     stunServersLbl.setText(strings.expertStunserverLbl);
     stunServerPortLbl.setText(strings.expertStunServerPortLbl);
-
-
 
     setFieldValues(
         model.isForcingServerMode(),

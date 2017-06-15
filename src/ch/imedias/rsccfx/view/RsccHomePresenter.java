@@ -95,5 +95,5 @@ public class RsccHomePresenter implements ControlledPresenter {
         popOverHelper.helpPopOver.show(view.headerView.helpBtn);
       }
     });
-    }
+  }
 }
