@@ -23,7 +23,7 @@ public class HeaderWebView extends VBox {
   final WebView browser = new WebView();
   final WebEngine webEngine = browser.getEngine();
   final Worker<Void> worker = webEngine.getLoadWorker();
-  final Label versionLbl = new Label("");
+  final Label versionLbl = new Label();
   static final int BROWSER_WIDTH = 1000;
 
   public HeaderWebView() {
