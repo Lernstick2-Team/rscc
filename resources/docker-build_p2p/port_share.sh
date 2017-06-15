@@ -46,7 +46,7 @@ fi
 
 ### create a key pair for the connection and get
 ### the key name, remote port and the private key
-keyfile=$(tempfile)
+keyfile=$(mktemp)
 ssh -o StrictHostKeyChecking=no -p $p2p_port -i keys/create.key vnc@$p2p_server > $keyfile 2>>$logfile
 key=$(sed -n -e '1p' $keyfile | tr -d [:space:])
 remote_port=$(sed -n -e '2p' $keyfile | tr -d [:space:])
