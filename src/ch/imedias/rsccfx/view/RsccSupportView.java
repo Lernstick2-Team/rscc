@@ -3,6 +3,7 @@ package ch.imedias.rsccfx.view;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.view.util.KeyTextField;
+import ch.imedias.rsccfx.view.util.StatusBar;
 import java.util.logging.Logger;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -15,7 +16,6 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -33,13 +33,11 @@ public class RsccSupportView extends BorderPane {
 
   final Label titleLbl = new Label();
   final Label descriptionLbl = new Label();
-  final Label statusLbl = new Label();
-  final Label keyInputStatusLbl = new Label();
   final Label startServiceDescriptionLbl = new Label();
   final Label startServiceTitleLbl = new Label();
 
-  final HBox statusBox = new HBox();
-  final HBox keyInputStatusBox = new HBox();
+  final StatusBar statusBarKeyInput = new StatusBar();
+  final StatusBar statusBarStartService = new StatusBar();
 
   final KeyTextField keyFld = new KeyTextField();
 
@@ -85,10 +83,6 @@ public class RsccSupportView extends BorderPane {
     startServiceDescriptionLbl.textProperty().set(strings.startServiceDescpriptionLbl);
     startServiceTitleLbl.textProperty().set(strings.startService);
 
-    statusLbl.textProperty().set(strings.supportStatusLblWaiting);
-
-    keyInputStatusLbl.textProperty().set(strings.supportStatusLblWaiting);
-
     keyInputTitledPane.setText(strings.supportKeyInputPane);
     startServiceTitledPane.setText(strings.supportAdressBookPane);
   }
@@ -107,11 +101,6 @@ public class RsccSupportView extends BorderPane {
     titleLbl.getStyleClass().add("titleLbl");
 
     descriptionLbl.getStyleClass().add("nameLbl");
-
-    statusLbl.getStyleClass().add("statusLbl");
-    keyInputStatusLbl.getStyleClass().add("statusLbl");
-    statusBox.getChildren().add(statusLbl);
-    keyInputStatusBox.getChildren().add(keyInputStatusLbl);
 
     keyFld.getStyleClass().add("keyFld");
 
@@ -141,11 +130,11 @@ public class RsccSupportView extends BorderPane {
     GridPane.setConstraints(connectBtn, 0, 2);
     GridPane.setConstraints(titleLbl, 2, 0);
     GridPane.setConstraints(descriptionLbl, 2, 1);
-    GridPane.setConstraints(keyInputStatusBox, 0, 3);
-    GridPane.setColumnSpan(keyInputStatusBox, 3);
+    GridPane.setConstraints(statusBarKeyInput, 0, 3);
+    GridPane.setColumnSpan(statusBarKeyInput, 3);
 
     keyInputInnerPane.getChildren().addAll(keyFld, validationImgView, connectBtn, titleLbl,
-        descriptionLbl, keyInputStatusBox);
+        descriptionLbl, statusBarKeyInput);
     keyInputInnerPane.setAlignment(Pos.CENTER);
     keyInputInnerPane.getChildren().stream().forEach(node -> {
       GridPane.setVgrow(node, Priority.ALWAYS);
@@ -166,7 +155,7 @@ public class RsccSupportView extends BorderPane {
     keyInputInnerPane.getColumnConstraints().addAll(col1, col2, col3);
 
     // special styling
-    GridPane.setVgrow(statusBox, Priority.NEVER);
+    GridPane.setVgrow(statusBarKeyInput, Priority.NEVER);
     GridPane.setValignment(titleLbl, VPos.BOTTOM);
     GridPane.setHalignment(titleLbl, HPos.LEFT);
     GridPane.setValignment(descriptionLbl, VPos.CENTER);
@@ -188,12 +177,12 @@ public class RsccSupportView extends BorderPane {
     GridPane.setConstraints(startServiceTitleLbl, 1, 0);
     GridPane.setConstraints(startServiceDescriptionLbl, 1, 1);
     GridPane.setConstraints(emptyPane, 0, 2);
-    GridPane.setConstraints(statusBox, 0, 3);
+    GridPane.setConstraints(statusBarStartService, 0, 3);
 
-    GridPane.setColumnSpan(statusBox, 2);
+    GridPane.setColumnSpan(statusBarStartService, 2);
 
     startServiceInnerPane.getChildren().addAll(startServiceBtn,
-        startServiceDescriptionLbl, startServiceTitleLbl, emptyPane, statusBox);
+        startServiceDescriptionLbl, startServiceTitleLbl, emptyPane, statusBarStartService);
 
     // initial styling
     startServiceInnerPane.getChildren().stream().forEach(node -> {
@@ -203,8 +192,8 @@ public class RsccSupportView extends BorderPane {
           GridPane.setHalignment(node, HPos.CENTER);
           GridPane.setMargin(node, new Insets(10));
       startServiceInnerPane.setAlignment(Pos.CENTER);
-      GridPane.setVgrow(keyInputStatusBox, Priority.NEVER);
-      GridPane.setValignment(keyInputStatusBox, VPos.BOTTOM);
+      GridPane.setVgrow(statusBarStartService, Priority.NEVER);
+      GridPane.setValignment(statusBarStartService, VPos.BOTTOM);
         }
     );
 
@@ -221,8 +210,8 @@ public class RsccSupportView extends BorderPane {
     GridPane.setHalignment(startServiceTitleLbl, HPos.LEFT);
     GridPane.setValignment(startServiceBtn, VPos.CENTER);
     GridPane.setValignment(startServiceDescriptionLbl, VPos.CENTER);
-    GridPane.setVgrow(statusBox, Priority.NEVER);
-    GridPane.setValignment(statusBox, VPos.BOTTOM);
+    GridPane.setVgrow(statusBarStartService, Priority.NEVER);
+    GridPane.setValignment(statusBarStartService, VPos.BOTTOM);
 
     GridPane.setMargin(titleLbl, new Insets(0));
   }

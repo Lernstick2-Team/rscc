@@ -10,7 +10,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -62,9 +61,6 @@ public class RunRudp extends Thread {
     try {
 
       String remoteAddressAsString = model.getRemoteClientIpAddress().getHostAddress();
-
-      model.setConnectionStatus("Starting RUDP...", 1);
-
 
       if (viewerIsRudpClient && callAsViewer) {
         //TCP Server & RUDP Client

@@ -76,6 +76,10 @@ public class VncViewerHandler {
           }
 
           LOGGER.info("VNC - Viewer process has ended");
+          if (model.isVncSessionRunning()) {
+            model.setStatusBarKeyInput(model.strings.statusBarConnectionClosed,
+                model.STATUS_BAR_STYLE_INITIALIZE);
+          }
           model.setVncSessionRunning(false);
           model.setVncViewerProcessRunning(false);
 

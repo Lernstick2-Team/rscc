@@ -8,8 +8,6 @@ import ch.imedias.rsccfx.model.util.KeyUtil;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -28,7 +26,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
   private final RsccSupportView view;
   private final HeaderPresenter headerPresenter;
   private final KeyUtil keyUtil;
-  private final BooleanProperty serviceRunning = new SimpleBooleanProperty(false);
   private String validImage =
       getClass().getClassLoader().getResource("images/valid.svg").toExternalForm();
   private String invalidImage =
@@ -105,7 +102,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
               view.startServiceTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.startServiceInnerPane);
               view.contentBox.getChildren().add(1, view.keyInputInnerPane);
-              model.setConnectionStatus("", 0);
             }
           }
         }
@@ -117,26 +113,16 @@ public class RsccSupportPresenter implements ControlledPresenter {
               view.keyInputTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.keyInputInnerPane);
               view.contentBox.getChildren().add(2, view.startServiceInnerPane);
-              model.setConnectionStatus(view.strings.statusBoxServiceIdle, 0);
             }
           }
         }
     );
 
-    // handles statusBox updates from connectionStatus property in model
-    model.connectionStatusStyleProperty().addListener((observable, oldValue, newValue) -> {
-      view.statusBox.getStyleClass().clear();
-      view.statusBox.getStyleClass().add(newValue);
-      view.keyInputStatusBox.getStyleClass().clear();
-      view.keyInputStatusBox.getStyleClass().add(newValue);
-    });
+    view.statusBarKeyInput.setStatusProperties(model.statusBarTextKeyInputProperty(),
+        model.statusBarStyleClassKeyInputProperty());
 
-    model.connectionStatusTextProperty().addListener((observable, oldValue, newValue) -> {
-      Platform.runLater(() -> {
-        view.statusLbl.textProperty().set(newValue);
-        view.keyInputStatusLbl.textProperty().set(newValue);
-      });
-    });
+    view.statusBarStartService.setStatusProperties(model.statusBarTextStartServiceProperty(),
+        model.statusBarStyleClassStartServiceProperty());
 
     // make it possible to connect by pressing enter
     view.keyFld.setOnKeyPressed(ke -> {
