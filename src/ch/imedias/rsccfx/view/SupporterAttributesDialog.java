@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -42,10 +43,14 @@ public class SupporterAttributesDialog extends DialogPane {
   final ButtonType cancelBtnType = ButtonType.CANCEL;
   final ButtonType editBtnType = new ButtonType(strings.dialogEditButtonText);
   final ButtonType callBtnType = new ButtonType(strings.dialogCallButtonText);
+  final ButtonType okBtnType = ButtonType.OK;
+  final ButtonType applyBtnType = ButtonType.APPLY;
+
   final CheckBox chargeableCBox = new CheckBox();
   final CheckBox encryptedCBox = new CheckBox();
   private Supporter supporter;
   private Rscc model;
+  private BooleanProperty editMode = new SimpleBooleanProperty(false);
 
   BooleanProperty nameValid = new SimpleBooleanProperty(false);
 
@@ -112,7 +117,7 @@ public class SupporterAttributesDialog extends DialogPane {
     attributePane.add(encryptedLbl, 0, 5);
     attributePane.add(encryptedCBox, 1, 5);
 
-    this.getButtonTypes().addAll(callBtnType, editBtnType, cancelBtnType);
+    this.getButtonTypes().addAll(callBtnType, editBtnType, okBtnType);
 
     this.setContent(attributePane);
     dialog.setDialogPane(this);
@@ -122,10 +127,18 @@ public class SupporterAttributesDialog extends DialogPane {
     nameFld.textProperty().addListener(
         (observable, oldValue, newValue) -> validateName()
     );
-    Button editBtn = (Button)lookupButton(callBtnType);
-    editBtn.setOnAction(event -> {
-      System.out.println("SURPRISE!");
-    });
+
+    // Set Edit mode upon pressing the edit button
+    final Button editBtn = (Button)lookupButton(editBtnType);
+    editBtn.addEventFilter(
+        ActionEvent.ACTION,
+        event -> {
+          event.consume(); // stops the window from closing
+          setEditMode(true);
+        }
+    );
+
+
   }
 
   private boolean isEmpty(String string) {
@@ -169,5 +182,17 @@ public class SupporterAttributesDialog extends DialogPane {
 
   private void validateName() {
     setNameValid(!isEmpty(nameFld.getText()));
+  }
+
+  public boolean isEditMode() {
+    return editMode.get();
+  }
+
+  public BooleanProperty editModeProperty() {
+    return editMode;
+  }
+
+  public void setEditMode(boolean editMode) {
+    this.editMode.set(editMode);
   }
 }

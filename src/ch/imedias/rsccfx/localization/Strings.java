@@ -1,10 +1,10 @@
 package ch.imedias.rsccfx.localization;
 
 /**
- *  Code generated at 15:09:07 13.06.2017
+ *  Code generated at 14:48:55 15.06.2017
  *  by generateStringsClass.py version 0.3.4
  *  based on properties file with hash:
- *  34baa401984d6e40eae4035aad3168b14d4ec5efdc84312b9bed9746eff01dc2
+ *  b6873155542bc5153c29e1fa7fb321e0ed297561d60cb594ef07e9a20109d444
  */
 
 import java.util.Locale;
