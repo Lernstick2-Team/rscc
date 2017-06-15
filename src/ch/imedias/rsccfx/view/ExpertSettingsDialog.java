@@ -80,8 +80,6 @@ public class ExpertSettingsDialog extends DialogPane {
         save();
       }
     }
-
-
   }
 
   private void attachEvents() {
@@ -167,6 +165,10 @@ public class ExpertSettingsDialog extends DialogPane {
 
     forceConnectOverServerTgl.getStyleClass().add("toggles");
 
+    addServer.getStyleClass().add("addRemoveDefaultsBtn");
+    removeServer.getStyleClass().add("addRemoveDefaultsBtn");
+    loadDefaults.getStyleClass().add("addRemoveDefaultsBtn");
+
     settingsPane.add(forceConnectOverServerLbl, 0, 1);
     settingsPane.add(forceConnectOverServerTgl, 1, 1);
     settingsPane.add(keyserverIpLbl, 0, 2);
@@ -207,8 +209,4 @@ public class ExpertSettingsDialog extends DialogPane {
     model.setStunServers(stunServers);
     model.saveUserPreferences();
   }
-
-
 }
-
-
