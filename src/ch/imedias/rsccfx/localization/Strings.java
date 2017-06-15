@@ -1,10 +1,10 @@
 package ch.imedias.rsccfx.localization;
 
 /**
- *  Code generated at 14:48:55 15.06.2017
+ *  Code generated at 15:12:33 15.06.2017
  *  by generateStringsClass.py version 0.3.4
  *  based on properties file with hash:
- *  b6873155542bc5153c29e1fa7fb321e0ed297561d60cb594ef07e9a20109d444
+ *  a4aad2b494cd4ebb77e5eb0d89576ffe7afb8970043251c1065c7497bbcdd108
  */
 
 import java.util.Locale;
@@ -82,7 +82,7 @@ public class Strings {
   public String dialogImageText;
   public String dialogChargeableLbl;
   public String dialogEncryptedLbl;
-  public String dialogCallButtonText;
+  public String dialogConnectButtonText;
   public String dialogEditButtonText;
   public String dialogDeleteButtonText;
   public String supportCompressionLbl;
@@ -176,7 +176,7 @@ public class Strings {
     dialogImageText = rscBndl.getString("dialogImageText");
     dialogChargeableLbl = rscBndl.getString("dialogChargeableLbl");
     dialogEncryptedLbl = rscBndl.getString("dialogEncryptedLbl");
-    dialogCallButtonText = rscBndl.getString("dialogCallButtonText");
+    dialogConnectButtonText = rscBndl.getString("dialogConnectButtonText");
     dialogEditButtonText = rscBndl.getString("dialogEditButtonText");
     dialogDeleteButtonText = rscBndl.getString("dialogDeleteButtonText");
     supportCompressionLbl = rscBndl.getString("supportCompressionLbl");

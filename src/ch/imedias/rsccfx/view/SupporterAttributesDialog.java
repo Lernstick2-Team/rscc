@@ -4,6 +4,7 @@ import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.xml.Supporter;
+import ch.imedias.rsccfx.view.util.NumberTextField;
 import java.util.Optional;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
@@ -16,6 +17,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
@@ -32,22 +34,35 @@ public class SupporterAttributesDialog extends DialogPane {
   final Dialog dialog = new Dialog();
   final GridPane attributePane = new GridPane();
   Strings strings = new Strings();
+
+  // Description Labels
   final Label nameLbl = new Label();
   final Label addressLbl = new Label();
   final Label portLbl = new Label();
   final Label chargeableLbl = new Label();
   final Label encryptedLbl = new Label();
-  final Label nameFld = new Label();
-  final Label addressFld = new Label();
-  final Label portFld = new Label();
-  final ButtonType cancelBtnType = ButtonType.CANCEL;
-  final ButtonType editBtnType = new ButtonType(strings.dialogEditButtonText);
-  final ButtonType callBtnType = new ButtonType(strings.dialogCallButtonText);
-  final ButtonType okBtnType = ButtonType.OK;
-  final ButtonType applyBtnType = ButtonType.APPLY;
+
+  // Read mode fields
+  final Label nameReadLbl = new Label();
+  final Label addressReadLbl = new Label();
+  final Label portReadFld = new Label();
+
+  // Edit mode fields
+  final TextField nameEditFld = new TextField();
+  final TextField addressEditFld = new TextField();
+  final NumberTextField portEditFld = new NumberTextField();
 
   final CheckBox chargeableCBox = new CheckBox();
   final CheckBox encryptedCBox = new CheckBox();
+
+  final ButtonType editBtnType = new ButtonType(strings.dialogEditButtonText);
+  final ButtonType connectBtnType = new ButtonType(strings.dialogConnectButtonText);
+  final ButtonType okBtnType = ButtonType.OK;
+  final ButtonType applyBtnType = ButtonType.APPLY;
+  Button editBtn;
+  Button applyBtn;
+
+
   private Supporter supporter;
   private Rscc model;
   private BooleanProperty editMode = new SimpleBooleanProperty(false);
@@ -66,6 +81,11 @@ public class SupporterAttributesDialog extends DialogPane {
     initFieldData();
     layoutForm();
     attachEventListeners();
+    setupBindings();
+  }
+
+  private void setupBindings() {
+
   }
 
   private void initFieldData() {
@@ -77,11 +97,11 @@ public class SupporterAttributesDialog extends DialogPane {
     chargeableLbl.setText(strings.dialogChargeableLbl);
     encryptedLbl.setText(strings.dialogEncryptedLbl);
 
-    nameFld.setText(supporter.getDescription());
+    nameEditFld.setText(supporter.getDescription());
     validateName();
 
-    addressFld.setText(supporter.getAddress());
-    portFld.setText(String.valueOf(supporter.getPort()));
+    addressEditFld.setText(supporter.getAddress());
+    portEditFld.setText(String.valueOf(supporter.getPort()));
     chargeableCBox.setSelected(supporter.isChargeable());
     encryptedCBox.setSelected(supporter.isEncrypted());
   }
@@ -89,7 +109,7 @@ public class SupporterAttributesDialog extends DialogPane {
 
   private void layoutForm() {
     // Set Hgrow for TextField
-    attributePane.setHgrow(addressFld, Priority.ALWAYS);
+    attributePane.setHgrow(addressEditFld, Priority.ALWAYS);
     attributePane.getStyleClass().add("gridPane");
 
     //setup layout (aka setup specific pane etc.)
@@ -107,29 +127,29 @@ public class SupporterAttributesDialog extends DialogPane {
     chargeableCBox.setDisable(true);
 
     attributePane.add(nameLbl, 0, 0);
-    attributePane.add(nameFld, 1, 0);
+    attributePane.add(nameEditFld, 1, 0);
     attributePane.add(addressLbl, 0, 1);
-    attributePane.add(addressFld, 1, 1);
+    attributePane.add(addressEditFld, 1, 1);
     attributePane.add(portLbl, 0, 2);
-    attributePane.add(portFld, 1, 2);
+    attributePane.add(portEditFld, 1, 2);
     attributePane.add(chargeableLbl, 0, 4);
     attributePane.add(chargeableCBox, 1, 4);
     attributePane.add(encryptedLbl, 0, 5);
     attributePane.add(encryptedCBox, 1, 5);
 
-    this.getButtonTypes().addAll(callBtnType, editBtnType, okBtnType);
+    this.getButtonTypes().addAll(connectBtnType, applyBtnType ,editBtnType, okBtnType);
 
     this.setContent(attributePane);
     dialog.setDialogPane(this);
   }
 
   private void attachEventListeners() {
-    nameFld.textProperty().addListener(
+    nameEditFld.textProperty().addListener(
         (observable, oldValue, newValue) -> validateName()
     );
 
     // Set Edit mode upon pressing the edit button
-    final Button editBtn = (Button)lookupButton(editBtnType);
+    editBtn = (Button)lookupButton(editBtnType);
     editBtn.addEventFilter(
         ActionEvent.ACTION,
         event -> {
@@ -138,7 +158,15 @@ public class SupporterAttributesDialog extends DialogPane {
         }
     );
 
-
+    // Set Read mode upon pressing the apply button
+    applyBtn = (Button)lookupButton(applyBtnType);
+    applyBtn.addEventFilter(
+        ActionEvent.ACTION,
+        event -> {
+          event.consume(); // stops the window from closing
+          setEditMode(false);
+        }
+    );
   }
 
   private boolean isEmpty(String string) {
@@ -154,12 +182,7 @@ public class SupporterAttributesDialog extends DialogPane {
     Optional userChoice = dialog.showAndWait();
 
     if (userChoice.isPresent()) {
-      if (userChoice.get() == editBtnType) {
-        SupporterAttributesDialogEdit editDialog =
-            new SupporterAttributesDialogEdit(this.supporter);
-        return editDialog.show();
-      }
-      if (userChoice.get() == callBtnType) {
+      if (userChoice.get() == connectBtnType) {
         model.callSupporterDirect(supporter.getAddress(),
             supporter.getPort(), supporter.isEncrypted());
       }
@@ -181,7 +204,7 @@ public class SupporterAttributesDialog extends DialogPane {
   }
 
   private void validateName() {
-    setNameValid(!isEmpty(nameFld.getText()));
+    setNameValid(!isEmpty(nameEditFld.getText()));
   }
 
   public boolean isEditMode() {
