@@ -99,7 +99,7 @@ public class RsccRequestView extends BorderPane {
     FontAwesomeIconView refreshIcon = new FontAwesomeIconView(FontAwesomeIcon.REFRESH);
     refreshIcon.setGlyphSize(ICON_SIZE);
     reloadKeyBtn.setGraphic(refreshIcon);
-    resetBtn.setText("reset supporter"); //TODO localisation
+    resetBtn.setText(strings.requestResetSupportersBtn);
 
   }
 
@@ -142,6 +142,8 @@ public class RsccRequestView extends BorderPane {
     VBox.setVgrow(supporterInnerInnerBox, Priority.ALWAYS);
 
     supporterOuterBox.setMargin(statusBarSupporter, new Insets(15, 12, 15, 12));
+
+    resetBtn.setId("connectBtn");
 
     setTop(headerView);
     setCenter(contentBox);
