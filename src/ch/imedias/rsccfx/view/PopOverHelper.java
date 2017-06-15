@@ -177,7 +177,7 @@ public class PopOverHelper {
     requestHelpLbl.setId("requestHelpLbl");
 
     requestHelpBox.getChildren().addAll(requestHelpLbl,helpBtn);
-
+    helpBtn.setOnAction(actionEvent -> new HeaderWebView());
     requestSettingsBox.getStyleClass().add("settingsBoxes");
 
   }
