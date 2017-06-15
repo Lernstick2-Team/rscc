@@ -18,6 +18,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -168,9 +169,11 @@ public class Rscc {
    * Initializes the status of the status bars upon startup of the application.
    */
   private void initStatusBars() {
-    setStatusBarStartService(strings.statusBarServiceIdle, STATUS_BAR_STYLE_IDLE);
-    setStatusBarKeyInput(strings.statusBarPleaseEnterKey, STATUS_BAR_STYLE_INITIALIZE);
-    setStatusBarSupporter(strings.supportStatusLblReady, STATUS_BAR_STYLE_IDLE);
+    Platform.runLater(() -> {
+      setStatusBarStartService(strings.statusBarServiceIdle, STATUS_BAR_STYLE_IDLE);
+      setStatusBarKeyInput(strings.statusBarPleaseEnterKey, STATUS_BAR_STYLE_INITIALIZE);
+      setStatusBarSupporter(strings.supportStatusLblReady, STATUS_BAR_STYLE_IDLE);
+    });
   }
 
   /**
