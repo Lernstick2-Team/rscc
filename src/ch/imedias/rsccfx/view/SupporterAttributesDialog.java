@@ -5,6 +5,7 @@ import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.xml.Supporter;
 import ch.imedias.rsccfx.view.util.NumberTextField;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
@@ -85,7 +86,6 @@ public class SupporterAttributesDialog extends DialogPane {
     this.getStylesheets().add(RsccApp.styleSheet);
     this.supporter = supporter;
     // if a new supporter was opened, start in edit mode
-    System.out.println("Edit Mode: " + (editMode || supporter.toString().equals("+")));
     setEditMode(editMode || supporter.toString().equals("+"));
     initFieldData();
     layoutForm();
@@ -165,10 +165,10 @@ public class SupporterAttributesDialog extends DialogPane {
     attributePane.add(encryptedLbl, 0, 5);
     attributePane.add(encryptedCBox, 1, 5);
 
-    if (!isEditMode()) {
-      this.getButtonTypes().addAll(cancelBtnType, applyBtnType);
-    }else{
-      getButtonTypes().addAll(editBtnType, okBtnType, connectBtnType);
+    if (isEditMode()) {
+      layoutEditMode();
+    } else {
+      layoutReadMode();
     }
 
     this.setContent(attributePane);
@@ -180,21 +180,18 @@ public class SupporterAttributesDialog extends DialogPane {
         (observable, oldValue, newValue) -> validateName()
     );
 
-    layoutReadMode();
-
     editModeProperty().addListener((observable, oldIsEditMode, newIsEditMode) -> {
-      if (oldIsEditMode != newIsEditMode) {
-        if (newIsEditMode) {
-          layoutEditMode();
-        } else {
-          layoutReadMode();
-        }
+      if (newIsEditMode) {
+        layoutEditMode();
+      } else {
+        layoutReadMode();
       }
     });
   }
 
   private void layoutEditMode() {
-    getButtonTypes().removeAll(editBtnType, okBtnType, connectBtnType);
+    LOGGER.info("Layout Edit Mode");
+    getButtonTypes().removeAll(getButtonTypes());
     getButtonTypes().addAll(applyBtnType, cancelBtnType);
 
     // Set Read mode upon pressing the apply button
@@ -207,6 +204,8 @@ public class SupporterAttributesDialog extends DialogPane {
           setEditMode(false);
         }
     );
+
+    applyBtn.disableProperty().bind(nameValid.not());
 
     // Set Read mode upon pressing the cancel button
     cancelBtn = (Button)lookupButton(cancelBtnType);
@@ -221,7 +220,10 @@ public class SupporterAttributesDialog extends DialogPane {
   }
 
   private void layoutReadMode() {
-    getButtonTypes().removeAll(applyBtnType, cancelBtnType);
+    LOGGER.info("Layout Read Mode");
+
+    // safe way of removing elements, in case they are not present already
+    getButtonTypes().removeAll(getButtonTypes());
     getButtonTypes().addAll(connectBtnType, editBtnType, okBtnType);
 
     // Set Edit mode upon pressing the edit button

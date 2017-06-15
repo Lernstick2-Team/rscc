@@ -202,7 +202,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     supporterBtn.setOnAction(event -> {
       openDialog(supporter, supporterBtn, false);
-
     });
 
     int row = buttonSize / GRID_MAXIMUM_COLUMNS;
