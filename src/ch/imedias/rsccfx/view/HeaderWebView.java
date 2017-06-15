@@ -39,8 +39,7 @@ public class HeaderWebView extends VBox {
     // with progress property of Worker
     progressBar.progressProperty().bind(worker.progressProperty());
     progressBar.setPrefWidth(BROWSER_WIDTH);
-//    versionLbl.setText(new SystemCommander().executeTerminalCommand("dpkg -s rscc | grep Version").getOutputString());
-    versionLbl.setText(RsccApp.APP_VERSION);
+    versionLbl.setText("Version: " + RsccApp.APP_VERSION);
 
     this.getChildren().addAll(browser, versionLbl, progressBar);
 
