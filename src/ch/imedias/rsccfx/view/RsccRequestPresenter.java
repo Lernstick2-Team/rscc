@@ -80,7 +80,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
     );
 
     view.resetBtn.setOnAction(
-        event -> resetSupporter());
+        event -> resetSupporter()
+    );
 
     // handles TitledPane switching between the two TitledPanes
     view.keyGenerationTitledPane.expandedProperty().addListener(
@@ -247,10 +248,15 @@ public class RsccRequestPresenter implements ControlledPresenter {
    * Resets the supporter buttons to the default.
    */
   public void resetSupporter() {
-    view.supporterInnerPane.getChildren().remove(0);
+    view.supporterInnerPane.getChildren().remove(0, view.supporterInnerPane.getChildren().size());
+    buttonSize = 0;
 
-    supporterHelper.saveSupporters(supporterHelper.getDefaultSupporters());
-    supporterHelper.getDefaultSupporters().stream().forEachOrdered(this::createNewSupporterBtn);
+    supporters.clear();
+
+    supporterHelper.getDefaultSupporters().stream().forEachOrdered(supporter -> {
+      createNewSupporterBtn(supporter);
+    });
+
     supporterHelper.saveSupporters(supporters);
   }
 
