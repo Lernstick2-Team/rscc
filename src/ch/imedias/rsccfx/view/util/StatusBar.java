@@ -6,14 +6,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
 /**
- * Created by François Martin on 13.06.17.
+ * Represents the status bar which displays the current state of the connection.
  */
 public class StatusBar extends HBox {
 
   final Label statusLbl = new Label();
 
   /**
-   * Constructor for a ne StatusBar.
+   * Constructs a StatusBar.
    */
   public StatusBar() {
     this.getStyleClass().add("statusBar");
@@ -22,10 +22,10 @@ public class StatusBar extends HBox {
   }
 
   /**
-   * Sets Listeners on properties to have the StatusBar updated.
+   * Sets Listeners on properties to keep the StatusBar updated.
    *
    * @param textProperty       property containing the text to display.
-   * @param styleClassProperty proprty containing the style to display.
+   * @param styleClassProperty proprty containing the css style class to display.
    */
   public void setStatusProperties(StringProperty textProperty, StringProperty styleClassProperty) {
     textProperty.addListener((observable, oldValue, newValue) -> {
