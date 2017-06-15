@@ -9,6 +9,7 @@ import ch.imedias.rsccfx.model.xml.SupporterHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -159,7 +160,11 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     // disable disconnect button if no session is started
     view.disconnectBtn.disableProperty().bind(model.vncSessionRunningProperty().not());
-    view.reloadKeyBtn.disableProperty().bind(model.vncSessionRunningProperty());
+    view.reloadKeyBtn.disableProperty().bind(Bindings.or(model.vncSessionRunningProperty(),
+        model.isKeyRefreshInProgresProperty()));
+
+
+
   }
 
   /**

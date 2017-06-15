@@ -126,6 +126,7 @@ public class Rscc {
   private final BooleanProperty connectionEstablishmentRunning = new SimpleBooleanProperty(false);
   private final BooleanProperty rscccfpHasTalkedToOtherClient = new SimpleBooleanProperty(false);
   private final BooleanProperty isSshRunning = new SimpleBooleanProperty(false);
+  private final BooleanProperty isKeyRefreshInProgres = new SimpleBooleanProperty(false);
 
   private final Preferences preferences = Preferences.userNodeForPackage(Rscc.class);
 
@@ -369,6 +370,8 @@ public class Rscc {
 
     if (returnValues.getExitCode() != 0) {
       LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+      setStatusBarKeyGeneration(strings.statusBarKeyGeneratedFailed, STATUS_BAR_STYLE_FAIL);
+      setIsKeyRefreshInProgres(false);
       return;
     }
 
@@ -378,6 +381,7 @@ public class Rscc {
     rscccfp.start();
 
     setStatusBarKeyGeneration(strings.statusBarKeyGeneratedSuccess, STATUS_BAR_STYLE_INITIALIZE);
+    setIsKeyRefreshInProgres(false);
 
     try {
       rscccfp.join();
@@ -557,6 +561,7 @@ public class Rscc {
    * again.
    */
   public void refreshKey() {
+    setIsKeyRefreshInProgres(true);
     killConnection();
     requestKeyFromServer();
   }
@@ -976,5 +981,17 @@ public class Rscc {
 
   public StringProperty statusBarStyleClassStartServiceProperty() {
     return statusBarStyleClassStartService;
+  }
+
+  public boolean isKeyRefreshInProgres() {
+    return isKeyRefreshInProgres.get();
+  }
+
+  public BooleanProperty isKeyRefreshInProgresProperty() {
+    return isKeyRefreshInProgres;
+  }
+
+  public void setIsKeyRefreshInProgres(boolean isKeyRefreshInProgres) {
+    this.isKeyRefreshInProgres.set(isKeyRefreshInProgres);
   }
 }
