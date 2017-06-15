@@ -105,7 +105,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
         }
     );
 
-
     model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
           if (oldValue && !newValue
               && RsccApp.REQUEST_VIEW.equals(viewParent.getCurrentViewName())) {
@@ -148,7 +147,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
         popOverHelper.helpPopOver.show(view.headerView.helpBtn));
     headerPresenter.setSettingsBtnAction(event ->
         popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
-
   }
 
   /**
