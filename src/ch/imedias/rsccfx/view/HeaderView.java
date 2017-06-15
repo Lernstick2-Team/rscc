@@ -119,6 +119,7 @@ public class HeaderView extends GridPane {
 
   private void bindFieldsToModel() {
     // make bindings to the model
+    backBtn.disableProperty().bind(model.vncSessionRunningProperty().not());
   }
 }
 
