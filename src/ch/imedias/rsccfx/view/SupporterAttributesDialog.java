@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
@@ -121,8 +122,11 @@ public class SupporterAttributesDialog extends DialogPane {
     nameFld.textProperty().addListener(
         (observable, oldValue, newValue) -> validateName()
     );
+    Button editBtn = (Button)lookupButton(callBtnType);
+    editBtn.setOnAction(event -> {
+      System.out.println("SURPRISE!");
+    });
   }
-
 
   private boolean isEmpty(String string) {
     return "".equals(string.trim());
