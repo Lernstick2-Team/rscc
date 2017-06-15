@@ -141,6 +141,7 @@ public class PopOverHelper {
     helpPopOver.setDetachable(false);
 
     settingsPopOver.setId("settingsPopOver");
+
   }
 
   private void layoutHome() {

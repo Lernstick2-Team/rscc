@@ -193,9 +193,18 @@ public class RsccSupportPresenter implements ControlledPresenter {
       view.keyFld.clear();
       model.killConnection();
     });
-    headerPresenter.setHelpBtnAction(event ->
-        popOverHelper.helpPopOver.show(view.headerView.helpBtn));
-    headerPresenter.setSettingsBtnAction(event ->
-        popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
+
+    if (popOverHelper.helpPopOver.isShowing() || popOverHelper.settingsPopOver.isShowing()) {
+      headerPresenter.setHelpBtnAction(actionEvent -> {
+        popOverHelper.helpPopOver.hide();
+      });
+      headerPresenter.setSettingsBtnAction(event ->
+          popOverHelper.settingsPopOver.hide());
+    } else {
+      headerPresenter.setHelpBtnAction(event ->
+          popOverHelper.helpPopOver.show(view.headerView.helpBtn));
+      headerPresenter.setSettingsBtnAction(event ->
+          popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
+    }
   }
 }
