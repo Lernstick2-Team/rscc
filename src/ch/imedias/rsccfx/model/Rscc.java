@@ -125,6 +125,7 @@ public class Rscc {
   private final BooleanProperty connectionEstablishmentRunning = new SimpleBooleanProperty(false);
   private final BooleanProperty rscccfpHasTalkedToOtherClient = new SimpleBooleanProperty(false);
   private final BooleanProperty isSshRunning = new SimpleBooleanProperty(false);
+  private final BooleanProperty isKeyRefreshInProgress = new SimpleBooleanProperty(false);
 
   private final Preferences preferences = Preferences.userNodeForPackage(Rscc.class);
 
@@ -248,7 +249,6 @@ public class Rscc {
     }
   }
 
-
   /**
    * Extracts files from running JAR to folder.
    *
@@ -368,6 +368,8 @@ public class Rscc {
 
     if (returnValues.getExitCode() != 0) {
       LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+      setStatusBarKeyGeneration(strings.statusBarKeyGeneratedFailed, STATUS_BAR_STYLE_FAIL);
+      setIsKeyRefreshInProgress(false);
       return;
     }
 
@@ -377,6 +379,7 @@ public class Rscc {
     rscccfp.start();
 
     setStatusBarKeyGeneration(strings.statusBarKeyGeneratedSuccess, STATUS_BAR_STYLE_INITIALIZE);
+    setIsKeyRefreshInProgress(false);
 
     try {
       rscccfp.join();
@@ -433,7 +436,6 @@ public class Rscc {
     statusBarStyleClassKeyGenerationProperty().set(styleClass);
   }
 
-
   /**
    * Updates StatusBar on KeyInput.
    *
@@ -444,7 +446,6 @@ public class Rscc {
     statusBarTextKeyInputProperty().set(text);
     statusBarStyleClassKeyInputProperty().set(styleClass);
   }
-
 
   /**
    * Updates StatusBar on StartService.
@@ -457,7 +458,6 @@ public class Rscc {
     statusBarStyleClassStartServiceProperty().set(styleClass);
   }
 
-
   /**
    * Updates StatusBar on KeyInput.
    *
@@ -468,7 +468,6 @@ public class Rscc {
     statusBarTextSupporterProperty().set(text);
     statusBarStyleClassSupporterProperty().set(styleClass);
   }
-
 
   /**
    * Starts connection to the user.
@@ -550,16 +549,15 @@ public class Rscc {
     setConnectionEstablishmentRunning(false);
   }
 
-
   /**
    * Refreshes the key by killing the connection, requesting a new key and starting the server
    * again.
    */
   public void refreshKey() {
+    setIsKeyRefreshInProgress(true);
     killConnection();
     requestKeyFromServer();
   }
-
 
   /**
    * Starts VNCViewer in reverse mode (-listen).
@@ -572,7 +570,6 @@ public class Rscc {
     vncViewer.startVncViewerListening();
     setConnectionEstablishmentRunning(false);
   }
-
 
   /**
    * Calls Supporter from addressbook (Starts VNC Server in Reverse mode).
@@ -594,7 +591,6 @@ public class Rscc {
     setConnectionEstablishmentRunning(false);
   }
 
-
   /**
    * Starts the VNC Viewer as in listening mode.
    */
@@ -609,7 +605,6 @@ public class Rscc {
 
     setConnectionEstablishmentRunning(false);
   }
-
 
   /**
    * Stops the VNC Viewer.
@@ -975,5 +970,17 @@ public class Rscc {
 
   public StringProperty statusBarStyleClassStartServiceProperty() {
     return statusBarStyleClassStartService;
+  }
+
+  public boolean isKeyRefreshInProgres() {
+    return isKeyRefreshInProgress.get();
+  }
+
+  public BooleanProperty isKeyRefreshInProgressProperty() {
+    return isKeyRefreshInProgress;
+  }
+
+  public void setIsKeyRefreshInProgress(boolean isKeyRefreshInProgress) {
+    this.isKeyRefreshInProgress.set(isKeyRefreshInProgress);
   }
 }
