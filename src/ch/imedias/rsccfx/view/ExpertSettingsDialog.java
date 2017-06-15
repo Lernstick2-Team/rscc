@@ -16,6 +16,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
@@ -41,6 +42,10 @@ public class ExpertSettingsDialog extends DialogPane {
   final Label proxyPortLbl = new Label();
   final Label stunServerPortLbl = new Label();
   final Label stunServersLbl = new Label();
+
+  Separator upperSeperator = new Separator();
+  Separator underSeperator = new Separator();
+
 
   final ToggleSwitch forceConnectOverServerTgl = new ToggleSwitch();
 
@@ -199,7 +204,14 @@ public class ExpertSettingsDialog extends DialogPane {
     settingsPane.add(stunServersLbl, 0, 9);
     settingsPane.add(stunServersListView, 1, 9);
     settingsPane.add(addRemoveServerBox, 1, 10);
-    settingsPane.add(loadDefaults, 0, 11);
+    settingsPane.add(underSeperator, 0,11);
+    settingsPane.add(loadDefaults, 0, 12);
+    settingsPane.add(upperSeperator, 0,13);
+
+    loadDefaults.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+    GridPane.setColumnSpan(upperSeperator,2);
+    GridPane.setColumnSpan(underSeperator,2);
+    GridPane.setColumnSpan(loadDefaults,2);
 
     this.getButtonTypes().add(ButtonType.APPLY);
     this.getButtonTypes().add(ButtonType.CANCEL);
