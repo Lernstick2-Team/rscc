@@ -33,7 +33,7 @@ public class RsccHomeView extends BorderPane {
   final VBox supportBoxLabels = new VBox();
 
   private final Rscc model;
-  private final Strings strings = new Strings();
+  final Strings strings = new Strings();
 
   Image requestImg;
   Image supportImg;

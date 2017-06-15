@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 
 
 /**
@@ -36,11 +34,9 @@ public class VncServerHandler {
    *
    * @param hostAddress   Address to connect to.
    * @param vncViewerPort Port to connect to.
-   * @return true when conneting did not fail.
    */
-  public boolean startVncServerReverse(String hostAddress, Integer vncViewerPort,
-                                       boolean isEncrypted) {
-    final BooleanProperty connectionSucceed = new SimpleBooleanProperty(true);
+  public void startVncServerReverse(String hostAddress, Integer vncViewerPort,
+                                    boolean isEncrypted) {
 
     Thread startServerProcessThread = new Thread() {
       public void run() {
@@ -68,19 +64,25 @@ public class VncServerHandler {
 
             if (errorString != null && errorString.contains("failed to connect")) {
               LOGGER.info("Detected: failed to connect");
-              connectionSucceed.setValue(false);
+              model.setStatusBarSupporter(model.strings.statusBarConnectionFailed,
+                  model.STATUS_BAR_STYLE_FAIL);
               killVncServerProcess();
             }
 
             if (errorString != null && errorString.contains("reverse_connect")
                 && errorString.contains("OK")) {
               LOGGER.info("Detected: Reverse connect OK");
-              connectionSucceed.setValue(true);
               model.setVncSessionRunning(true);
+              model.setStatusBarSupporter(model.strings.statusBarConnected,
+                  model.STATUS_BAR_STYLE_SUCCESS);
             }
           }
 
           LOGGER.info("VNC - Server process has ended");
+          if (model.isVncSessionRunning()) {
+            model.setStatusBarSupporter(model.strings.statusBarConnectionClosed,
+                model.STATUS_BAR_STYLE_INITIALIZE);
+          }
           model.setVncSessionRunning(false);
           model.setVncServerProcessRunning(false);
 
@@ -96,8 +98,6 @@ public class VncServerHandler {
     };
 
     startServerProcessThread.start();
-
-    return connectionSucceed.getValue();
   }
 
 
@@ -135,18 +135,22 @@ public class VncServerHandler {
               LOGGER.info("Client has connected");
               model.setVncSessionRunning(true);
               if (model.getRudp() != null) {
-                model.setConnectionStatus("VNC-Connection established using ICE", 2);
+                model.setStatusBarKeyGeneration(model.strings.statusBarVncConnectionEstablishedICE,
+                    model.STATUS_BAR_STYLE_SUCCESS);
               } else {
-                model.setConnectionStatus("VNC-Connection established over Server", 2);
+                model.setStatusBarKeyGeneration(
+                    model.strings.statusBarVncConnectionEstablishedServer,
+                    model.STATUS_BAR_STYLE_SUCCESS);
               }
-
             }
-
           }
 
           LOGGER.info("VNC - Server process has ended");
           errorStream.close();
           model.setVncSessionRunning(false);
+          model.setStatusBarKeyGeneration(model.strings.statusBarConnectionClosed,
+              model.STATUS_BAR_STYLE_INITIALIZE);
+
           model.setVncServerProcessRunning(false);
 
         } catch (IOException e) {
