@@ -18,7 +18,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -36,7 +35,7 @@ import javafx.beans.property.StringProperty;
 public class Rscc {
 
   //Default stettings
-  public static final String DEFAULT_KEY_SERVER_IP = "86.119.39.89";
+  public static final String DEFAULT_KEY_SERVER_IP = "agora.imedias.ch";
   public static final String DEFAULT_KEY_SERVER_HTTP_PORT = "800";
   public static final int DEFAULT_VNC_PORT = 5900;
   public static final int DEFAULT_VNC_QUALITY = 6;
