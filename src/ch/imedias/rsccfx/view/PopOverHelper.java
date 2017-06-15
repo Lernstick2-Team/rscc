@@ -47,8 +47,6 @@ public class PopOverHelper {
 
   VBox homeHelpBox = new VBox();
   VBox supportSettingsBox = new VBox();
-  VBox supportHelpBox = new VBox();
-  VBox requestHelpBox = new VBox();
   VBox requestSettingsBox = new VBox();
   VBox supportCompressionSliderBox = new VBox();
   VBox supportQualitySliderBox = new VBox();
@@ -99,7 +97,7 @@ public class PopOverHelper {
         layoutRequest();
         helpPopOver.setContentNode(new HeaderWebView());
         settingsPopOver.setContentNode(supportSettingsBox);
-        helpPopOver.setContentNode(requestHelpBox);
+        helpPopOver.setContentNode(new HeaderWebView());
         settingsPopOver.setContentNode(requestSettingsBox);
         requestSettingsBindings();
         invokeExpertSettings();
@@ -176,8 +174,6 @@ public class PopOverHelper {
     // Help
     requestHelpLbl.setId("requestHelpLbl");
 
-    requestHelpBox.getChildren().addAll(requestHelpLbl,helpBtn);
-
     requestSettingsBox.getStyleClass().add("settingsBoxes");
 
   }
@@ -232,7 +228,6 @@ public class PopOverHelper {
     // Help
     supportHelpLbl.setId("supportHelpLbl");
 
-    supportHelpBox.getChildren().addAll(supportHelpLbl,helpBtn);
     helpBtn.setOnAction(actionEvent -> new HeaderWebView());
   }
 
