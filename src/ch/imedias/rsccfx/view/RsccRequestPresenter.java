@@ -161,10 +161,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
     // disable disconnect button if no session is started
     view.disconnectBtn.disableProperty().bind(model.vncSessionRunningProperty().not());
     view.reloadKeyBtn.disableProperty().bind(Bindings.or(model.vncSessionRunningProperty(),
-        model.isKeyRefreshInProgresProperty()));
-
-
-
+        model.isKeyRefreshInProgressProperty()));
   }
 
   /**
