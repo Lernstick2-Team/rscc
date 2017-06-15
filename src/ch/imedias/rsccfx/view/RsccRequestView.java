@@ -217,6 +217,6 @@ public class RsccRequestView extends BorderPane {
   private void bindFieldsToModel() {
     // make bindings to the model
     generatedKeyFld.textProperty().bind(keyUtil.formattedKeyProperty());
-    reloadKeyBtn.disableProperty().bind(model.vncSessionRunningProperty().not());
+    reloadKeyBtn.disableProperty().bind(model.vncSessionRunningProperty());
   }
 }
