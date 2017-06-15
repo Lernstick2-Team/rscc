@@ -166,6 +166,8 @@ public class ExpertSettingsDialog extends DialogPane {
     dialog.setResizable(false);
     addRemoveServerBox.setSpacing(50);
 
+    stunServersListView.setPrefHeight(200);
+
     settingsPane.getStyleClass().add("settingsPane");
 
     forceConnectOverServerTgl.getStyleClass().add("toggles");
@@ -196,8 +198,8 @@ public class ExpertSettingsDialog extends DialogPane {
     settingsPane.add(stunServerPortFld, 1, 8);
     settingsPane.add(stunServersLbl, 0, 9);
     settingsPane.add(stunServersListView, 1, 9);
-    settingsPane.add(loadDefaults, 0, 10);
     settingsPane.add(addRemoveServerBox, 1, 10);
+    settingsPane.add(loadDefaults, 0, 11);
 
     this.getButtonTypes().add(ButtonType.APPLY);
     this.getButtonTypes().add(ButtonType.CANCEL);
