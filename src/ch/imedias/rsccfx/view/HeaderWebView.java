@@ -1,8 +1,10 @@
 package ch.imedias.rsccfx.view;
 
+import ch.imedias.rsccfx.model.SystemCommander;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.concurrent.Worker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
@@ -21,6 +23,7 @@ public class HeaderWebView extends VBox {
   final WebView browser = new WebView();
   final WebEngine webEngine = browser.getEngine();
   final Worker<Void> worker = webEngine.getLoadWorker();
+  final Label versionLbl = new Label("");
   static final int BROWSER_WIDTH = 1000;
 
   public HeaderWebView() {
@@ -36,8 +39,10 @@ public class HeaderWebView extends VBox {
     // with progress property of Worker
     progressBar.progressProperty().bind(worker.progressProperty());
     progressBar.setPrefWidth(BROWSER_WIDTH);
+    versionLbl.setText(new SystemCommander().executeTerminalCommand("dpkg -s rscc | grep Version").getOutputString());
 
-    this.getChildren().addAll(browser, progressBar);
+
+    this.getChildren().addAll(browser, versionLbl, progressBar);
 
     try  {
       String url = getClass().getClassLoader().getResource("helpPage.html").toExternalForm();
