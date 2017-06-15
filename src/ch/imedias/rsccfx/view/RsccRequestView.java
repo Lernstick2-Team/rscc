@@ -194,7 +194,7 @@ public class RsccRequestView extends BorderPane {
 
   private void layoutSupporterPane() {
     supporterOuterBox.getChildren().addAll(supporterInnerBox, statusBarSupporter);
-    supporterInnerBox.getChildren().addAll(scrollPane, supporterDescriptionLbl);
+    supporterInnerBox.getChildren().addAll(scrollPane, supporterDescriptionLbl, resetBtn);
 
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);

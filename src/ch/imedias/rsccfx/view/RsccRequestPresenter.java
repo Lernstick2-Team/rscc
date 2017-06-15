@@ -247,7 +247,11 @@ public class RsccRequestPresenter implements ControlledPresenter {
    * Resets the supporter buttons to the default.
    */
   public void resetSupporter() {
+    view.supporterInnerPane.getChildren().remove(0);
+
     supporterHelper.saveSupporters(supporterHelper.getDefaultSupporters());
+    supporterHelper.getDefaultSupporters().stream().forEachOrdered(this::createNewSupporterBtn);
+    supporterHelper.saveSupporters(supporters);
   }
 
   private void attachContextMenu(Button button, Supporter supporter) {
