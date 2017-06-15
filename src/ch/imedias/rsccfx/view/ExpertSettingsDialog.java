@@ -20,6 +20,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import org.controlsfx.control.ToggleSwitch;
 
 /**
@@ -51,7 +53,8 @@ public class ExpertSettingsDialog extends DialogPane {
   final NumberTextField stunServerPortFld = new NumberTextField();
   final Button addServer = new Button("+");
   final Button removeServer = new Button("-");
-  final HBox addRemoveServerBox = new HBox(addServer, removeServer);
+  final Region spacer = new Region();
+  final HBox addRemoveServerBox = new HBox(addServer, spacer, removeServer);
   final Button loadDefaults = new Button();
   final ObservableList<String> stunServersList = FXCollections.observableArrayList();
   final ListView<String> stunServersListView = new ListView<>(stunServersList);
@@ -167,6 +170,8 @@ public class ExpertSettingsDialog extends DialogPane {
     forceConnectOverServerTgl.getStyleClass().add("toggles");
 
     this.getStyleClass().add("expertDialog");
+
+    HBox.setHgrow(spacer, Priority.ALWAYS);
 
     addServer.getStyleClass().add("addRemoveDefaultsBtn");
     removeServer.getStyleClass().add("addRemoveDefaultsBtn");
