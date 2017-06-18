@@ -48,9 +48,6 @@ public class ExpertSettingsDialog extends DialogPane {
   final Label stunServerPortLbl = new Label();
   final Label stunServersLbl = new Label();
 
-  Separator upperSeperator = new Separator();
-  Separator underSeperator = new Separator();
-
   final ToggleSwitch forceConnectOverServerTgl = new ToggleSwitch();
 
   final TextField keyServerIpFld = new TextField();
@@ -221,8 +218,6 @@ public class ExpertSettingsDialog extends DialogPane {
     settingsPane.add(stunServersLbl, 0, 9);
     settingsPane.add(stunServersListView, 1, 9);
     settingsPane.add(addRemoveServerBox, 1, 10);
-    GridPane.setColumnSpan(upperSeperator,2);
-    GridPane.setColumnSpan(underSeperator,2);
 
     this.getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL, loadDefaultsBtnType);
     this.setContent(settingsPane);
