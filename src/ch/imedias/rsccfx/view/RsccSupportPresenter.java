@@ -103,6 +103,10 @@ public class RsccSupportPresenter implements ControlledPresenter {
               view.contentBox.getChildren().removeAll(view.startServiceInnerPane);
               view.contentBox.getChildren().add(1, view.keyInputInnerPane);
             }
+            // keep titledPane open if it was closed by clicking on it while it is already open
+            if (oldValue && !newValue && !view.startServiceTitledPane.isExpanded()) {
+              view.keyInputTitledPane.setExpanded(true);
+            }
           }
         }
     );
@@ -113,6 +117,10 @@ public class RsccSupportPresenter implements ControlledPresenter {
               view.keyInputTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.keyInputInnerPane);
               view.contentBox.getChildren().add(2, view.startServiceInnerPane);
+            }
+            // keep titledPane open if it was closed by clicking on it while it is already open
+            if (oldValue && !newValue && !view.keyInputTitledPane.isExpanded()) {
+              view.startServiceTitledPane.setExpanded(true);
             }
           }
         }

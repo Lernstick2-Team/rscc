@@ -90,6 +90,10 @@ public class RsccRequestPresenter implements ControlledPresenter {
               view.contentBox.getChildren().removeAll(view.supporterOuterBox);
               view.contentBox.getChildren().add(1, view.keyGenerationInnerPane);
             }
+            // keep titledPane open if it was closed by clicking on it while it is already open
+            if (oldValue && !newValue && !view.supporterTitledPane.isExpanded()) {
+              view.keyGenerationTitledPane.setExpanded(true);
+            }
           }
         }
     );
@@ -101,6 +105,10 @@ public class RsccRequestPresenter implements ControlledPresenter {
               view.keyGenerationTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.keyGenerationInnerPane);
               view.contentBox.getChildren().add(2, view.supporterOuterBox);
+            }
+            // keep titledPane open if it was closed by clicking on it while it is already open
+            if (oldValue && !newValue && !view.keyGenerationTitledPane.isExpanded()) {
+              view.supporterTitledPane.setExpanded(true);
             }
           }
         }
