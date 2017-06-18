@@ -98,13 +98,13 @@ public class RsccSupportPresenter implements ControlledPresenter {
     view.keyInputTitledPane.expandedProperty().addListener(
         (observable, oldValue, newValue) -> {
           if (oldValue != newValue) {
-            if (newValue) {
+            if (newValue && view.startServiceTitledPane.isExpanded()) {
               view.startServiceTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.startServiceInnerPane);
               view.contentBox.getChildren().add(1, view.keyInputInnerPane);
             }
             // keep titledPane open if it was closed by clicking on it while it is already open
-            if (oldValue && !newValue && !view.startServiceTitledPane.isExpanded()) {
+            if (oldValue && !view.startServiceTitledPane.isExpanded()) {
               view.keyInputTitledPane.setExpanded(true);
             }
           }
@@ -113,7 +113,7 @@ public class RsccSupportPresenter implements ControlledPresenter {
     view.startServiceTitledPane.expandedProperty().addListener(
         (observable, oldValue, newValue) -> {
           if (oldValue != newValue) {
-            if (newValue) {
+            if (newValue && view.keyInputTitledPane.isExpanded()) {
               view.keyInputTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.keyInputInnerPane);
               view.contentBox.getChildren().add(2, view.startServiceInnerPane);
