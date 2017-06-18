@@ -18,7 +18,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -36,7 +35,7 @@ import javafx.beans.property.StringProperty;
 public class Rscc {
 
   //Default stettings
-  public static final String DEFAULT_KEY_SERVER_IP = "86.119.39.89";
+  public static final String DEFAULT_KEY_SERVER_IP = "agora.imedias.ch";
   public static final String DEFAULT_KEY_SERVER_HTTP_PORT = "800";
   public static final int DEFAULT_VNC_PORT = 5900;
   public static final int DEFAULT_VNC_QUALITY = 6;
@@ -126,6 +125,7 @@ public class Rscc {
   private final BooleanProperty connectionEstablishmentRunning = new SimpleBooleanProperty(false);
   private final BooleanProperty rscccfpHasTalkedToOtherClient = new SimpleBooleanProperty(false);
   private final BooleanProperty isSshRunning = new SimpleBooleanProperty(false);
+  private final BooleanProperty isKeyRefreshInProgress = new SimpleBooleanProperty(false);
 
   private final Preferences preferences = Preferences.userNodeForPackage(Rscc.class);
 
@@ -188,7 +188,6 @@ public class Rscc {
     LOGGER.info("Loaded UserPrefs");
   }
 
-
   /**
    * Saves the UserPreferences.
    */
@@ -248,7 +247,6 @@ public class Rscc {
       );
     }
   }
-
 
   /**
    * Extracts files from running JAR to folder.
@@ -369,6 +367,8 @@ public class Rscc {
 
     if (returnValues.getExitCode() != 0) {
       LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+      setStatusBarKeyGeneration(strings.statusBarKeyGeneratedFailed, STATUS_BAR_STYLE_FAIL);
+      setIsKeyRefreshInProgress(false);
       return;
     }
 
@@ -378,6 +378,7 @@ public class Rscc {
     rscccfp.start();
 
     setStatusBarKeyGeneration(strings.statusBarKeyGeneratedSuccess, STATUS_BAR_STYLE_INITIALIZE);
+    setIsKeyRefreshInProgress(false);
 
     try {
       rscccfp.join();
@@ -434,7 +435,6 @@ public class Rscc {
     statusBarStyleClassKeyGenerationProperty().set(styleClass);
   }
 
-
   /**
    * Updates StatusBar on KeyInput.
    *
@@ -445,7 +445,6 @@ public class Rscc {
     statusBarTextKeyInputProperty().set(text);
     statusBarStyleClassKeyInputProperty().set(styleClass);
   }
-
 
   /**
    * Updates StatusBar on StartService.
@@ -458,7 +457,6 @@ public class Rscc {
     statusBarStyleClassStartServiceProperty().set(styleClass);
   }
 
-
   /**
    * Updates StatusBar on KeyInput.
    *
@@ -469,7 +467,6 @@ public class Rscc {
     statusBarTextSupporterProperty().set(text);
     statusBarStyleClassSupporterProperty().set(styleClass);
   }
-
 
   /**
    * Starts connection to the user.
@@ -551,16 +548,15 @@ public class Rscc {
     setConnectionEstablishmentRunning(false);
   }
 
-
   /**
    * Refreshes the key by killing the connection, requesting a new key and starting the server
    * again.
    */
   public void refreshKey() {
+    setIsKeyRefreshInProgress(true);
     killConnection();
     requestKeyFromServer();
   }
-
 
   /**
    * Starts VNCViewer in reverse mode (-listen).
@@ -573,7 +569,6 @@ public class Rscc {
     vncViewer.startVncViewerListening();
     setConnectionEstablishmentRunning(false);
   }
-
 
   /**
    * Calls Supporter from addressbook (Starts VNC Server in Reverse mode).
@@ -595,7 +590,6 @@ public class Rscc {
     setConnectionEstablishmentRunning(false);
   }
 
-
   /**
    * Starts the VNC Viewer as in listening mode.
    */
@@ -610,7 +604,6 @@ public class Rscc {
 
     setConnectionEstablishmentRunning(false);
   }
-
 
   /**
    * Stops the VNC Viewer.
@@ -976,5 +969,17 @@ public class Rscc {
 
   public StringProperty statusBarStyleClassStartServiceProperty() {
     return statusBarStyleClassStartService;
+  }
+
+  public boolean isKeyRefreshInProgres() {
+    return isKeyRefreshInProgress.get();
+  }
+
+  public BooleanProperty isKeyRefreshInProgressProperty() {
+    return isKeyRefreshInProgress;
+  }
+
+  public void setIsKeyRefreshInProgress(boolean isKeyRefreshInProgress) {
+    this.isKeyRefreshInProgress.set(isKeyRefreshInProgress);
   }
 }
