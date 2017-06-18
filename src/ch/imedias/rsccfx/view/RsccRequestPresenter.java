@@ -165,8 +165,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
   private void setupBindings() {
     headerPresenter.getSettingsBtnDisableProperty().bind(model.vncServerProcessRunningProperty());
 
-    // disable disconnect button if no session is started
-    view.disconnectBtn.disableProperty().bind(model.vncSessionRunningProperty().not());
+    // make disconnect button invisible if no session is running
+    view.disconnectBtn.visibleProperty().bind(model.vncSessionRunningProperty());
     view.reloadKeyBtn.disableProperty().bind(model.vncSessionRunningProperty());
   }
 
