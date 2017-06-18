@@ -9,6 +9,7 @@ import ch.imedias.rsccfx.model.xml.SupporterHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -78,6 +79,10 @@ public class RsccRequestPresenter implements ControlledPresenter {
           Thread thread = new Thread(model::refreshKey);
           thread.start();
         }
+    );
+
+    view.resetBtn.setOnAction(
+        event -> resetSupporter()
     );
 
     // handles TitledPane switching between the two TitledPanes
@@ -167,7 +172,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     // make disconnect button invisible if no session is running
     view.disconnectBtn.visibleProperty().bind(model.vncSessionRunningProperty());
-    view.reloadKeyBtn.disableProperty().bind(model.vncSessionRunningProperty());
+    view.reloadKeyBtn.disableProperty().bind(Bindings.or(model.vncSessionRunningProperty(),
+        model.isKeyRefreshInProgressProperty()));
   }
 
   /**
@@ -243,6 +249,22 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
     // remove the supporter and save list.
     supporters.remove(supporter);
+    supporterHelper.saveSupporters(supporters);
+  }
+
+  /**
+   * Resets the supporter buttons to the default.
+   */
+  public void resetSupporter() {
+    view.supporterInnerPane.getChildren().clear();
+
+    buttonSize = 0;
+
+    supporters.clear();
+
+    supporterHelper.getDefaultSupporters().stream()
+        .forEachOrdered(supporter -> createNewSupporterBtn(supporter));
+
     supporterHelper.saveSupporters(supporters);
   }
 
