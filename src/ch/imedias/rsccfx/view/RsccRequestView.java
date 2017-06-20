@@ -127,7 +127,7 @@ public class RsccRequestView extends BorderPane {
     reloadKeyBtn.setId("reloadKeyBtn");
 
     disconnectBtn.setId("connectBtn");
-    disconnectBtn.setDisable(true);
+    disconnectBtn.setVisible(false);
 
     contentBox.getChildren().addAll(keyGenerationTitledPane, keyGenerationInnerPane,
         supporterTitledPane);

@@ -110,7 +110,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
         }
     );
 
-
     model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
           if (oldValue && !newValue
               && RsccApp.REQUEST_VIEW.equals(viewParent.getCurrentViewName())) {
@@ -149,11 +148,20 @@ public class RsccRequestPresenter implements ControlledPresenter {
       model.killConnection();
       viewParent.setView(RsccApp.HOME_VIEW);
     });
-    headerPresenter.setHelpBtnAction(event ->
-        popOverHelper.helpPopOver.show(view.headerView.helpBtn));
-    headerPresenter.setSettingsBtnAction(event ->
-        popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
-
+    headerPresenter.setHelpBtnAction(event -> {
+      if (popOverHelper.helpPopOver.isShowing()) {
+        popOverHelper.helpPopOver.hide();
+      } else {
+        popOverHelper.helpPopOver.show(view.headerView.helpBtn);
+      }
+    });
+    headerPresenter.setSettingsBtnAction(event -> {
+      if (popOverHelper.settingsPopOver.isShowing()) {
+        popOverHelper.settingsPopOver.hide();
+      } else {
+        popOverHelper.settingsPopOver.show(view.headerView.settingsBtn);
+      }
+    });
   }
 
   /**
@@ -162,8 +170,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
   private void setupBindings() {
     headerPresenter.getSettingsBtnDisableProperty().bind(model.vncServerProcessRunningProperty());
 
-    // disable disconnect button if no session is started
-    view.disconnectBtn.disableProperty().bind(model.vncSessionRunningProperty().not());
+    // make disconnect button invisible if no session is running
+    view.disconnectBtn.visibleProperty().bind(model.vncSessionRunningProperty());
     view.reloadKeyBtn.disableProperty().bind(Bindings.or(model.vncSessionRunningProperty(),
         model.isKeyRefreshInProgressProperty()));
   }
