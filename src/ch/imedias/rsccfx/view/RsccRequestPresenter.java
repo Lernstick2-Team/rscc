@@ -3,6 +3,7 @@ package ch.imedias.rsccfx.view;
 import ch.imedias.rsccfx.ControlledPresenter;
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.ViewController;
+import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.xml.Supporter;
 import ch.imedias.rsccfx.model.xml.SupporterHelper;
@@ -38,6 +39,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
   private ViewController viewParent;
   private PopOverHelper popOverHelper;
   private int buttonSize = 0;
+  Strings strings = new Strings();
+
 
   /**
    * Initializes a new RsccRequestPresenter with the matching view.
@@ -204,25 +207,29 @@ public class RsccRequestPresenter implements ControlledPresenter {
     attachContextMenu(supporterBtn, supporter);
 
     supporterBtn.setOnAction(event -> {
-      // Open Dialog to modify data
-      SupporterAttributesDialog supporterAttributesDialog =
-          new SupporterAttributesDialog(supporter);
-      boolean supporterSaved = supporterAttributesDialog.show();
-      Supporter lastSupporter = supporters.get(supporters.size() - 1);
-      if (supporterSaved) {
-        if (lastSupporter == supporter) {
-          createNewSupporterBtn(new Supporter());
-        }
-        // Update data in button name and save to preferences
-        supporterBtn.setText(supporter.toString());
-        supporterHelper.saveSupporters(supporters);
-      }
+      openDialog(supporter, supporterBtn, false);
     });
 
     int row = buttonSize / GRID_MAXIMUM_COLUMNS;
     int column = buttonSize % GRID_MAXIMUM_COLUMNS;
     view.supporterInnerPane.add(supporterBtn, column, row);
     buttonSize++;
+  }
+
+  private void openDialog(Supporter supporter, Button supporterBtn, boolean editMode) {
+    // Open Dialog to modify data
+    SupporterAttributesDialog supporterAttributesDialog =
+        new SupporterAttributesDialog(supporter, this.model, editMode);
+    boolean supporterSaved = supporterAttributesDialog.show();
+    Supporter lastSupporter = supporters.get(supporters.size() - 1);
+    if (supporterSaved) {
+      if (lastSupporter == supporter) {
+        createNewSupporterBtn(new Supporter());
+      }
+      // Update data in button name and save to preferences
+      supporterBtn.setText(supporter.toString());
+      supporterHelper.saveSupporters(supporters);
+    }
   }
 
   /**
@@ -272,27 +279,19 @@ public class RsccRequestPresenter implements ControlledPresenter {
     // Create ContextMenu
     final ContextMenu contextMenu = new ContextMenu();
 
-    MenuItem editMenuItem = new MenuItem("Edit");
+    MenuItem editMenuItem = new MenuItem(strings.dialogEditButtonText);
 
     editMenuItem.setOnAction(event -> {
-      // Open Dialog to modify data
-      SupporterAttributesDialog supporterAttributesDialog =
-          new SupporterAttributesDialog(supporter);
-      boolean supporterSaved = supporterAttributesDialog.show();
-      if (supporterSaved) {
-        // Update data in button name and save to preferences
-        button.setText(supporter.toString());
-        supporterHelper.saveSupporters(supporters);
-      }
+      openDialog(supporter, button, true);
     });
 
-    MenuItem connectMenuItem = new MenuItem("Call");
+    MenuItem connectMenuItem = new MenuItem(strings.dialogConnectButtonText);
     connectMenuItem.setOnAction(event -> {
       model.callSupporterDirect(supporter.getAddress(), supporter.getPort(),
           supporter.isEncrypted());
     });
 
-    MenuItem deleteMenuItem = new MenuItem("Delete");
+    MenuItem deleteMenuItem = new MenuItem(strings.dialogDeleteButtonText);
     deleteMenuItem.setOnAction(event -> deleteSupporterBtn(button, supporter));
 
     // Add MenuItem to ContextMenu
