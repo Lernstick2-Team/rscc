@@ -392,7 +392,7 @@ public class Rscc {
         try {
           Thread.sleep(1000);
         } catch (InterruptedException e) {
-          e.printStackTrace();
+          LOGGER.info(e.getMessage());
         }
 
         rudp = null;
@@ -417,7 +417,7 @@ public class Rscc {
       }
 
     } catch (Exception e) {
-      e.printStackTrace();
+      LOGGER.info(e.getMessage());
       killConnection();
     }
     setConnectionEstablishmentRunning(false);
@@ -501,7 +501,7 @@ public class Rscc {
     try {
       rscccfp.join();
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LOGGER.info(e.getMessage());
     }
 
     rudp = null;
@@ -529,7 +529,7 @@ public class Rscc {
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        LOGGER.info(e.getMessage());
       }
     }
 

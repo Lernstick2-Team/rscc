@@ -61,13 +61,13 @@ public class Rscccfp extends Thread {
       try {
         startRscccfpServer();
       } catch (Throwable throwable) {
-        throwable.printStackTrace();
+        LOGGER.info(throwable.getMessage());
       }
     } else {
       try {
         startRscccfpClient("127.0.0.1");
       } catch (Throwable throwable) {
-        throwable.printStackTrace();
+        LOGGER.info(throwable.getMessage());
       }
     }
   }
@@ -128,9 +128,9 @@ public class Rscccfp extends Thread {
       runIceMagic();
 
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.info(e.getMessage());
     } catch (Throwable throwable) {
-      throwable.printStackTrace();
+      LOGGER.info(throwable.getMessage());
     }
   }
 
@@ -157,7 +157,7 @@ public class Rscccfp extends Thread {
         return;
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.info(e.getMessage());
     }
 
 
@@ -220,7 +220,7 @@ public class Rscccfp extends Thread {
 
 
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.info(e.getMessage());
     }
   }
 
@@ -233,7 +233,7 @@ public class Rscccfp extends Thread {
       outputStream.writeBoolean(model.isLocalIceSuccessful());
       outputStream.flush();
     } catch (Exception e) {
-      e.printStackTrace();
+      LOGGER.info(e.getMessage());
     }
   }
 
@@ -260,7 +260,7 @@ public class Rscccfp extends Thread {
       outputStream.flush();
       LOGGER.info("RSCCCFP: sent sdp");
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.info(e.getMessage());
     }
   }
 
@@ -299,7 +299,7 @@ public class Rscccfp extends Thread {
       LOGGER.info("RSCCCFP: received other sdp");
 
     } catch (Exception e) {
-      e.printStackTrace();
+      LOGGER.info(e.getMessage());
     }
   }
 
@@ -324,7 +324,7 @@ public class Rscccfp extends Thread {
       }
       agent.free();
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.info(e.getMessage());
     }
 
   }
@@ -342,7 +342,7 @@ public class Rscccfp extends Thread {
             address, model.getStunServerPort(), Transport.UDP);
         agent.addCandidateHarvester(new StunCandidateHarvester(ta));
       } catch (Exception e) {
-        e.printStackTrace();
+        LOGGER.info(e.getMessage());
       }
     }
     IceMediaStream stream = agent.createMediaStream("data");

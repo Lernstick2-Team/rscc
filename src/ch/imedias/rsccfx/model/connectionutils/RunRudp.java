@@ -322,7 +322,7 @@ public class RunRudp extends Thread {
       try {
         tcpInputStream.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        LOGGER.info(e.getMessage());
       }
     }
     if (rudpInputStream != null) {
@@ -330,7 +330,7 @@ public class RunRudp extends Thread {
       try {
         rudpInputStream.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        LOGGER.info(e.getMessage());
       }
     }
     if (tcpOutputStream != null) {
@@ -338,7 +338,7 @@ public class RunRudp extends Thread {
       try {
         tcpOutputStream.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        LOGGER.info(e.getMessage());
       }
     }
     if (rudpOutputStream != null) {
@@ -346,7 +346,7 @@ public class RunRudp extends Thread {
       try {
         rudpOutputStream.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        LOGGER.info(e.getMessage());
       }
     }
     if (rudpSocket != null && !rudpSocket.isClosed()) {
@@ -354,7 +354,7 @@ public class RunRudp extends Thread {
       try {
         rudpSocket.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        LOGGER.info(e.getMessage());
       }
     }
     if (rudpSocket2 != null && !rudpSocket2.isClosed()) {
@@ -362,7 +362,7 @@ public class RunRudp extends Thread {
       try {
         rudpSocket2.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        LOGGER.info(e.getMessage());
       }
     }
     if (rudpServerSocket != null && !rudpServerSocket.isClosed()) {
@@ -370,7 +370,7 @@ public class RunRudp extends Thread {
       try {
         rudpServerSocket.close();
       } catch (Exception e) {
-        e.printStackTrace();
+        LOGGER.info(e.getMessage());
       }
     }
     if (tcpServerSocket != null && !tcpServerSocket.isClosed()) {
@@ -378,7 +378,7 @@ public class RunRudp extends Thread {
       try {
         tcpServerSocket.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        LOGGER.info(e.getMessage());
       }
     }
     if (tcpSocket != null && !tcpSocket.isClosed()) {
@@ -386,7 +386,7 @@ public class RunRudp extends Thread {
       try {
         tcpSocket.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        LOGGER.info(e.getMessage());
       }
     }
   }
