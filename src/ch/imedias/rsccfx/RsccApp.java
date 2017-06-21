@@ -29,7 +29,7 @@ public class RsccApp extends Application {
       Logger.getLogger(RsccApp.class.getName());
 
   public static final String APP_NAME = "Remote Support";
-  public static final String APP_VERSION = "0.7.1";
+  public static final String APP_VERSION = "0.8";
 
   /**
    * Declares views for use with ViewController.
