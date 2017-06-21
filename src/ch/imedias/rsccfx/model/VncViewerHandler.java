@@ -85,7 +85,7 @@ public class VncViewerHandler {
           errorStream.close();
 
         } catch (IOException e) {
-          e.getStackTrace();
+          LOGGER.info(e.getMessage());
         }
 
         LOGGER.info("Ending VNC Viewer Thread ");
@@ -142,7 +142,7 @@ public class VncViewerHandler {
           LOGGER.info("VNC - Viewer process has ended");
 
         } catch (IOException e) {
-          e.getStackTrace();
+          LOGGER.info(e.getMessage());
         }
       }
     };

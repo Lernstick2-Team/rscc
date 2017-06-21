@@ -89,7 +89,7 @@ public class VncServerHandler {
           errorStream.close();
 
         } catch (IOException e) {
-          e.getStackTrace();
+          LOGGER.info(e.getMessage());
         }
 
         LOGGER.info("Ending VNC Server Thread ");
@@ -153,7 +153,7 @@ public class VncServerHandler {
           model.setVncServerProcessRunning(false);
 
         } catch (IOException e) {
-          e.getStackTrace();
+          LOGGER.info(e.getMessage());
         }
       }
     };

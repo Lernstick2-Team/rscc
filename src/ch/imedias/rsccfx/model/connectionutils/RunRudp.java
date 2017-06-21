@@ -208,7 +208,7 @@ public class RunRudp extends Thread {
             model.getUdpPackageSize());
       }
     } catch (Exception e) {
-      LOGGER.info(e.toString() + " " + e.getStackTrace());
+      LOGGER.info(e.getMessage());
     }
   }
 
@@ -240,7 +240,7 @@ public class RunRudp extends Thread {
             rudpOutput.flush();
           }
         } catch (IOException e) {
-          LOGGER.info(e.toString() + " " + e.getStackTrace());
+          LOGGER.info(e.getMessage());
         }
 
         // the client closed the connection to us, so close
@@ -248,13 +248,13 @@ public class RunRudp extends Thread {
         try {
           rudpOutput.close();
         } catch (IOException e) {
-          LOGGER.info(e.toString() + " " + e.getStackTrace());
+          LOGGER.info(e.getMessage());
         } finally {
           try {
             closeAll();
 
           } catch (Exception e) {
-            LOGGER.info(e.toString() + " " + e.getStackTrace());
+            LOGGER.info(e.getMessage());
           }
         }
       }
@@ -274,13 +274,13 @@ public class RunRudp extends Thread {
         tcpOutput.flush();
       }
     } catch (IOException e) {
-      LOGGER.info(e.toString() + " " + e.getStackTrace());
+      LOGGER.info(e.getMessage());
     } finally {
       try {
         closeAll();
 
       } catch (Exception e) {
-        LOGGER.info(e.toString() + " " + e.getStackTrace());
+        LOGGER.info(e.getMessage());
       }
     }
 

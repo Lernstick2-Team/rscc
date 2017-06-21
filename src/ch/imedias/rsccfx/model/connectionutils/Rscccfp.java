@@ -275,7 +275,7 @@ public class Rscccfp extends Thread {
     try {
       //wait for starting line
       String sdpLine = inputStream.readLine();
-      if (sdpLine.equals("ForcingServerMode")) {
+      if ("ForcingServerMode".equals(sdpLine)) {
         LOGGER.info("RSCCCFP: Servermode is forced from opposite");
         return;
       }
@@ -285,7 +285,7 @@ public class Rscccfp extends Thread {
       }
       sdpLine = inputStream.readLine();
 
-      while (!sdpLine.equals("sdpEnd")) {
+      while (!"sdpEnd".equals(sdpLine)) {
 
         receivedSdp.append(sdpLine);
         receivedSdp.append('\n');

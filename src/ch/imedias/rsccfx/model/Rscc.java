@@ -583,7 +583,7 @@ public class Rscc {
         STATUS_BAR_STYLE_INITIALIZE);
     int portValue = -1;
     if (!port.equals("")) {
-      portValue = Integer.valueOf(port);
+      portValue = Integer.parseInt(port);
     }
     vncServer = new VncServerHandler(this);
     vncServer.startVncServerReverse(address, portValue > 0 ? portValue : 5500, isEncrypted);

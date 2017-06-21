@@ -83,7 +83,7 @@ public class SupporterAttributesDialog extends DialogPane {
    */
   public SupporterAttributesDialog(Supporter supporter, Rscc model, boolean editMode) {
     this.model = model;
-    this.getStylesheets().add(RsccApp.styleSheet);
+    this.getStylesheets().add(RsccApp.getStyleSheet());
     this.supporter = supporter;
     // if a new supporter was opened, start in edit mode
     setEditMode(editMode || supporter.toString().equals("+"));

@@ -59,7 +59,7 @@ public class RsccRequestView extends BorderPane {
   final ScrollPane scrollPane = new ScrollPane();
 
   final KeyTextField generatedKeyFld = new KeyTextField();
-  private final double scalingFactor = RsccApp.scalingFactor;
+  private final double scalingFactor = RsccApp.getScalingFactor();
   private final Rscc model;
   private final Strings strings = new Strings();
 

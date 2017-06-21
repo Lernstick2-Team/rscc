@@ -50,18 +50,18 @@ public class RsccApp extends Application {
   private static final double ROOT_TEXT_SIZE_FULL_HD = 11;
   private static final double ROOT_TEXT_SIZE_LOW = 10;
 
-  public static double rootTextSize;
+  private static double rootTextSize;
 
   /**
    * Defines the scaling based on the DPI of the screen in relation to a 4K resolution display.
    * Must be used in all views to scale all displayed values that cannot be set in the CSS.
    */
-  public static double scalingFactor;
+  private static double scalingFactor;
 
   /**
    * Defines the stylesheet that is being used.
    */
-  public static String styleSheet;
+  private static String styleSheet;
 
   private Rscc model;
 
@@ -181,5 +181,17 @@ public class RsccApp extends Application {
     for (Handler h : log.getHandlers()) {
       h.setLevel(logLevel);
     }
+  }
+
+  public static double getRootTextSize() {
+    return rootTextSize;
+  }
+
+  public static double getScalingFactor() {
+    return scalingFactor;
+  }
+
+  public static String getStyleSheet() {
+    return styleSheet;
   }
 }

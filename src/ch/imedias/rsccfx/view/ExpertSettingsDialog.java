@@ -80,7 +80,7 @@ public class ExpertSettingsDialog extends DialogPane {
    */
   public ExpertSettingsDialog(Rscc model) {
     this.model = model;
-    this.getStylesheets().add(RsccApp.styleSheet);
+    this.getStylesheets().add(RsccApp.getStyleSheet());
     initFieldData();
     layoutForm();
     attachEvents();
