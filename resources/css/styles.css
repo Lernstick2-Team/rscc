@@ -343,6 +343,41 @@
     -fx-font-size: 1.3em;
 }
 
+.list-view {
+    -fx-font-size: 1.3em;
+}
+
+.addRemoveDefaultsBtn {
+    -fx-font-size: 1.3em;
+    -fx-padding: 1.538em 2.308em 1.538em 2.308em;
+    -fx-alignment: center;
+    -fx-background-radius: 0.308em;
+    -fx-border-radius: 0.308em;
+    -fx-border-color:#A7A7A7;
+    -fx-background-color: #EAEAEA;
+}
+
+.addRemoveDefaultsBtn:hover {
+    -fx-background-color: #ffffff;
+    -fx-cursor: hand;
+}
+
+.expertDialog .button-bar .button{
+    -fx-font-size: 1.3em;
+    -fx-padding: 1.538em 2.308em 1.538em 2.308em;
+    -fx-alignment: center;
+    -fx-background-radius: 0.308em;
+    -fx-border-radius: 0.308em;
+    -fx-border-color:#A7A7A7;
+    -fx-background-color: #EAEAEA;
+}
+
+.expertDialog .button-bar .button:hover{
+    -fx-background-color: #ffffff;
+    -fx-cursor: hand;
+}
+
+}
 /***************************************************************************
  *                                                                         *
  *                             Dialog Supporter                            *
