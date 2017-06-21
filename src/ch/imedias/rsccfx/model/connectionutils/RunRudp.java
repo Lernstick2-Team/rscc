@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 
 /**
  * Establishes a RUDP connection between two clients, can be run as server or client.
- * Created by pwg on 09.05.17.
  */
 public class RunRudp extends Thread {
   private static final Logger LOGGER = Logger.getLogger(Rscccfp.class.getName());
@@ -42,7 +41,7 @@ public class RunRudp extends Thread {
   private ListMultimap<String, Closeable> closables = ArrayListMultimap.create();
 
   /**
-   * Constructor.
+   * Creates a new RunRudp object.
    *
    * @param model              the one and only Model.
    * @param viewerIsRudpClient defines if the object is RUDP Client or Server.
