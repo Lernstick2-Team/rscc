@@ -10,7 +10,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,7 +17,6 @@ import java.util.logging.Logger;
 
 /**
  * Establishes a RUDP connection between two clients, can be run as server or client.
- * Created by pwg on 09.05.17.
  */
 public class RunRudp extends Thread {
   private static final Logger LOGGER = Logger.getLogger(Rscccfp.class.getName());
@@ -43,7 +41,7 @@ public class RunRudp extends Thread {
   private ListMultimap<String, Closeable> closables = ArrayListMultimap.create();
 
   /**
-   * Constructor.
+   * Creates a new RunRudp object.
    *
    * @param model              the one and only Model.
    * @param viewerIsRudpClient defines if the object is RUDP Client or Server.
@@ -63,9 +61,6 @@ public class RunRudp extends Thread {
 
       String remoteAddressAsString = model.getRemoteClientIpAddress().getHostAddress();
 
-      model.setConnectionStatus("Trying to setup UDP proxy", 1);
-
-
       if (viewerIsRudpClient && callAsViewer) {
         //TCP Server & RUDP Client
 
@@ -76,8 +71,11 @@ public class RunRudp extends Thread {
         //Could be an issue in a p2p session behind NAT, works locally.
         //    rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
         // model.getRemoteClientPort(), null, model.getIcePort());
+        // rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
+        //   model.getRemoteClientPort());
+
         rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
-            model.getRemoteClientPort());
+            model.getRemoteClientPort(), null, model.getIcePort());
 
         rudpInputStream = rudpSocket.getInputStream();
         rudpOutputStream = rudpSocket.getOutputStream();
@@ -184,8 +182,10 @@ public class RunRudp extends Thread {
         //model.getRemoteClientPort(), null, model.getIcePort()); alternative for starting Ice
         //on a fixed port (Could be an issue on p2p connection over NAT)
 
+        // rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
+        //   model.getRemoteClientPort());
         rudpSocket = new ReliableSocket(model.getRemoteClientIpAddress().getHostAddress(),
-            model.getRemoteClientPort());
+            model.getRemoteClientPort(), null, model.getIcePort());
 
         rudpInputStream = rudpSocket.getInputStream();
         rudpOutputStream = rudpSocket.getOutputStream();
@@ -208,7 +208,7 @@ public class RunRudp extends Thread {
             model.getUdpPackageSize());
       }
     } catch (Exception e) {
-      LOGGER.info(e.toString() + " " + e.getStackTrace());
+      LOGGER.info(e.getMessage());
     }
   }
 
@@ -224,7 +224,6 @@ public class RunRudp extends Thread {
    */
   private void startProxy(InputStream tcpInput, OutputStream tcpOutput, InputStream
       rudpInput, OutputStream rudpOutput, int bufferSize) {
-    model.setConnectionStatus("UDP proxy succesful", 2);
 
     final byte[] request = new byte[bufferSize];
     byte[] reply = new byte[bufferSize];
@@ -241,7 +240,7 @@ public class RunRudp extends Thread {
             rudpOutput.flush();
           }
         } catch (IOException e) {
-          LOGGER.info(e.toString() + " " + e.getStackTrace());
+          LOGGER.info(e.getMessage());
         }
 
         // the client closed the connection to us, so close
@@ -249,13 +248,13 @@ public class RunRudp extends Thread {
         try {
           rudpOutput.close();
         } catch (IOException e) {
-          LOGGER.info(e.toString() + " " + e.getStackTrace());
+          LOGGER.info(e.getMessage());
         } finally {
           try {
             closeAll();
 
           } catch (Exception e) {
-            LOGGER.info(e.toString() + " " + e.getStackTrace());
+            LOGGER.info(e.getMessage());
           }
         }
       }
@@ -275,13 +274,13 @@ public class RunRudp extends Thread {
         tcpOutput.flush();
       }
     } catch (IOException e) {
-      LOGGER.info(e.toString() + " " + e.getStackTrace());
+      LOGGER.info(e.getMessage());
     } finally {
       try {
         closeAll();
 
       } catch (Exception e) {
-        LOGGER.info(e.toString() + " " + e.getStackTrace());
+        LOGGER.info(e.getMessage());
       }
     }
 
@@ -317,16 +316,77 @@ public class RunRudp extends Thread {
   }
 
   private void setupClosables() {
-    for (Field field : this.getClass().getDeclaredFields()) {
-      Object fieldObject = null;
+
+    if (tcpInputStream != null) {
+      LOGGER.info("tcpInputStream is not null - close");
       try {
-        fieldObject = field.get(this);
-      } catch (IllegalAccessException e) {
-        LOGGER.warning(e.getMessage());
+        tcpInputStream.close();
+      } catch (IOException e) {
+        LOGGER.info(e.getMessage());
       }
-      if (fieldObject != null && fieldObject instanceof Closeable) {
-        LOGGER.info("Add to Closeables: " + fieldObject + "; Name: " + field.getName());
-        closables.put(field.getName(), (Closeable) fieldObject);
+    }
+    if (rudpInputStream != null) {
+      LOGGER.info("rudpInputStream is not null - close");
+      try {
+        rudpInputStream.close();
+      } catch (IOException e) {
+        LOGGER.info(e.getMessage());
+      }
+    }
+    if (tcpOutputStream != null) {
+      LOGGER.info("tcpOutputStream is not null - close");
+      try {
+        tcpOutputStream.close();
+      } catch (IOException e) {
+        LOGGER.info(e.getMessage());
+      }
+    }
+    if (rudpOutputStream != null) {
+      LOGGER.info("rudpOutputStream is not null - close");
+      try {
+        rudpOutputStream.close();
+      } catch (IOException e) {
+        LOGGER.info(e.getMessage());
+      }
+    }
+    if (rudpSocket != null && !rudpSocket.isClosed()) {
+      LOGGER.info("rudpSocket is not null - close");
+      try {
+        rudpSocket.close();
+      } catch (IOException e) {
+        LOGGER.info(e.getMessage());
+      }
+    }
+    if (rudpSocket2 != null && !rudpSocket2.isClosed()) {
+      LOGGER.info("rudpSocket2 is not null - close");
+      try {
+        rudpSocket2.close();
+      } catch (IOException e) {
+        LOGGER.info(e.getMessage());
+      }
+    }
+    if (rudpServerSocket != null && !rudpServerSocket.isClosed()) {
+      LOGGER.info("rudpServerSocket is not null - close");
+      try {
+        rudpServerSocket.close();
+      } catch (Exception e) {
+        LOGGER.info(e.getMessage());
+      }
+    }
+    if (tcpServerSocket != null && !tcpServerSocket.isClosed()) {
+      LOGGER.info("tcpServerSocket is not null - close");
+      try {
+        tcpServerSocket.close();
+      } catch (IOException e) {
+        LOGGER.info(e.getMessage());
+      }
+    }
+    if (tcpSocket != null && !tcpSocket.isClosed()) {
+      LOGGER.info("tcpSocket is not null - close");
+      try {
+        tcpSocket.close();
+      } catch (IOException e) {
+        LOGGER.info(e.getMessage());
       }
     }
   }

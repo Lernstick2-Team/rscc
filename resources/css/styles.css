@@ -91,28 +91,28 @@
     -fx-font-weight: bold;
 }
 
-.statusBox{
+.statusBar{
     -fx-alignment: center;
     -fx-background-color: darkgray;
     -fx-background-radius: 0.308em;
     -fx-border-radius: 0.308em;
 }
 
-.statusBoxInitialize{
+.statusBarInitialize{
     -fx-background-color: rgb(240, 173, 78);
     -fx-alignment: center;
     -fx-background-radius: 0.308em;
     -fx-border-radius: 0.308em;
 }
 
-.statusBoxSuccess{
+.statusBarSuccess{
     -fx-background-color: rgb(92, 184, 92);
     -fx-alignment: center;
     -fx-background-radius: 0.308em;
     -fx-border-radius: 0.308em;
 }
 
-.statusBoxFail{
+.statusBarFail{
     -fx-background-color: rgb(217, 83, 79);
     -fx-alignment: center;
 }
@@ -135,6 +135,12 @@
     -fx-text-alignment: center;
     -fx-alignment: center;
     -fx-padding: 2em 0 2em 0;
+}
+
+.keyFld .context-menu {
+    -fx-font-size: 0.7em;
+    -fx-border-radius: 0.308em;
+    -fx-background-radius: 0.308em;
 }
 
 .titled-pane {
@@ -189,6 +195,13 @@
     -fx-border-color: lightgrey;
 
 }
+
+.supporterBtn .context-menu {
+    -fx-font-size: 1em;
+    -fx-border-radius: 0.308em;
+    -fx-background-radius: 0.308em;
+}
+
 
 .supporterBtn:hover{
     -fx-cursor: hand;
@@ -264,6 +277,7 @@
 
 .toggles {
     -fx-alignment: baseline-center;
+    -thumb-move-animation-time: 150;
 }
 
 .toggles .thumb-area {
@@ -283,7 +297,8 @@
 }
 
 .toggles:selected .thumb-area {
-    -fx-background-color: #A7A7A7;
+    -fx-background-color: linear-gradient(to bottom, derive(-fx-text-box-border, -20%), derive(-fx-text-box-border, -30%)),
+    linear-gradient(to bottom, derive(#0b99c9, 30%), #0b99c9);
 }
 
 .toggles .thumb:hover {
@@ -328,6 +343,41 @@
     -fx-font-size: 1.3em;
 }
 
+.list-view {
+    -fx-font-size: 1.3em;
+}
+
+.addRemoveDefaultsBtn {
+    -fx-font-size: 1.3em;
+    -fx-padding: 1.538em 2.308em 1.538em 2.308em;
+    -fx-alignment: center;
+    -fx-background-radius: 0.308em;
+    -fx-border-radius: 0.308em;
+    -fx-border-color:#A7A7A7;
+    -fx-background-color: #EAEAEA;
+}
+
+.addRemoveDefaultsBtn:hover {
+    -fx-background-color: #ffffff;
+    -fx-cursor: hand;
+}
+
+.expertDialog .button-bar .button{
+    -fx-font-size: 1.3em;
+    -fx-padding: 1.538em 2.308em 1.538em 2.308em;
+    -fx-alignment: center;
+    -fx-background-radius: 0.308em;
+    -fx-border-radius: 0.308em;
+    -fx-border-color:#A7A7A7;
+    -fx-background-color: #EAEAEA;
+}
+
+.expertDialog .button-bar .button:hover{
+    -fx-background-color: #ffffff;
+    -fx-cursor: hand;
+}
+
+}
 /***************************************************************************
  *                                                                         *
  *                             Dialog Supporter                            *

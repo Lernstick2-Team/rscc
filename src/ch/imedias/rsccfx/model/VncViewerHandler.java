@@ -8,8 +8,7 @@ import java.util.logging.Logger;
 
 
 /**
- * This Class handles a VNC Viewer.
- * Created by jp on 11/05/17.
+ * Handles a VNC Viewer.
  */
 public class VncViewerHandler {
   private static final Logger LOGGER =
@@ -76,13 +75,17 @@ public class VncViewerHandler {
           }
 
           LOGGER.info("VNC - Viewer process has ended");
+          if (model.isVncSessionRunning()) {
+            model.setStatusBarKeyInput(model.strings.statusBarConnectionClosed,
+                model.STATUS_BAR_STYLE_INITIALIZE);
+          }
           model.setVncSessionRunning(false);
           model.setVncViewerProcessRunning(false);
 
           errorStream.close();
 
         } catch (IOException e) {
-          e.getStackTrace();
+          LOGGER.info(e.getMessage());
         }
 
         LOGGER.info("Ending VNC Viewer Thread ");
@@ -139,7 +142,7 @@ public class VncViewerHandler {
           LOGGER.info("VNC - Viewer process has ended");
 
         } catch (IOException e) {
-          e.getStackTrace();
+          LOGGER.info(e.getMessage());
         }
       }
     };

@@ -8,8 +8,6 @@ import ch.imedias.rsccfx.model.util.KeyUtil;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -28,7 +26,6 @@ public class RsccSupportPresenter implements ControlledPresenter {
   private final RsccSupportView view;
   private final HeaderPresenter headerPresenter;
   private final KeyUtil keyUtil;
-  private final BooleanProperty serviceRunning = new SimpleBooleanProperty(false);
   private String validImage =
       getClass().getClassLoader().getResource("images/valid.svg").toExternalForm();
   private String invalidImage =
@@ -55,7 +52,8 @@ public class RsccSupportPresenter implements ControlledPresenter {
   }
 
   private void initImages() {
-    view.validationImg.load(invalidImage);
+    String validationImage = keyUtil.isKeyValid() ? validImage : invalidImage;
+    Platform.runLater(() -> view.validationImg.load(validationImage));
   }
 
   /**
@@ -80,11 +78,11 @@ public class RsccSupportPresenter implements ControlledPresenter {
 
   }
 
-  /**
-   * Updates the validation image after every key pressed.
-   */
   private void attachEvents() {
-    view.connectBtn.setOnAction(event -> model.connectToUser());
+    view.connectBtn.setOnAction(event -> {
+      Thread thread = new Thread(model::connectToUser);
+      thread.start();
+    });
 
     // formats the key while typing
     StringProperty key = view.keyFld.textProperty();
@@ -100,11 +98,14 @@ public class RsccSupportPresenter implements ControlledPresenter {
     view.keyInputTitledPane.expandedProperty().addListener(
         (observable, oldValue, newValue) -> {
           if (oldValue != newValue) {
-            if (newValue) {
+            if (newValue && view.startServiceTitledPane.isExpanded()) {
               view.startServiceTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.startServiceInnerPane);
               view.contentBox.getChildren().add(1, view.keyInputInnerPane);
-              model.setConnectionStatus("", 0);
+            }
+            // keep titledPane open if it was closed by clicking on it while it is already open
+            if (oldValue && !view.startServiceTitledPane.isExpanded()) {
+              view.keyInputTitledPane.setExpanded(true);
             }
           }
         }
@@ -112,35 +113,30 @@ public class RsccSupportPresenter implements ControlledPresenter {
     view.startServiceTitledPane.expandedProperty().addListener(
         (observable, oldValue, newValue) -> {
           if (oldValue != newValue) {
-            if (newValue) {
+            if (newValue && view.keyInputTitledPane.isExpanded()) {
               view.keyInputTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.keyInputInnerPane);
               view.contentBox.getChildren().add(2, view.startServiceInnerPane);
-              model.setConnectionStatus(view.strings.statusBoxServiceIdle, 0);
+            }
+            // keep titledPane open if it was closed by clicking on it while it is already open
+            if (oldValue && !newValue && !view.keyInputTitledPane.isExpanded()) {
+              view.startServiceTitledPane.setExpanded(true);
             }
           }
         }
     );
 
-    // handles statusBox updates from connectionStatus property in model
-    model.connectionStatusStyleProperty().addListener((observable, oldValue, newValue) -> {
-      view.statusBox.getStyleClass().clear();
-      view.statusBox.getStyleClass().add(newValue);
-      view.keyInputStatusBox.getStyleClass().clear();
-      view.keyInputStatusBox.getStyleClass().add(newValue);
-    });
+    view.statusBarKeyInput.setStatusProperties(model.statusBarTextKeyInputProperty(),
+        model.statusBarStyleClassKeyInputProperty());
 
-    model.connectionStatusTextProperty().addListener((observable, oldValue, newValue) -> {
-      Platform.runLater(() -> {
-        view.statusLbl.textProperty().set(newValue);
-        view.keyInputStatusLbl.textProperty().set(newValue);
-      });
-    });
+    view.statusBarStartService.setStatusProperties(model.statusBarTextStartServiceProperty(),
+        model.statusBarStyleClassStartServiceProperty());
 
     // make it possible to connect by pressing enter
     view.keyFld.setOnKeyPressed(ke -> {
       if (ke.getCode() == KeyCode.ENTER && keyUtil.isKeyValid()) {
-        model.connectToUser();
+        Thread thread = new Thread(model::connectToUser);
+        thread.start();
       }
     });
 
@@ -166,9 +162,11 @@ public class RsccSupportPresenter implements ControlledPresenter {
     view.startServiceBtn.setOnAction(event -> {
       if (model.isVncViewerProcessRunning()) {
         view.startServiceBtn.setText(view.strings.startService);
-        model.stopVncViewerAsService();
+        Thread thread = new Thread(model::stopVncViewerAsService);
+        thread.start();
       } else {
-        model.startVncViewerAsService();
+        Thread thread = new Thread(model::startVncViewerAsService);
+        thread.start();
         view.startServiceBtn.setText(view.strings.stopService);
       }
     });
@@ -198,10 +196,25 @@ public class RsccSupportPresenter implements ControlledPresenter {
    */
   private void initHeader() {
     // Set all the actions regarding buttons in this method.
-    headerPresenter.setBackBtnAction(event -> viewParent.setView("home"));
-    headerPresenter.setHelpBtnAction(event ->
-        popOverHelper.helpPopOver.show(view.headerView.helpBtn));
-    headerPresenter.setSettingsBtnAction(event ->
-        popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
+    headerPresenter.setBackBtnAction(event -> {
+      viewParent.setView("home");
+      view.keyFld.clear();
+      model.killConnection();
+    });
+
+    headerPresenter.setHelpBtnAction(event -> {
+      if (popOverHelper.helpPopOver.isShowing()) {
+        popOverHelper.helpPopOver.hide();
+      } else {
+        popOverHelper.helpPopOver.show(view.headerView.helpBtn);
+      }
+    });
+    headerPresenter.setSettingsBtnAction(event -> {
+      if (popOverHelper.settingsPopOver.isShowing()) {
+        popOverHelper.settingsPopOver.hide();
+      } else {
+        popOverHelper.settingsPopOver.show(view.headerView.settingsBtn);
+      }
+    });
   }
 }

@@ -58,7 +58,7 @@ then
 fi
 
 ### get the private key of the connection
-keyfile=$(tempfile)
+keyfile=$(mktemp)
 echo -e "$key\n" | ssh -o StrictHostKeyChecking=no -p $p2p_port -i keys/get.key vnc@$p2p_server > $keyfile 2>>$logfile
 
 ### get the remote port from the key file

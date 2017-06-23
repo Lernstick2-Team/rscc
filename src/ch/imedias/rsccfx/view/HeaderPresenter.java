@@ -24,6 +24,11 @@ public class HeaderPresenter {
   public HeaderPresenter(Rscc model, HeaderView view) {
     this.model = model;
     this.view = view;
+    setupBindings();
+  }
+
+  private void setupBindings() {
+    view.backBtn.disableProperty().bind(model.vncSessionRunningProperty());
   }
 
   /**
@@ -81,5 +86,4 @@ public class HeaderPresenter {
   public BooleanProperty getSettingsBtnDisableProperty() {
     return view.settingsBtn.disableProperty();
   }
-
 }

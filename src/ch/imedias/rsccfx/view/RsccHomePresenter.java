@@ -3,6 +3,7 @@ package ch.imedias.rsccfx.view;
 import ch.imedias.rsccfx.ControlledPresenter;
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.ViewController;
+import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import java.util.logging.Logger;
 import javafx.scene.Scene;
@@ -19,6 +20,7 @@ public class RsccHomePresenter implements ControlledPresenter {
   private static final Double VIEW_BTN_HEIGHT_DIVISOR = 2.5d;
   private static final Double VIEW_BTN_WIDTH_DIVISOR = 1.5d;
 
+  private final Strings strings = new Strings();
   private final Rscc model;
   private final RsccHomeView view;
   private final HeaderPresenter headerPresenter;
@@ -73,11 +75,9 @@ public class RsccHomePresenter implements ControlledPresenter {
 
   private void attachEvents() {
     view.supportViewBtn.setOnAction(event -> {
-      model.setConnectionStatus("Waiting for key input", 0);
       viewParent.setView(RsccApp.SUPPORT_VIEW);
     });
     view.requestViewBtn.setOnAction(event -> {
-      model.setConnectionStatus("", 0);
       Thread thread = new Thread(model::requestKeyFromServer);
       thread.start();
       viewParent.setView(RsccApp.REQUEST_VIEW);
@@ -88,7 +88,12 @@ public class RsccHomePresenter implements ControlledPresenter {
     // set all the actions regarding buttons in this method
     headerPresenter.setBackBtnVisibility(false);
     headerPresenter.setSettingsBtnVisibility(false);
-    headerPresenter.setHelpBtnAction(event ->
-        popOverHelper.helpPopOver.show(view.headerView.helpBtn));
+    headerPresenter.setHelpBtnAction(event -> {
+      if (popOverHelper.helpPopOver.isShowing()) {
+        popOverHelper.helpPopOver.hide();
+      } else {
+        popOverHelper.helpPopOver.show(view.headerView.helpBtn);
+      }
+    });
   }
 }

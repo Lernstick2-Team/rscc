@@ -113,6 +113,25 @@ This will create all the necessary files on your local machine (e.g. desktop ent
 
 End with an example of getting some data out of the system or using it for a little demo
 
+## Settings & Recommendations
+Standard settings try to establish a direct connection between clients over ICE. 
+This can be disabled by activating the setting "force server mode".
+If any of the clients activates this setting, ICE process will be skipped.
+The connection over the server might be faster. While using direct connection, it is recommended to use the
+BGR 233 mode to reduce traffic and increase speed.
+View only restricts the VNC protocoll to view only.
+
+## Expertsettings
+Keyserver IP address: Address of the server which generates the key and matches up clients.
+Keyserver HTTP-Port: Communication Port of Keyserver
+VNC Port: Port on which the Vnc-Server runs
+ICE Port: Port over which the direct traffic is sent and received
+UDP Packet Size: max Size of UDP-packets
+Proxy Port: Redirection of VNC-Packets to this port.
+Stunserver Port: try to reach Stun-Server over this port.
+StunServers: List of potential Stun-Servers.
+
+
 ## Running the tests
 
 The whitebox tests are being carried out using JUnit 4 and Mockito. Therefore you can run them in your favorite IDE or by using Maven.
@@ -164,7 +183,6 @@ GPL
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
 * RUDP: https://sourceforge.net/projects/rudp/
 * Proxy Server: http://www.java2s.com/Code/Java/Network-Protocol/Asimpleproxyserver.htm
 * Ice4j https://github.com/jitsi/ice4j#readme

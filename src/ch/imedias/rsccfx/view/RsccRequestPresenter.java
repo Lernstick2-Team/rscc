@@ -3,13 +3,14 @@ package ch.imedias.rsccfx.view;
 import ch.imedias.rsccfx.ControlledPresenter;
 import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.ViewController;
+import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.xml.Supporter;
 import ch.imedias.rsccfx.model.xml.SupporterHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -30,7 +31,7 @@ public class RsccRequestPresenter implements ControlledPresenter {
   private static final Logger LOGGER =
       Logger.getLogger(RsccRequestPresenter.class.getName());
   private static final int GRID_MAXIMUM_COLUMNS = 3;
-  public static List<Supporter> supporters = new ArrayList<>();
+  private static final List<Supporter> supporters = new ArrayList<>();
   private final Rscc model;
   private final RsccRequestView view;
   private final HeaderPresenter headerPresenter;
@@ -38,6 +39,8 @@ public class RsccRequestPresenter implements ControlledPresenter {
   private ViewController viewParent;
   private PopOverHelper popOverHelper;
   private int buttonSize = 0;
+  Strings strings = new Strings();
+
 
   /**
    * Initializes a new RsccRequestPresenter with the matching view.
@@ -51,7 +54,6 @@ public class RsccRequestPresenter implements ControlledPresenter {
     headerPresenter = new HeaderPresenter(model, view.headerView);
     supporterHelper = new SupporterHelper(model);
     initHeader();
-    initBindings();
     initSupporterList();
     attachEvents();
     setupBindings();
@@ -68,10 +70,12 @@ public class RsccRequestPresenter implements ControlledPresenter {
 
   private void attachEvents() {
     //Disconnects session on button click
-    view.disconnectBtn.setOnAction(event -> {
-      model.killConnection();
-      view.disconnectBtn.setDisable(true);
-    });
+    view.disconnectBtn.setOnAction(
+        event -> {
+          Thread thread = new Thread(model::killConnection);
+          thread.start();
+        }
+    );
 
     view.reloadKeyBtn.setOnAction(
         event -> {
@@ -80,42 +84,42 @@ public class RsccRequestPresenter implements ControlledPresenter {
         }
     );
 
+    view.resetBtn.setOnAction(
+        event -> resetSupporter()
+    );
+
     // handles TitledPane switching between the two TitledPanes
     view.keyGenerationTitledPane.expandedProperty().addListener(
         (observable, oldValue, newValue) -> {
           if (oldValue != newValue) {
-            if (newValue) {
+            if (newValue && view.supporterTitledPane.isExpanded()) {
               view.supporterTitledPane.setExpanded(false);
-              view.contentBox.getChildren().removeAll(view.supporterInnerBox);
+              view.contentBox.getChildren().removeAll(view.supporterOuterBox);
               view.contentBox.getChildren().add(1, view.keyGenerationInnerPane);
+            }
+            // keep titledPane open if it was closed by clicking on it while it is already open
+            if (oldValue && !view.supporterTitledPane.isExpanded()) {
+              view.keyGenerationTitledPane.setExpanded(true);
             }
           }
         }
     );
+
     view.supporterTitledPane.expandedProperty().addListener(
         (observable, oldValue, newValue) -> {
           if (oldValue != newValue) {
-            if (newValue) {
+            if (newValue && view.keyGenerationTitledPane.isExpanded()) {
               view.keyGenerationTitledPane.setExpanded(false);
               view.contentBox.getChildren().removeAll(view.keyGenerationInnerPane);
-              view.contentBox.getChildren().add(2, view.supporterInnerBox);
+              view.contentBox.getChildren().add(2, view.supporterOuterBox);
+            }
+            // keep titledPane open if it was closed by clicking on it while it is already open
+            if (oldValue && !view.keyGenerationTitledPane.isExpanded()) {
+              view.supporterTitledPane.setExpanded(true);
             }
           }
         }
     );
-
-    model.connectionStatusStyleProperty().addListener((observable, oldValue, newValue) -> {
-      Platform.runLater(() -> {
-        view.statusBox.getStyleClass().clear();
-        view.statusBox.getStyleClass().add(newValue);
-      });
-    });
-
-    model.connectionStatusTextProperty().addListener((observable, oldValue, newValue) -> {
-      Platform.runLater(() -> {
-        view.statusLbl.textProperty().set(newValue);
-      });
-    });
 
     model.vncSessionRunningProperty().addListener((observableValue, oldValue, newValue) -> {
           if (oldValue && !newValue
@@ -124,6 +128,12 @@ public class RsccRequestPresenter implements ControlledPresenter {
           }
         }
     );
+
+    view.statusBarKeyGeneration.setStatusProperties(model.statusBarTextKeyGenerationProperty(),
+        model.statusBarStyleClassKeyGenerationProperty());
+
+    view.statusBarSupporter.setStatusProperties(model.statusBarTextSupporterProperty(),
+        model.statusBarStyleClassSupporterProperty());
   }
 
   /**
@@ -149,11 +159,20 @@ public class RsccRequestPresenter implements ControlledPresenter {
       model.killConnection();
       viewParent.setView(RsccApp.HOME_VIEW);
     });
-    headerPresenter.setHelpBtnAction(event ->
-        popOverHelper.helpPopOver.show(view.headerView.helpBtn));
-    headerPresenter.setSettingsBtnAction(event ->
-        popOverHelper.settingsPopOver.show(view.headerView.settingsBtn));
-
+    headerPresenter.setHelpBtnAction(event -> {
+      if (popOverHelper.helpPopOver.isShowing()) {
+        popOverHelper.helpPopOver.hide();
+      } else {
+        popOverHelper.helpPopOver.show(view.headerView.helpBtn);
+      }
+    });
+    headerPresenter.setSettingsBtnAction(event -> {
+      if (popOverHelper.settingsPopOver.isShowing()) {
+        popOverHelper.settingsPopOver.hide();
+      } else {
+        popOverHelper.settingsPopOver.show(view.headerView.settingsBtn);
+      }
+    });
   }
 
   /**
@@ -161,13 +180,11 @@ public class RsccRequestPresenter implements ControlledPresenter {
    */
   private void setupBindings() {
     headerPresenter.getSettingsBtnDisableProperty().bind(model.vncServerProcessRunningProperty());
-  }
 
-
-  private void initBindings() {
-    // disable disconnect button if no session is started
-    view.disconnectBtn.disableProperty().bind(model.vncSessionRunningProperty().not());
-
+    // make disconnect button invisible if no session is running
+    view.disconnectBtn.visibleProperty().bind(model.vncSessionRunningProperty());
+    view.reloadKeyBtn.disableProperty().bind(Bindings.or(model.vncSessionRunningProperty(),
+        model.isKeyRefreshInProgressProperty()));
   }
 
   /**
@@ -198,25 +215,29 @@ public class RsccRequestPresenter implements ControlledPresenter {
     attachContextMenu(supporterBtn, supporter);
 
     supporterBtn.setOnAction(event -> {
-      // Open Dialog to modify data
-      SupporterAttributesDialog supporterAttributesDialog =
-          new SupporterAttributesDialog(supporter);
-      boolean supporterSaved = supporterAttributesDialog.show();
-      Supporter lastSupporter = supporters.get(supporters.size() - 1);
-      if (supporterSaved) {
-        if (lastSupporter == supporter) {
-          createNewSupporterBtn(new Supporter());
-        }
-        // Update data in button name and save to preferences
-        supporterBtn.setText(supporter.toString());
-        supporterHelper.saveSupporters(supporters);
-      }
+      openDialog(supporter, supporterBtn, false);
     });
 
     int row = buttonSize / GRID_MAXIMUM_COLUMNS;
     int column = buttonSize % GRID_MAXIMUM_COLUMNS;
     view.supporterInnerPane.add(supporterBtn, column, row);
     buttonSize++;
+  }
+
+  private void openDialog(Supporter supporter, Button supporterBtn, boolean editMode) {
+    // Open Dialog to modify data
+    SupporterAttributesDialog supporterAttributesDialog =
+        new SupporterAttributesDialog(supporter, this.model, editMode);
+    boolean supporterSaved = supporterAttributesDialog.show();
+    Supporter lastSupporter = supporters.get(supporters.size() - 1);
+    if (supporterSaved) {
+      if (lastSupporter == supporter) {
+        createNewSupporterBtn(new Supporter());
+      }
+      // Update data in button name and save to preferences
+      supporterBtn.setText(supporter.toString());
+      supporterHelper.saveSupporters(supporters);
+    }
   }
 
   /**
@@ -246,31 +267,39 @@ public class RsccRequestPresenter implements ControlledPresenter {
     supporterHelper.saveSupporters(supporters);
   }
 
+  /**
+   * Resets the supporter buttons to the default.
+   */
+  public void resetSupporter() {
+    view.supporterInnerPane.getChildren().clear();
+
+    buttonSize = 0;
+
+    supporters.clear();
+
+    supporterHelper.getDefaultSupporters().stream()
+        .forEachOrdered(supporter -> createNewSupporterBtn(supporter));
+
+    supporterHelper.saveSupporters(supporters);
+  }
+
   private void attachContextMenu(Button button, Supporter supporter) {
     // Create ContextMenu
     final ContextMenu contextMenu = new ContextMenu();
 
-    MenuItem editMenuItem = new MenuItem("Edit");
+    MenuItem editMenuItem = new MenuItem(strings.dialogEditButtonText);
 
     editMenuItem.setOnAction(event -> {
-      // Open Dialog to modify data
-      SupporterAttributesDialog supporterAttributesDialog =
-          new SupporterAttributesDialog(supporter);
-      boolean supporterSaved = supporterAttributesDialog.show();
-      if (supporterSaved) {
-        // Update data in button name and save to preferences
-        button.setText(supporter.toString());
-        supporterHelper.saveSupporters(supporters);
-      }
+      openDialog(supporter, button, true);
     });
 
-    MenuItem connectMenuItem = new MenuItem("Call");
+    MenuItem connectMenuItem = new MenuItem(strings.dialogConnectButtonText);
     connectMenuItem.setOnAction(event -> {
       model.callSupporterDirect(supporter.getAddress(), supporter.getPort(),
           supporter.isEncrypted());
     });
 
-    MenuItem deleteMenuItem = new MenuItem("Delete");
+    MenuItem deleteMenuItem = new MenuItem(strings.dialogDeleteButtonText);
     deleteMenuItem.setOnAction(event -> deleteSupporterBtn(button, supporter));
 
     // Add MenuItem to ContextMenu
