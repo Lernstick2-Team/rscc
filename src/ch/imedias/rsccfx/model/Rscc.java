@@ -4,15 +4,34 @@ import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.connectionutils.Rscccfp;
 import ch.imedias.rsccfx.model.connectionutils.RunRudp;
 import ch.imedias.rsccfx.model.util.KeyUtil;
+import com.google.common.io.Files;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Properties;
 import java.util.function.UnaryOperator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -26,6 +45,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javax.swing.*;
 
 
 /**
@@ -118,6 +138,8 @@ public class Rscc {
   private final IntegerProperty stunServerPort = new SimpleIntegerProperty();
   private final BooleanProperty forcingServerMode = new SimpleBooleanProperty(false);
 
+  private int remote_port;
+
   //States
   private final BooleanProperty vncSessionRunning = new SimpleBooleanProperty(false);
   private final BooleanProperty vncServerProcessRunning = new SimpleBooleanProperty(false);
@@ -162,6 +184,7 @@ public class Rscc {
     this.keyUtil = keyUtil;
     defineResourcePath();
     loadUserPreferences();
+
   }
 
   /**
@@ -247,6 +270,7 @@ public class Rscc {
       );
     }
   }
+
 
   /**
    * Extracts files from running JAR to folder.
@@ -350,6 +374,95 @@ public class Rscc {
 
 
   /**
+   * Run ssh command.
+   */
+  private void sshPortConnection(boolean sharing) {
+    JSch jsch;
+    File tempKeyFile = new File(pathToResourceDocker + "/keys/tmp.key");
+
+    try {
+      // Replaces: ssh -o StrictHostKeyChecking=no -p $p2p_port -i keys/create.key vnc@$p2p_server > $keyfile 2>>$logfile
+      // Replaces: echo -e "$key\n" | ssh -o StrictHostKeyChecking=no -p $p2p_port -i keys/get.key vnc@$p2p_server > $keyfile 2>>$logfile
+
+      jsch = new JSch();
+
+      if (sharing) {
+        jsch.addIdentity(pathToResourceDocker + "/keys/create.key");
+      } else {
+        jsch.addIdentity(pathToResourceDocker + "/keys/get.key");
+        LOGGER.info("set keyfile");
+      }
+      Session session = jsch.getSession("vnc", getKeyServerIp(), 2201);
+
+      Properties config = new Properties();
+      config.put("StrictHostKeyChecking", "no");
+      session.setConfig(config);
+
+      session.connect();
+      LOGGER.info("session connected");
+      Channel channel = session.openChannel("shell");
+
+      channel.setInputStream(System.in);
+      channel.setOutputStream(System.out);
+
+      BufferedInputStream bufferedInputStream = new BufferedInputStream(channel.getInputStream());
+      BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(channel.getOutputStream());
+
+      BufferedReader r = new BufferedReader(
+          new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8));
+      OutputStreamWriter w = new OutputStreamWriter(bufferedOutputStream, StandardCharsets.UTF_8);
+
+      channel.connect();
+
+      if (!sharing){
+        w.write(keyUtil.getKey() + "\n");
+        LOGGER.info("flushed outputstream");
+      }
+      w.close();
+
+      String firstline = r.readLine();
+      System.out.println(firstline);
+      String secondline = r.readLine();
+      System.out.println(secondline);
+
+      keyUtil.setKey(firstline);
+      remote_port = Integer.parseInt(secondline);
+      LOGGER.info("RemotePort defined on " + remote_port);
+
+      String bla;
+      PrintWriter pw = new PrintWriter(new FileWriter(tempKeyFile));
+      while ((bla = r.readLine()) != null) {
+        pw.println(bla);
+      }
+      pw.close();
+
+      channel.disconnect();
+      session.disconnect();
+
+      jsch = new JSch();
+      jsch.addIdentity(tempKeyFile.getPath());
+      session=jsch.getSession("vnc", getKeyServerIp(), 2201);
+      config = new Properties();
+      config.put("StrictHostKeyChecking", "no");
+      session.setConfig(config);
+
+      session.connect();
+      if (sharing){
+        session.setPortForwardingR(remote_port, "localhost", getVncPort());
+      } else {
+        session.setPortForwardingL(getVncPort(), "localhost", remote_port);
+      }
+      System.out.println("set remote forwarding");
+
+    } catch (JSchException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  /**
    * Requests a key from the key server.
    */
   public void requestKeyFromServer() {
@@ -360,19 +473,21 @@ public class Rscc {
 
     setStatusBarKeyGeneration(strings.statusBarRequestingKey, STATUS_BAR_STYLE_INITIALIZE);
 
-    String command = systemCommander.commandStringGenerator(
-        pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()));
+    sshPortConnection(true);
 
-    SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
-
-    if (returnValues.getExitCode() != 0) {
-      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
-      setStatusBarKeyGeneration(strings.statusBarKeyGeneratedFailed, STATUS_BAR_STYLE_FAIL);
-      setIsKeyRefreshInProgress(false);
-      return;
-    }
-
-    keyUtil.setKey(returnValues.getOutputString()); // update key in model
+//    String command = systemCommander.commandStringGenerator(
+//        pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()));
+//
+//    SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
+//
+//    if (returnValues.getExitCode() != 0) {
+//      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+//      setStatusBarKeyGeneration(strings.statusBarKeyGeneratedFailed, STATUS_BAR_STYLE_FAIL);
+//      setIsKeyRefreshInProgress(false);
+//      return;
+//    }
+//
+//    keyUtil.setKey(returnValues.getOutputString()); // update key in model
     rscccfp = new Rscccfp(this, true);
     rscccfp.setDaemon(true);
     rscccfp.start();
@@ -438,8 +553,8 @@ public class Rscc {
   /**
    * Updates StatusBar on KeyInput.
    *
-   * @param text  The Text to set.
-   * @param styleClass  The StyleClass to set to.
+   * @param text       The Text to set.
+   * @param styleClass The StyleClass to set to.
    */
   public void setStatusBarKeyInput(String text, String styleClass) {
     statusBarTextKeyInputProperty().set(text);
@@ -478,21 +593,23 @@ public class Rscc {
 
     keyServerSetup();
 
-    String command = systemCommander.commandStringGenerator(pathToResourceDocker,
-        "port_connect.sh", Integer.toString(getVncPort()), keyUtil.getKey());
+    sshPortConnection(false);
 
-    setStatusBarKeyInput(strings.statusBarKeyserverConnected, STATUS_BAR_STYLE_INITIALIZE);
-
-    SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
-
-    if (returnValues.getExitCode() != 0) {
-      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
-      setStatusBarKeyInput(strings.statusBarKeyNotVerified + getKeyUtil().getKey(),
-          STATUS_BAR_STYLE_FAIL);
-
-      setConnectionEstablishmentRunning(false);
-      return;
-    }
+//    String command = systemCommander.commandStringGenerator(pathToResourceDocker,
+//        "port_connect.sh", Integer.toString(getVncPort()), keyUtil.getKey());
+//
+//    setStatusBarKeyInput(strings.statusBarKeyserverConnected, STATUS_BAR_STYLE_INITIALIZE);
+//
+//    SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
+//
+//    if (returnValues.getExitCode() != 0) {
+//      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+//      setStatusBarKeyInput(strings.statusBarKeyNotVerified + getKeyUtil().getKey(),
+//          STATUS_BAR_STYLE_FAIL);
+//
+//      setConnectionEstablishmentRunning(false);
+//      return;
+//    }
 
     rscccfp = new Rscccfp(this, false);
     rscccfp.setDaemon(true);
