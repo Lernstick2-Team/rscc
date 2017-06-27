@@ -117,6 +117,8 @@ public class RsccApp extends Application {
     styleSheet = getClass().getClassLoader()
         .getResource("css/styles.css").toExternalForm();
 
+
+
     SystemCommander systemCommander = new SystemCommander();
     model = new Rscc(systemCommander, new KeyUtil());
     ViewController mainView = new ViewController();

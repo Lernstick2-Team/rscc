@@ -14,7 +14,7 @@ public class VncViewerHandler {
   private static final Logger LOGGER =
       Logger.getLogger(VncViewerHandler.class.getName());
   private final Rscc model;
-  private final String vncViewerName = "vncviewer";
+  private final CommandHandler command;
   private Process process;
 
   /**
@@ -24,6 +24,7 @@ public class VncViewerHandler {
    */
   public VncViewerHandler(Rscc model) {
     this.model = model;
+    command = model.getCommand();
   }
 
 
@@ -88,16 +89,16 @@ public class VncViewerHandler {
 
   private String getViewerCommand(String hostAddress, Integer vncViewerPort, boolean listenMode) {
     StringBuilder commandArray = new StringBuilder();
-    commandArray.append(vncViewerName);
+    commandArray.append(command.getVncViewer());
     if (listenMode) {
-      commandArray.append(" ").append("-listen");
+      commandArray.append(" ").append(command.getVncViewerListen());
     }
-    commandArray.append(" ").append("-CompressLevel");
+    commandArray.append(" ").append(command.getVncViewerCompression());
     commandArray.append(" ").append(Integer.toString((int) model.getVncCompression()));
-    commandArray.append(" ").append("-QualityLevel");
+    commandArray.append(" ").append(command.getVncViewerQuality());
     commandArray.append(" ").append(Integer.toString((int) model.getVncQuality()));
     if (model.getVncBgr233()) {
-      commandArray.append(" ").append("-LowColorLevel");
+      commandArray.append(" ").append(command.getVncViewerBgr233());
     }
     if (!listenMode) {
       commandArray.append(" ").append(hostAddress + "::" + vncViewerPort);
