@@ -137,7 +137,7 @@ public class Rscc {
   private String pathToResources;
   private String pathToResourceDocker;
   private String pathToDefaultSupporters;
-  private String pathToOsxServer;
+  private static String pathToOsxServer;
   private boolean isLocalIceSuccessful = false;
   private boolean isRemoteIceSuccessful = false;
   private InetAddress remoteClientIpAddress;
@@ -996,5 +996,9 @@ public class Rscc {
 
   public CommandHandler getCommand() {
     return command;
+  }
+
+  public static String getPathToOsxServer() {
+    return pathToOsxServer;
   }
 }
