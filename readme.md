@@ -77,7 +77,7 @@ These instructions will get you a copy of the project up and running on your loc
 - Working Linux installation
   - preferably latest [Lernstick build](http://lernstick.ch/releases/lernstick_debian8_latest.iso)
 - Java IDE of your choice (e.g. IntelliJ Idea, Eclipse, NetBeans, ...)
-- Most recent []Java 8 JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+- Most recent [Java 8 JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - VNC server (x11vnc)
 - VNC viewer (vncviewer)
 - Python
