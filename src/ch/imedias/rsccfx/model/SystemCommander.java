@@ -24,6 +24,9 @@ public class SystemCommander {
     try {
       StringBuilder output = new StringBuilder();
       StringBuilder error = new StringBuilder();
+
+      LOGGER.fine("Running command '" + command + "'");
+
       // Execute Command
       process = Runtime.getRuntime().exec(command);
       int exitCode = process.waitFor();
@@ -36,14 +39,24 @@ public class SystemCommander {
       String line;
       while ((line = outputReader.readLine()) != null) {
         output.append(line).append("\n");
+        // FIXME: On Windows if bash runs ssh which goes to background, reading from process stdout doesn't end until
+        // ssh is not terminated.
+        // Read only first line of output (which contains access key).
+        break;
       }
       while ((line = errorReader.readLine()) != null) {
         error.append(line).append("\n");
       }
       outputReader.close();
       errorReader.close();
+
+      if (!error.toString().isEmpty() || exitCode != 0) {
+        LOGGER.warning("Command '" + command + "' exit code: " + exitCode + ", stdout:\n" + output.toString() +
+                "\nstderr:\n" + error.toString());
+      }
+
       response.setOutputString(output.toString().trim());
-      response.setErrorString(output.toString().trim());
+      response.setErrorString(error.toString().trim());
     } catch (Exception exception) {
       LOGGER.severe("Exception thrown when running the command: "
           + command
@@ -88,6 +101,13 @@ public class SystemCommander {
   public String commandStringGenerator(
       String pathToScript, String scriptName, String... attributes) {
     StringBuilder commandString = new StringBuilder();
+
+    boolean windows = true; // TODO
+    //String bashPath = "C:/Users/pcuser/rscc-develop/shell_w32/bash.exe"; // TODO
+    String bashPath = "C:\\MinGW\\msys\\1.0\\bin\\bash.exe"; // TODO
+    if (windows) {
+      commandString.append(bashPath).append(" ");
+    }
 
     if (pathToScript != null) {
       // remove all slashes at the end

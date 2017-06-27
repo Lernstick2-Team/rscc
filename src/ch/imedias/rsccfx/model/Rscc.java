@@ -16,6 +16,7 @@ import java.util.Enumeration;
 import java.util.function.UnaryOperator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javafx.beans.property.BooleanProperty;
@@ -86,7 +87,7 @@ public class Rscc {
   private static final String[] EXTRACTED_RESOURCES =
       {DOCKER_FOLDER_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
   public static final UnaryOperator<String> REMOVE_FILE_IN_PATH =
-      string -> string.replaceFirst("file:", "");
+      string -> string.replaceFirst("file:/", "");
   private final SystemCommander systemCommander;
 
   //StatusBar
@@ -150,6 +151,9 @@ public class Rscc {
    * @param keyUtil         a KeyUtil-object which stores the key, validates and formats it.
    */
   public Rscc(SystemCommander systemCommander, KeyUtil keyUtil) {
+    // TODO
+    LOGGER.setLevel(Level.FINE);
+
     if (systemCommander == null) {
       LOGGER.info("Parameter SystemCommander is NULL");
       throw new IllegalArgumentException("Parameter SystemCommander is NULL");
@@ -235,6 +239,10 @@ public class Rscc {
           REMOVE_FILE_IN_PATH.apply(
               getClass().getClassLoader().getResource(DEFAULT_SUPPORTERS_FILE_NAME).getFile()
           );
+      // TODO: on Windows getFile() returns path like "/C:\...", removing starting "/".
+      // Crossplaform way to get resource path should be used.
+      pathToResourceDocker = pathToResourceDocker.substring(1);
+      pathToDefaultSupporters = pathToDefaultSupporters.substring(1);
     } else {
       LOGGER.fine("Running in JAR");
       pathToResources = userHome + "/" + RSCC_FOLDER_NAME;

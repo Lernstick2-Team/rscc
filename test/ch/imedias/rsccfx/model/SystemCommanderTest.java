@@ -42,6 +42,12 @@ public class SystemCommanderTest {
   public void testExecuteTerminalCommand() throws Exception {
     String testTerminalCommand = "testExecuteTerminalCommand";
     StringBuilder command = new StringBuilder("echo ").append(testTerminalCommand);
+    // TODO
+    boolean windows = true;
+    if (windows) {
+      // There is no "echo" command (executable) on windows, "echo" is part of cmd.exe syntax.
+      command = command.insert(0, "cmd /c ");
+    }
     SystemCommanderReturnValues returnValues = systemCommander
         .executeTerminalCommand(command.toString());
     assertEquals(testTerminalCommand, returnValues.getOutputString());

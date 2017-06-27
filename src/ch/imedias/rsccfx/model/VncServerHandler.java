@@ -113,11 +113,15 @@ public class VncServerHandler {
         try {
 
           StringBuilder commandArray = new StringBuilder();
+          /*
           commandArray.append(vncServerName);
           commandArray.append(" ").append("-localhost");
           if (model.getVncViewOnly()) {
             commandArray.append(" ").append("-viewonly");
           }
+          */
+          // TODO
+          commandArray.append("C:\\Program Files\\TightVNC\\tvnserver.exe -run");
 
           LOGGER.info("Strating VNC-Server with command: " + commandArray.toString());
 

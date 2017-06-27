@@ -29,7 +29,7 @@ public class RsccApp extends Application {
       Logger.getLogger(RsccApp.class.getName());
 
   public static final String APP_NAME = "Remote Support";
-  public static final String APP_VERSION = "0.8";
+  public static final String APP_VERSION = "0.7.1";
 
   /**
    * Declares views for use with ViewController.
@@ -71,7 +71,7 @@ public class RsccApp extends Application {
 
   @Override
   public void start(Stage stage) {
-    setLogLevel(Level.INFO);
+    setLogLevel(Level.FINE);
 
     // Get Screensize
     Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();

@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/bin/bash -x
 ### set the p2p_server to be used
 
 ### go to the script directory
 cd $(dirname $0)
 
 ### include config file
-. ./ssh.rc
+. ssh.rc
 
 ### get the arguments
 if [ "$1" = '' ]
@@ -33,7 +33,8 @@ webserver="http://$p2p_server:$http_port"
 p2p_port=$(wget $webserver/port -O- 2>$logfile)
 
 ### remove Server from known_hosts
-ssh-keygen -R [$p2p_server]:$p2p_port
+# We shouldn't modify user's known_hosts (but we do currently)... 
+#ssh-keygen -R [$p2p_server]:$p2p_port
 
 ### update ssh.rc
 sed -i ssh.rc \
