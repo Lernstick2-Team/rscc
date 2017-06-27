@@ -4,11 +4,12 @@ import com.google.common.base.CharMatcher;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SystemCommander {
   private static final Logger LOGGER =
-      Logger.getLogger(SystemCommander.class.getName());
+      LogManager.getLogger(SystemCommander.class.getName());
 
   /**
    * Executes a command in the Linux terminal.
@@ -45,7 +46,7 @@ public class SystemCommander {
       response.setOutputString(output.toString().trim());
       response.setErrorString(output.toString().trim());
     } catch (Exception exception) {
-      LOGGER.severe("Exception thrown when running the command: "
+      LOGGER.error("Exception thrown when running the command: "
           + command
           + "\n Exception Message: " + exception.getMessage());
       throw new IllegalArgumentException();
@@ -65,7 +66,7 @@ public class SystemCommander {
     try {
       process = Runtime.getRuntime().exec(command);
     } catch (Exception exception) {
-      LOGGER.severe("Exception thrown when running the command: "
+      LOGGER.error("Exception thrown when running the command: "
           + command
           + "\n Exception Message: " + exception.getMessage());
       throw new IllegalArgumentException();

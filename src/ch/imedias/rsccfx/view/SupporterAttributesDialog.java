@@ -5,9 +5,7 @@ import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.xml.Supporter;
 import ch.imedias.rsccfx.view.util.NumberTextField;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -21,6 +19,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Creates the DialogPane by SupporterButton click.
@@ -28,7 +28,7 @@ import javafx.scene.layout.Priority;
 public class SupporterAttributesDialog extends DialogPane {
 
   private static final Logger LOGGER =
-      Logger.getLogger(SupporterAttributesDialog.class.getName());
+      LogManager.getLogger(SupporterAttributesDialog.class.getName());
 
   private static final int DEFAULT_PORT = 5500;
 

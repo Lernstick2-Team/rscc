@@ -9,7 +9,6 @@ import ch.imedias.rsccfx.model.xml.Supporter;
 import ch.imedias.rsccfx.model.xml.SupporterHelper;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -22,6 +21,8 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Defines the behaviour of interactions
@@ -29,7 +30,7 @@ import javafx.scene.layout.Priority;
  */
 public class RsccRequestPresenter implements ControlledPresenter {
   private static final Logger LOGGER =
-      Logger.getLogger(RsccRequestPresenter.class.getName());
+      LogManager.getLogger(RsccRequestPresenter.class.getName());
   private static final int GRID_MAXIMUM_COLUMNS = 3;
   private static final List<Supporter> supporters = new ArrayList<>();
   private final Rscc model;

@@ -5,12 +5,13 @@ import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.ViewController;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.util.KeyUtil;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Presenter class of RsccSupportView. Defines the behaviour of interactions
@@ -19,7 +20,7 @@ import javafx.scene.input.KeyCode;
  */
 public class RsccSupportPresenter implements ControlledPresenter {
   private static final Logger LOGGER =
-      Logger.getLogger(RsccSupportPresenter.class.getName());
+      LogManager.getLogger(RsccSupportPresenter.class.getName());
 
   private static final double WIDTH_SUBTRACTION_ENTERKEY = 100d;
   private final Rscc model;

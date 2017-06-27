@@ -1,14 +1,14 @@
 package ch.imedias.rsccfx.view;
 
 import ch.imedias.rsccfx.RsccApp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.concurrent.Worker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -16,7 +16,7 @@ import javafx.scene.web.WebView;
  */
 public class HeaderWebView extends VBox {
   private static final Logger LOGGER =
-      Logger.getLogger(HeaderWebView.class.getName());
+      LogManager.getLogger(HeaderWebView.class.getName());
 
   //final String wikiUrl = "https://wiki.lernstick.ch";
   final ProgressBar progressBar = new ProgressBar();
@@ -48,7 +48,7 @@ public class HeaderWebView extends VBox {
       //If local Help Page should be shown
       webEngine.load(url);
     } catch (NullPointerException e) {
-      LOGGER.log(Level.SEVERE, "File helpPage.html not found");
+      LOGGER.error("File helpPage.html not found");
     }
 
     //If external Wiki should be shown

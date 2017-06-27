@@ -9,13 +9,14 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Manages Supporter data, used in conjunction with the list of predefined supporters.
@@ -23,7 +24,7 @@ import javax.xml.bind.Unmarshaller;
 public class SupporterHelper {
 
   private static final Logger LOGGER =
-      Logger.getLogger(SupporterHelper.class.getName());
+      LogManager.getLogger(SupporterHelper.class.getName());
   private static final String SUPPORTER_PREFERENCES = "supporter";
   private final Preferences preferences = Preferences.userNodeForPackage(RsccApp.class);
   private Rscc model;
@@ -72,7 +73,7 @@ public class SupporterHelper {
     try {
       supportersXmlFile = new File(model.getPathToDefaultSupporters());
     } catch (NullPointerException e) {
-      LOGGER.warning("Path to default supporters file is null! Returning null.");
+      LOGGER.warn("Path to default supporters file is null! Returning null.");
       return null;
     }
     return getSupportersFromXml(supportersXmlFile);
@@ -85,7 +86,7 @@ public class SupporterHelper {
   private List<Supporter> getSupportersFromXml(String string) {
     List<Supporter> supportersList = null;
     if (string == null) {
-      LOGGER.warning("String to create a list of supporters from is null! Returning null.");
+      LOGGER.warn("String to create a list of supporters from is null! Returning null.");
       return null;
     }
     StringReader reader = new StringReader(string);
@@ -100,7 +101,7 @@ public class SupporterHelper {
       // gets thrown when the format is invalid, in this case return default
       supportersList = getDefaultSupporters();
     } catch (JAXBException e) {
-      LOGGER.warning(e.getMessage());
+      LOGGER.warn(e.getMessage());
     }
     return supportersList;
   }
@@ -122,7 +123,7 @@ public class SupporterHelper {
 
       string = writer.toString();
     } catch (JAXBException e) {
-      LOGGER.warning(e.getMessage());
+      LOGGER.warn(e.getMessage());
     }
     return string;
   }
@@ -132,7 +133,7 @@ public class SupporterHelper {
     try {
       output = Files.toString(file, Charsets.UTF_8);
     } catch (IOException e) {
-      LOGGER.warning("IOException during conversion of file to string! " + e.getMessage());
+      LOGGER.warn("IOException during conversion of file to string! " + e.getMessage());
     }
     return output;
   }

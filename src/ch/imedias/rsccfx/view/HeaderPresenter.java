@@ -1,17 +1,18 @@
 package ch.imedias.rsccfx.view;
 
 import ch.imedias.rsccfx.model.Rscc;
-import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Defines the behaviour of interaction and initializes the size of the GUI components.
  */
 public class HeaderPresenter {
   private static final Logger LOGGER =
-      Logger.getLogger(HeaderPresenter.class.getName());
+      LogManager.getLogger(HeaderPresenter.class.getName());
   private final Rscc model;
   private final HeaderView view;
 

@@ -9,10 +9,6 @@ import ch.imedias.rsccfx.view.RsccRequestPresenter;
 import ch.imedias.rsccfx.view.RsccRequestView;
 import ch.imedias.rsccfx.view.RsccSupportPresenter;
 import ch.imedias.rsccfx.view.RsccSupportView;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
@@ -20,13 +16,15 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Starts the Rscc Application.
  */
 public class RsccApp extends Application {
   private static final Logger LOGGER =
-      Logger.getLogger(RsccApp.class.getName());
+      LogManager.getLogger(RsccApp.class.getName());
 
   public static final String APP_NAME = "Remote Support";
   public static final String APP_VERSION = "0.7.1";
@@ -71,7 +69,6 @@ public class RsccApp extends Application {
 
   @Override
   public void start(Stage stage) {
-    setLogLevel(Level.INFO);
 
     // Get Screensize
     Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -174,13 +171,6 @@ public class RsccApp extends Application {
     model.killConnection();
     super.stop();
     System.exit(0);
-  }
-
-  private void setLogLevel(Level logLevel) {
-    Logger log = LogManager.getLogManager().getLogger("");
-    for (Handler h : log.getHandlers()) {
-      h.setLevel(logLevel);
-    }
   }
 
   public static double getRootTextSize() {

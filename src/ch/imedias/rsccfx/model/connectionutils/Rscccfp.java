@@ -9,7 +9,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ice4j.Transport;
 import org.ice4j.TransportAddress;
 import org.ice4j.ice.Agent;
@@ -25,7 +26,7 @@ import org.ice4j.ice.harvest.StunCandidateHarvester;
  */
 
 public class Rscccfp extends Thread {
-  private static final Logger LOGGER = Logger.getLogger(Rscccfp.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(Rscccfp.class.getName());
 
   private final Rscc model;
 

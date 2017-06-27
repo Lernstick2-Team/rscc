@@ -2,7 +2,6 @@ package ch.imedias.rsccfx.model.util;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Streams;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -11,6 +10,8 @@ import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Stores the key, handles the formatting and validation of the key.
@@ -18,7 +19,7 @@ import javafx.beans.property.StringProperty;
 public class KeyUtil {
 
   private static final Logger LOGGER =
-      Logger.getLogger(KeyUtil.class.getName());
+      LogManager.getLogger(KeyUtil.class.getName());
   public static final int KEY_DELIMITER_EVERY = 3;
   public static final int KEY_MAXIMUM_DIGITS = 9;
   public static final int KEY_AMOUNT_SPACES =
@@ -115,7 +116,7 @@ public class KeyUtil {
    */
   public void setKey(String key) {
     this.key.set(deformatKey(key));
-    LOGGER.fine("Key was set to: " + getKey() + " and " + getFormattedKey());
+    LOGGER.trace("Key was set to: " + getKey() + " and " + getFormattedKey());
   }
 
   public ReadOnlyStringProperty keyProperty() {

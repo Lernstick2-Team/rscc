@@ -1,11 +1,12 @@
 package ch.imedias.rsccfx;
 
 import java.util.HashMap;
-import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Displays all of the views and handles the switching between views.
@@ -14,7 +15,7 @@ import javafx.scene.layout.StackPane;
  */
 public class ViewController extends StackPane {
   private static final Logger LOGGER =
-      Logger.getLogger(ViewController.class.getName());
+      LogManager.getLogger(ViewController.class.getName());
 
   private final HashMap<String, Node> views = new HashMap<>();
   private final HashMap<String, ControlledPresenter> presenters = new HashMap<>();

@@ -4,7 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
  */
 public class VncServerHandler {
   private static final Logger LOGGER =
-      Logger.getLogger(VncServerHandler.class.getName());
+      LogManager.getLogger(VncServerHandler.class.getName());
   private final Rscc model;
   private final String vncServerName = "x11vnc";
   private Process process;
