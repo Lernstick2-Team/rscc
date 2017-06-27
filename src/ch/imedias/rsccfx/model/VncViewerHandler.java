@@ -39,20 +39,11 @@ public class VncViewerHandler {
         try {
           LOGGER.info("Starting VNC Viewer Connection");
 
-          StringBuilder commandArray = new StringBuilder();
-          commandArray.append(vncViewerName);
-          commandArray.append(" ").append("-compresslevel");
-          commandArray.append(" ").append(Integer.toString((int) model.getVncCompression()));
-          commandArray.append(" ").append("-quality");
-          commandArray.append(" ").append(Integer.toString((int) model.getVncQuality()));
-          if (model.getVncBgr233()) {
-            commandArray.append(" ").append("-bgr233");
-          }
-          commandArray.append(" ").append(hostAddress + "::" + vncViewerPort);
+          String command = getViewerCommand(hostAddress, vncViewerPort, false);
 
-          LOGGER.info("Strating VNCViewer with command: " + commandArray.toString());
+          LOGGER.info("Starting VNCViewer with command: " + command);
 
-          process = model.getSystemCommander().startProcess(commandArray.toString());
+          process = model.getSystemCommander().startProcess(command);
 
           model.setVncViewerProcessRunning(true);
 
@@ -95,6 +86,25 @@ public class VncViewerHandler {
     startViewerProcessThread.start();
   }
 
+  private String getViewerCommand(String hostAddress, Integer vncViewerPort, boolean listenMode) {
+    StringBuilder commandArray = new StringBuilder();
+    commandArray.append(vncViewerName);
+    if (listenMode) {
+      commandArray.append(" ").append("-listen");
+    }
+    commandArray.append(" ").append("-CompressLevel");
+    commandArray.append(" ").append(Integer.toString((int) model.getVncCompression()));
+    commandArray.append(" ").append("-QualityLevel");
+    commandArray.append(" ").append(Integer.toString((int) model.getVncQuality()));
+    if (model.getVncBgr233()) {
+      commandArray.append(" ").append("-LowColorLevel");
+    }
+    if (!listenMode) {
+      commandArray.append(" ").append(hostAddress + "::" + vncViewerPort);
+    }
+    return commandArray.toString();
+  }
+
 
   /**
    * Starts this VNCViewer listening on localhost.
@@ -107,21 +117,11 @@ public class VncViewerHandler {
         model.setVncViewerProcessRunning(true);
         try {
 
+          String command = getViewerCommand(null, null, true);
 
-          StringBuilder commandArray = new StringBuilder();
-          commandArray.append(vncViewerName);
-          commandArray.append(" ").append("-listen");
-          commandArray.append(" ").append("-compresslevel");
-          commandArray.append(" ").append(Integer.toString((int) model.getVncCompression()));
-          commandArray.append(" ").append("-quality");
-          commandArray.append(" ").append(Integer.toString((int) model.getVncQuality()));
-          if (model.getVncBgr233()) {
-            commandArray.append(" ").append("-bgr233");
-          }
+          LOGGER.info("Starting VNCViewer with command: " + command);
 
-          LOGGER.info("Strating VNCViewer with command: " + commandArray.toString());
-
-          process = model.getSystemCommander().startProcess(commandArray.toString());
+          process = model.getSystemCommander().startProcess(command);
 
           InputStream errorStream = process.getErrorStream();
           BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
