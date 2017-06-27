@@ -89,6 +89,7 @@ public class Rscc {
   public static final UnaryOperator<String> REMOVE_FILE_IN_PATH =
       string -> string.replaceFirst("file:", "");
   private final SystemCommander systemCommander;
+  private final CommandHandler command;
 
   //StatusBar
   public static final String STATUS_BAR_STYLE_IDLE = "statusBar";
@@ -144,13 +145,14 @@ public class Rscc {
   private VncServerHandler vncServer;
   private Rscccfp rscccfp;
 
+
   /**
    * Initializes the Rscc model class.
    *
    * @param systemCommander a SystemComander-object that executes shell commands.
    * @param keyUtil         a KeyUtil-object which stores the key, validates and formats it.
    */
-  public Rscc(SystemCommander systemCommander, KeyUtil keyUtil) {
+  public Rscc(SystemCommander systemCommander, KeyUtil keyUtil, CommandHandler command) {
     if (systemCommander == null) {
       LOGGER.info("Parameter SystemCommander is NULL");
       throw new IllegalArgumentException("Parameter SystemCommander is NULL");
@@ -161,6 +163,7 @@ public class Rscc {
     }
     this.systemCommander = systemCommander;
     this.keyUtil = keyUtil;
+    this.command = command;
     defineResourcePath();
     loadUserPreferences();
   }
@@ -982,5 +985,9 @@ public class Rscc {
 
   public void setIsKeyRefreshInProgress(boolean isKeyRefreshInProgress) {
     this.isKeyRefreshInProgress.set(isKeyRefreshInProgress);
+  }
+
+  public CommandHandler getCommand() {
+    return command;
   }
 }
