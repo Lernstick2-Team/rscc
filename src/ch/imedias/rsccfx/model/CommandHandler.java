@@ -21,6 +21,9 @@ public class CommandHandler {
 
   private StringProperty os = new SimpleStringProperty();
 
+  /**
+   * Sets the currently used OS and also initializes all commands.
+   */
   public CommandHandler() {
     setOs(determineOs());
     initializeCommands();
@@ -103,6 +106,10 @@ public class CommandHandler {
       this.commandWindows = commandWindows;
     }
 
+    /**
+     * Initializes a new command, using the same command for all OS'es.
+     * @param command to be used with all OS'es.
+     */
     public Command(String command) {
       this.commandDebian = command;
       this.commandArchlinux = command;
@@ -110,6 +117,11 @@ public class CommandHandler {
       this.commandWindows = command;
     }
 
+    /**
+     * Get the command depending on the used OS.
+     * @param os the currently used OS
+     * @return the command corresponding to the OS.
+     */
     public String getCommand(String os) {
       switch (os) {
         case ARCHLINUX:
