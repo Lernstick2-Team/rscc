@@ -36,6 +36,15 @@ public class CommandHandler {
     initializeCommands();
   }
 
+  /**
+   * Initializes all of the commands.
+   * Put new commands here, defining a command like this:
+   * {@link Command#Command(String, String,    String, String)}
+   * example = new  Command(debian, archLinux, macOs,  windows)
+   * or:
+   * {@link Command#Command(String)}
+   * example = new  Command(command) => will be the same for all OS'es
+   */
   private void initializeCommands() {
     vncViewer =
         new Command("vncviewer");
