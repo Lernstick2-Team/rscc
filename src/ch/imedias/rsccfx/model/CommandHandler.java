@@ -33,6 +33,7 @@ public class CommandHandler {
     String os = determineOs();
     setOs(os);
     LOGGER.info("Running on the OS: " + os);
+    initializeCommands();
   }
 
   private void initializeCommands() {
