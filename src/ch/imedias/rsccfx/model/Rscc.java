@@ -77,6 +77,8 @@ public class Rscc {
    */
   private static final String DOCKER_FOLDER_NAME = "docker-build_p2p";
   public static final String DEFAULT_SUPPORTERS_FILE_NAME = "rscc-defaults-lernstick.xml";
+  public static final String DEFAULT_OSX_SERVER_FILE_NAME = "OSXvnc-server";
+
 
   /**
    * sh files can not be executed in the JAR file and therefore must be extracted.
@@ -84,7 +86,7 @@ public class Rscc {
    */
   private static final String RSCC_FOLDER_NAME = ".config/rscc";
   private static final String[] EXTRACTED_RESOURCES =
-      {DOCKER_FOLDER_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
+      {DOCKER_FOLDER_NAME, DEFAULT_SUPPORTERS_FILE_NAME, DEFAULT_OSX_SERVER_FILE_NAME};
   public static final UnaryOperator<String> REMOVE_FILE_IN_PATH =
       string -> string.replaceFirst("file:", "");
   private final SystemCommander systemCommander;
@@ -135,6 +137,7 @@ public class Rscc {
   private String pathToResources;
   private String pathToResourceDocker;
   private String pathToDefaultSupporters;
+  private String pathToOsxServer;
   private boolean isLocalIceSuccessful = false;
   private boolean isRemoteIceSuccessful = false;
   private InetAddress remoteClientIpAddress;
@@ -238,12 +241,17 @@ public class Rscc {
           REMOVE_FILE_IN_PATH.apply(
               getClass().getClassLoader().getResource(DEFAULT_SUPPORTERS_FILE_NAME).getFile()
           );
+      pathToOsxServer =
+          REMOVE_FILE_IN_PATH.apply(
+              getClass().getClassLoader().getResource(DEFAULT_OSX_SERVER_FILE_NAME).getFile()
+          );
     } else {
       LOGGER.fine("Running in JAR");
       pathToResources = userHome + "/" + RSCC_FOLDER_NAME;
       // set paths of the files
       pathToResourceDocker = pathToResources + "/" + DOCKER_FOLDER_NAME;
       pathToDefaultSupporters = pathToResources + "/" + DEFAULT_SUPPORTERS_FILE_NAME;
+      pathToOsxServer = pathToResources + "/" + DEFAULT_OSX_SERVER_FILE_NAME;
       // extract all resources out of the JAR file
       Arrays.stream(EXTRACTED_RESOURCES).forEach(resource ->
           extractJarContents(theLocationOftheRunningClass, pathToResources, resource)
