@@ -4,18 +4,13 @@ import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.connectionutils.Rscccfp;
 import ch.imedias.rsccfx.model.connectionutils.RunRudp;
 import ch.imedias.rsccfx.model.util.KeyUtil;
-import com.google.common.io.Files;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.jcraft.jsch.UserInfo;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,7 +18,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -45,7 +39,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javax.swing.*;
 
 
 /**
@@ -138,7 +131,7 @@ public class Rscc {
   private final IntegerProperty stunServerPort = new SimpleIntegerProperty();
   private final BooleanProperty forcingServerMode = new SimpleBooleanProperty(false);
 
-  private int remote_port;
+  private int remotePort;
 
   //States
   private final BooleanProperty vncSessionRunning = new SimpleBooleanProperty(false);
@@ -379,10 +372,10 @@ public class Rscc {
   private void sshPortConnection(boolean sharing) {
     JSch jsch;
     File tempKeyFile = new File(pathToResourceDocker + "/keys/tmp.key");
+    BufferedInputStream bufferedInputStream;
+    BufferedOutputStream bufferedOutputStream;
 
     try {
-      // Replaces: ssh -o StrictHostKeyChecking=no -p $p2p_port -i keys/create.key vnc@$p2p_server > $keyfile 2>>$logfile
-      // Replaces: echo -e "$key\n" | ssh -o StrictHostKeyChecking=no -p $p2p_port -i keys/get.key vnc@$p2p_server > $keyfile 2>>$logfile
 
       jsch = new JSch();
 
@@ -405,29 +398,29 @@ public class Rscc {
       channel.setInputStream(System.in);
       channel.setOutputStream(System.out);
 
-      BufferedInputStream bufferedInputStream = new BufferedInputStream(channel.getInputStream());
-      BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(channel.getOutputStream());
+      bufferedInputStream = new BufferedInputStream(channel.getInputStream());
+      bufferedOutputStream = new BufferedOutputStream(channel.getOutputStream());
 
-      BufferedReader r = new BufferedReader(
-          new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8));
       OutputStreamWriter w = new OutputStreamWriter(bufferedOutputStream, StandardCharsets.UTF_8);
 
       channel.connect();
 
-      if (!sharing){
+      if (!sharing) {
         w.write(keyUtil.getKey() + "\n");
         LOGGER.info("flushed outputstream");
       }
       w.close();
 
+      BufferedReader r = new BufferedReader(
+          new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8));
       String firstline = r.readLine();
       System.out.println(firstline);
       String secondline = r.readLine();
       System.out.println(secondline);
 
       keyUtil.setKey(firstline);
-      remote_port = Integer.parseInt(secondline);
-      LOGGER.info("RemotePort defined on " + remote_port);
+      remotePort = Integer.parseInt(secondline);
+      LOGGER.info("RemotePort defined on " + remotePort);
 
       String bla;
       PrintWriter pw = new PrintWriter(new FileWriter(tempKeyFile));
@@ -441,16 +434,16 @@ public class Rscc {
 
       jsch = new JSch();
       jsch.addIdentity(tempKeyFile.getPath());
-      session=jsch.getSession("vnc", getKeyServerIp(), 2201);
+      session = jsch.getSession("vnc", getKeyServerIp(), 2201);
       config = new Properties();
       config.put("StrictHostKeyChecking", "no");
       session.setConfig(config);
 
       session.connect();
-      if (sharing){
-        session.setPortForwardingR(remote_port, "localhost", getVncPort());
+      if (sharing) {
+        session.setPortForwardingR(remotePort, "localhost", getVncPort());
       } else {
-        session.setPortForwardingL(getVncPort(), "localhost", remote_port);
+        session.setPortForwardingL(getVncPort(), "localhost", remotePort);
       }
       System.out.println("set remote forwarding");
 
@@ -475,19 +468,21 @@ public class Rscc {
 
     sshPortConnection(true);
 
-//    String command = systemCommander.commandStringGenerator(
-//        pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()));
-//
-//    SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
-//
-//    if (returnValues.getExitCode() != 0) {
-//      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
-//      setStatusBarKeyGeneration(strings.statusBarKeyGeneratedFailed, STATUS_BAR_STYLE_FAIL);
-//      setIsKeyRefreshInProgress(false);
-//      return;
-//    }
-//
-//    keyUtil.setKey(returnValues.getOutputString()); // update key in model
+    //    String command = systemCommander.commandStringGenerator(
+    //        pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()));
+    //
+    //    SystemCommanderReturnValues returnValues = systemCommander
+    // .executeTerminalCommand(command);
+    //
+    //    if (returnValues.getExitCode() != 0) {
+    //      LOGGER.severe("Command failed: " + command + " ExitCode: "
+    // + returnValues.getExitCode());
+    //      setStatusBarKeyGeneration(strings.statusBarKeyGeneratedFailed, STATUS_BAR_STYLE_FAIL);
+    //      setIsKeyRefreshInProgress(false);
+    //      return;
+    //    }
+    //
+    //    keyUtil.setKey(returnValues.getOutputString()); // update key in model
     rscccfp = new Rscccfp(this, true);
     rscccfp.setDaemon(true);
     rscccfp.start();
@@ -595,21 +590,23 @@ public class Rscc {
 
     sshPortConnection(false);
 
-//    String command = systemCommander.commandStringGenerator(pathToResourceDocker,
-//        "port_connect.sh", Integer.toString(getVncPort()), keyUtil.getKey());
-//
-//    setStatusBarKeyInput(strings.statusBarKeyserverConnected, STATUS_BAR_STYLE_INITIALIZE);
-//
-//    SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
-//
-//    if (returnValues.getExitCode() != 0) {
-//      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
-//      setStatusBarKeyInput(strings.statusBarKeyNotVerified + getKeyUtil().getKey(),
-//          STATUS_BAR_STYLE_FAIL);
-//
-//      setConnectionEstablishmentRunning(false);
-//      return;
-//    }
+    //    String command = systemCommander.commandStringGenerator(pathToResourceDocker,
+    //        "port_connect.sh", Integer.toString(getVncPort()), keyUtil.getKey());
+    //
+    //    setStatusBarKeyInput(strings.statusBarKeyserverConnected, STATUS_BAR_STYLE_INITIALIZE);
+    //
+    //    SystemCommanderReturnValues returnValues = systemCommander
+    // .executeTerminalCommand(command);
+    //
+    //    if (returnValues.getExitCode() != 0) {
+    //      LOGGER.severe("Command failed: " + command + " ExitCode: "
+    // + returnValues.getExitCode());
+    //      setStatusBarKeyInput(strings.statusBarKeyNotVerified + getKeyUtil().getKey(),
+    //          STATUS_BAR_STYLE_FAIL);
+    //
+    //      setConnectionEstablishmentRunning(false);
+    //      return;
+    //    }
 
     rscccfp = new Rscccfp(this, false);
     rscccfp.setDaemon(true);
