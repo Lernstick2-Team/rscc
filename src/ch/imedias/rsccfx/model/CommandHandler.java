@@ -1,5 +1,7 @@
 package ch.imedias.rsccfx.model;
 
+import ch.imedias.rsccfx.model.util.KeyUtil;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -8,7 +10,10 @@ import javafx.beans.property.StringProperty;
  */
 public class CommandHandler {
 
-  private static final String ARCHLINUX = "ARCHLINUX";
+  private static final Logger LOGGER =
+      Logger.getLogger(KeyUtil.class.getName());
+
+  private static final String ARCH_LINUX = "ARCH_LINUX";
   private static final String DEBIAN = "DEBIAN";
   private static final String MAC_OS = "MAC_OS";
   private static final String WINDOWS = "WINDOWS";
@@ -25,8 +30,9 @@ public class CommandHandler {
    * Sets the currently used OS and also initializes all commands.
    */
   public CommandHandler() {
-    setOs(determineOs());
-    initializeCommands();
+    String os = determineOs();
+    setOs(os);
+    LOGGER.info("Running on the OS: " + os);
   }
 
   private void initializeCommands() {
@@ -35,7 +41,7 @@ public class CommandHandler {
     vncViewerListen =
         new Command("-listen");
     vncViewerCompression =
-        new Command("-compresslevel", "-CompressLevel", "-CompressionLevel",null);
+        new Command("-compresslevel", "-CompressLevel", "-CompressionLevel", null);
     vncViewerQuality =
         new Command("-quality", "-QualityLevel", "-QualityLevel", null);
     vncViewerBgr233 =
@@ -45,7 +51,7 @@ public class CommandHandler {
 
   private String determineOs() {
     if (System.getProperty("os.version").contains("ARCH")) {
-      return ARCHLINUX;
+      return ARCH_LINUX;
     }
     if (System.getProperty("os.name").startsWith("Mac OS")) {
       return MAC_OS;
@@ -92,40 +98,42 @@ public class CommandHandler {
 
   private static class Command {
     private final String commandDebian;
-    private final String commandArchlinux;
+    private final String commandArchLinux;
     private final String commandMacOs;
     private final String commandWindows;
 
     public Command(String commandDebian,
-                   String commandArchlinux,
+                   String commandArchLinux,
                    String commandMacOs,
                    String commandWindows) {
       this.commandDebian = commandDebian;
-      this.commandArchlinux = commandArchlinux;
+      this.commandArchLinux = commandArchLinux;
       this.commandMacOs = commandMacOs;
       this.commandWindows = commandWindows;
     }
 
     /**
      * Initializes a new command, using the same command for all OS'es.
+     *
      * @param command to be used with all OS'es.
      */
     public Command(String command) {
       this.commandDebian = command;
-      this.commandArchlinux = command;
+      this.commandArchLinux = command;
       this.commandMacOs = command;
       this.commandWindows = command;
     }
 
     /**
      * Get the command depending on the used OS.
+     *
      * @param os the currently used OS
      * @return the command corresponding to the OS.
      */
     public String getCommand(String os) {
       switch (os) {
-        case ARCHLINUX:
-          return commandArchlinux;
+        case ARCH_LINUX:
+          return commandArchLinux;
         case DEBIAN:
           return commandDebian;
         case MAC_OS:
