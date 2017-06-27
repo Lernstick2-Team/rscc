@@ -1,5 +1,6 @@
 package ch.imedias.rsccfx;
 
+import ch.imedias.rsccfx.model.CommandHandler;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.model.SystemCommander;
 import ch.imedias.rsccfx.model.util.KeyUtil;
@@ -120,7 +121,7 @@ public class RsccApp extends Application {
 
 
     SystemCommander systemCommander = new SystemCommander();
-    model = new Rscc(systemCommander, new KeyUtil());
+    model = new Rscc(systemCommander, new KeyUtil(), new CommandHandler());
     ViewController mainView = new ViewController();
 
     // Initialize StatusBars
