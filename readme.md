@@ -83,6 +83,36 @@ These instructions will get you a copy of the project up and running on your loc
 - Python
 - Maven
 - Access to a running Server (use this [Docker image](https://hub.docker.com/r/jpduloch/p2p/) based on this [repository](https://github.com/jpduloch/p2p))
+
+
+### Supported Systems
+
+| Linux        | 
+| -------------| 
+
+| System        | Support       | Comment       |
+| ------------- | ------------- | ------------- |
+|  [Lernstick build](http://lernstick.ch/releases/lernstick_debian8_latest.iso)  | ✔  |  |
+
+
+
+| MAC OS       | 
+| -------------| 
+
+| System        | Support       | Comment       |
+| ------------- | ------------- | ------------- |
+| OSX 10.12.5   | ✘             |               |
+
+
+
+
+| Windows       | 
+| ------------- | 
+
+| System        | Support       | Comment       |
+| ------------- | ------------- | ------------- |
+| Win 10        | ✘             |               |
+
 ```
 Give examples
 ```
