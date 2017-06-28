@@ -227,5 +227,3 @@ GPL
 * RUDP: https://sourceforge.net/projects/rudp/
 * Proxy Server: http://www.java2s.com/Code/Java/Network-Protocol/Asimpleproxyserver.htm
 * Ice4j https://github.com/jitsi/ice4j#readme
-
-
