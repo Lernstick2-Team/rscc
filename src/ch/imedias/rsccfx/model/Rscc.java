@@ -132,6 +132,7 @@ public class Rscc {
   private final BooleanProperty forcingServerMode = new SimpleBooleanProperty(false);
 
   private int remotePort;
+  private File sessionKey;
 
   //States
   private final BooleanProperty vncSessionRunning = new SimpleBooleanProperty(false);
@@ -356,11 +357,14 @@ public class Rscc {
       vncViewer.killVncViewerProcess();
     }
 
-    // Execute port_stop.sh with the generated key to kill the SSH connections
-    LOGGER.info("SSH connection still active - try closing SSH connection");
-    String command = systemCommander.commandStringGenerator(
-        pathToResourceDocker, "port_stop.sh", keyUtil.getKey());
-    systemCommander.executeTerminalCommand(command);
+//    // Execute port_stop.sh with the generated key to kill the SSH connections
+//    LOGGER.info("SSH connection still active - try closing SSH connection");
+//    String command = systemCommander.commandStringGenerator(
+//        pathToResourceDocker, "port_stop.sh", keyUtil.getKey());
+//    systemCommander.executeTerminalCommand(command);
+
+    sshTunnelPortForwarding("delete", sessionKey);
+
     keyUtil.setKey("");
     LOGGER.info("Everything should be closed");
   }
@@ -369,90 +373,91 @@ public class Rscc {
   /**
    * Run ssh command.
    */
-  private void sshPortConnection(boolean sharing) {
+  private File sshSessionHandler(String verb) {
     JSch jsch;
-    File tempKeyFile = new File(pathToResourceDocker + "/keys/tmp.key");
+    File sessionKeyFile = new File(pathToResourceDocker + "/keys/tmp.key");
     BufferedInputStream bufferedInputStream;
     BufferedOutputStream bufferedOutputStream;
 
     try {
-
       jsch = new JSch();
+      jsch.addIdentity(pathToResourceDocker + "/keys/" + verb + ".key");
+      LOGGER.info("set keyfile");
 
-      if (sharing) {
-        jsch.addIdentity(pathToResourceDocker + "/keys/create.key");
-      } else {
-        jsch.addIdentity(pathToResourceDocker + "/keys/get.key");
-        LOGGER.info("set keyfile");
-      }
       Session session = jsch.getSession("vnc", getKeyServerIp(), 2201);
-
       Properties config = new Properties();
       config.put("StrictHostKeyChecking", "no");
       session.setConfig(config);
-
       session.connect();
       LOGGER.info("session connected");
-      Channel channel = session.openChannel("shell");
 
+      Channel channel = session.openChannel("shell");
       channel.setInputStream(System.in);
       channel.setOutputStream(System.out);
 
       bufferedInputStream = new BufferedInputStream(channel.getInputStream());
       bufferedOutputStream = new BufferedOutputStream(channel.getOutputStream());
-
-      OutputStreamWriter w = new OutputStreamWriter(bufferedOutputStream, StandardCharsets.UTF_8);
+      OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+          bufferedOutputStream, StandardCharsets.UTF_8);
 
       channel.connect();
 
-      if (!sharing) {
-        w.write(keyUtil.getKey() + "\n");
+      if (verb.equals("get")) {
+        outputStreamWriter.write(keyUtil.getKey() + "\n");
         LOGGER.info("flushed outputstream");
       }
-      w.close();
+      outputStreamWriter.close();
 
-      BufferedReader r = new BufferedReader(
+      BufferedReader bufferedReader = new BufferedReader(
           new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8));
-      String firstline = r.readLine();
-      System.out.println(firstline);
-      String secondline = r.readLine();
-      System.out.println(secondline);
+      String firstline = bufferedReader.readLine();
+      String secondline = bufferedReader.readLine();
 
       keyUtil.setKey(firstline);
       remotePort = Integer.parseInt(secondline);
       LOGGER.info("RemotePort defined on " + remotePort);
 
-      String bla;
-      PrintWriter pw = new PrintWriter(new FileWriter(tempKeyFile));
-      while ((bla = r.readLine()) != null) {
-        pw.println(bla);
+      String line;
+      PrintWriter printWriter = new PrintWriter(new FileWriter(sessionKeyFile));
+      while ((line = bufferedReader.readLine()) != null) {
+        printWriter.println(line);
       }
-      pw.close();
+      printWriter.close();
 
       channel.disconnect();
       session.disconnect();
-
-      jsch = new JSch();
-      jsch.addIdentity(tempKeyFile.getPath());
-      session = jsch.getSession("vnc", getKeyServerIp(), 2201);
-      config = new Properties();
-      config.put("StrictHostKeyChecking", "no");
-      session.setConfig(config);
-
-      session.connect();
-      if (sharing) {
-        session.setPortForwardingR(remotePort, "localhost", getVncPort());
-      } else {
-        session.setPortForwardingL(getVncPort(), "localhost", remotePort);
-      }
-      System.out.println("set remote forwarding");
 
     } catch (JSchException e) {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
+    return sessionKeyFile;
+  }
 
+  public void sshTunnelPortForwarding(String verb, File sessionKeyFile) {
+    JSch jsch;
+
+    try {
+      jsch = new JSch();
+      jsch.addIdentity(sessionKeyFile.getPath());
+      Session session = jsch.getSession("vnc", getKeyServerIp(), 2201);
+      Properties config = new Properties();
+      config.put("StrictHostKeyChecking", "no");
+      session.setConfig(config);
+      session.connect();
+      if ("share".equals(verb)) {
+        session.setPortForwardingR(remotePort, "localhost", getVncPort());
+      } else if ("connect".equals(verb)) {
+        session.setPortForwardingL(getVncPort(), "localhost", remotePort);
+      } else if ("delete".equals(verb)){
+        session.delPortForwardingR("localhost", remotePort);
+        session.delPortForwardingL("localhost", getVncPort());
+        session.disconnect();
+      }
+    } catch (JSchException e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -466,7 +471,8 @@ public class Rscc {
 
     setStatusBarKeyGeneration(strings.statusBarRequestingKey, STATUS_BAR_STYLE_INITIALIZE);
 
-    sshPortConnection(true);
+    sessionKey = sshSessionHandler("create");
+    sshTunnelPortForwarding("share",sessionKey);
 
     //    String command = systemCommander.commandStringGenerator(
     //        pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()));
@@ -588,7 +594,8 @@ public class Rscc {
 
     keyServerSetup();
 
-    sshPortConnection(false);
+    File sessionKey = sshSessionHandler("get");
+    sshTunnelPortForwarding("connect", sessionKey);
 
     //    String command = systemCommander.commandStringGenerator(pathToResourceDocker,
     //        "port_connect.sh", Integer.toString(getVncPort()), keyUtil.getKey());
