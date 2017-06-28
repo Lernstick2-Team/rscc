@@ -357,13 +357,17 @@ public class Rscc {
       vncViewer.killVncViewerProcess();
     }
 
-//    // Execute port_stop.sh with the generated key to kill the SSH connections
-//    LOGGER.info("SSH connection still active - try closing SSH connection");
-//    String command = systemCommander.commandStringGenerator(
-//        pathToResourceDocker, "port_stop.sh", keyUtil.getKey());
-//    systemCommander.executeTerminalCommand(command);
+    //    // Execute port_stop.sh with the generated key to kill the SSH connections
+    //    LOGGER.info("SSH connection still active - try closing SSH connection");
+    //    String command = systemCommander.commandStringGenerator(
+    //        pathToResourceDocker, "port_stop.sh", keyUtil.getKey());
+    //    systemCommander.executeTerminalCommand(command);
 
+    sshSessionHandler("delete");
     sshTunnelPortForwarding("delete", sessionKey);
+    remotePort = -1;
+    sessionKey.delete();
+    sessionKey = null;
 
     keyUtil.setKey("");
     LOGGER.info("Everything should be closed");
@@ -371,13 +375,17 @@ public class Rscc {
 
 
   /**
-   * Run ssh command.
+   *
+   * @param verb  Can be get, create, delete
+   * @return The SessionKeyFile.
    */
   private File sshSessionHandler(String verb) {
     JSch jsch;
     File sessionKeyFile = new File(pathToResourceDocker + "/keys/tmp.key");
     BufferedInputStream bufferedInputStream;
     BufferedOutputStream bufferedOutputStream;
+    OutputStreamWriter outputStreamWriter;
+    BufferedReader bufferedReader;
 
     try {
       jsch = new JSch();
@@ -397,44 +405,48 @@ public class Rscc {
 
       bufferedInputStream = new BufferedInputStream(channel.getInputStream());
       bufferedOutputStream = new BufferedOutputStream(channel.getOutputStream());
-      OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-          bufferedOutputStream, StandardCharsets.UTF_8);
+      outputStreamWriter = new OutputStreamWriter(bufferedOutputStream, StandardCharsets.UTF_8);
 
       channel.connect();
 
-      if (verb.equals("get")) {
+      if ("get".equals(verb) || "delete".equals(verb)) {
         outputStreamWriter.write(keyUtil.getKey() + "\n");
-        LOGGER.info("flushed outputstream");
+        LOGGER.info("Sent Key to Keyserver");
       }
       outputStreamWriter.close();
 
-      BufferedReader bufferedReader = new BufferedReader(
-          new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8));
-      String firstline = bufferedReader.readLine();
-      String secondline = bufferedReader.readLine();
+      if ("get".equals(verb) || "create".equals(verb)){
+        bufferedReader = new BufferedReader(
+            new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8));
+        String firstline = bufferedReader.readLine();
+        String secondline = bufferedReader.readLine();
 
-      keyUtil.setKey(firstline);
-      remotePort = Integer.parseInt(secondline);
-      LOGGER.info("RemotePort defined on " + remotePort);
+        keyUtil.setKey(firstline);
+        remotePort = Integer.parseInt(secondline);
+        LOGGER.info("RemotePort defined on " + remotePort);
 
-      String line;
-      PrintWriter printWriter = new PrintWriter(new FileWriter(sessionKeyFile));
-      while ((line = bufferedReader.readLine()) != null) {
-        printWriter.println(line);
+        String line;
+        PrintWriter printWriter = new PrintWriter(new FileWriter(sessionKeyFile));
+        while ((line = bufferedReader.readLine()) != null) {
+          printWriter.println(line);
+        }
+        printWriter.close();
+        bufferedReader.close();
       }
-      printWriter.close();
-
       channel.disconnect();
       session.disconnect();
 
-    } catch (JSchException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
+    } catch (JSchException | IOException e) {
       e.printStackTrace();
     }
     return sessionKeyFile;
   }
 
+  /**
+   * Initializes the SSH TunnelPortForwarding.
+   * @param verb  Can be share, connect, delete.
+   * @param sessionKeyFile  The File where the SessionKey is saved.
+   */
   public void sshTunnelPortForwarding(String verb, File sessionKeyFile) {
     JSch jsch;
 
@@ -450,7 +462,7 @@ public class Rscc {
         session.setPortForwardingR(remotePort, "localhost", getVncPort());
       } else if ("connect".equals(verb)) {
         session.setPortForwardingL(getVncPort(), "localhost", remotePort);
-      } else if ("delete".equals(verb)){
+      } else if ("delete".equals(verb)) {
         session.delPortForwardingR("localhost", remotePort);
         session.delPortForwardingL("localhost", getVncPort());
         session.disconnect();
