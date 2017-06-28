@@ -11,7 +11,6 @@ import com.jcraft.jsch.Session;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,13 +20,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -450,7 +448,7 @@ public class Rscc {
       jsch.addIdentity(pathToResourceDocker + "/keys/" + verb + ".key");
       LOGGER.info("set keyfile");
 
-      Session session = jsch.getSession("vnc", getKeyServerIp(), 2201);
+      Session session = jsch.getSession("vnc", getKeyServerIp(), p2pPort);
       Properties config = new Properties();
       config.put("StrictHostKeyChecking", "no");
       session.setConfig(config);
@@ -473,7 +471,7 @@ public class Rscc {
       }
       outputStreamWriter.close();
 
-      if ("get".equals(verb) || "create".equals(verb)){
+      if ("get".equals(verb) || "create".equals(verb)) {
         bufferedReader = new BufferedReader(
             new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8));
         String firstline = bufferedReader.readLine();
@@ -511,7 +509,7 @@ public class Rscc {
     try {
       jsch = new JSch();
       jsch.addIdentity(sessionKeyFile.getPath());
-      Session session = jsch.getSession("vnc", getKeyServerIp(), 2201);
+      Session session = jsch.getSession("vnc", getKeyServerIp(), p2pPort);
       Properties config = new Properties();
       config.put("StrictHostKeyChecking", "no");
       session.setConfig(config);
