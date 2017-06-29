@@ -144,6 +144,16 @@ This will create all the necessary files on your local machine (e.g. desktop ent
 
 End with an example of getting some data out of the system or using it for a little demo
 
+### Arch Linux
+To run it on Arch Linux, first run the following command to install the dependencies:
+```
+sudo pacman -S tigervnc x11vnc
+```
+You can then simply run it as you would run the standard jar, which means:
+```
+sudo java -jar rsccfx.jar
+```
+
 ## Settings & Recommendations
 Standard settings try to establish a direct connection between clients over ICE. 
 This can be disabled by activating the setting "force server mode".
@@ -217,5 +227,3 @@ GPL
 * RUDP: https://sourceforge.net/projects/rudp/
 * Proxy Server: http://www.java2s.com/Code/Java/Network-Protocol/Asimpleproxyserver.htm
 * Ice4j https://github.com/jitsi/ice4j#readme
-
-

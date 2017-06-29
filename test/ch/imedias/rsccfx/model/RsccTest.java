@@ -26,6 +26,7 @@ public class RsccTest {
   SystemCommanderReturnValues returnValues;
   SystemCommander mockSystemCommander;
   KeyUtil mockKeyUtil;
+  CommandHandler command;
 
 
   /**
@@ -35,7 +36,8 @@ public class RsccTest {
   public void setUp() throws Exception {
     mockSystemCommander = mock(SystemCommander.class);
     mockKeyUtil = mock(KeyUtil.class);
-    model = new Rscc(mockSystemCommander, mockKeyUtil);
+    command = new CommandHandler(); // TODO: replace with Mock
+    model = new Rscc(mockSystemCommander, mockKeyUtil, command);
     returnValues = new SystemCommanderReturnValues();
     // since commandStringGenerator is mainly a utility function and is being tested separately
     // call the real method
@@ -49,26 +51,26 @@ public class RsccTest {
   }
 
   /**
-   * Test for Constructor {@link Rscc#Rscc(SystemCommander, KeyUtil)}.
+   * Test for Constructor {@link Rscc#Rscc(SystemCommander, KeyUtil, CommandHandler)}.
    */
   @Test
   public void testRsccConstructorIllegalArguments() {
     try {
-      new Rscc(null, mockKeyUtil);
+      new Rscc(null, mockKeyUtil, command);
       fail("IllegalArgumentException was expected when SystemCommander is null");
     } catch (IllegalArgumentException e) {
       // expected behavior
     }
 
     try {
-      new Rscc(mockSystemCommander, null);
+      new Rscc(mockSystemCommander, null, command);
       fail("IllegalArgumentException was expected when KeyUtil is null");
     } catch (IllegalArgumentException e) {
       // expected behavior
     }
 
     try {
-      new Rscc(null, null);
+      new Rscc(null, null, command);
       fail("IllegalArgumentException was expected when all parameters are null");
     } catch (IllegalArgumentException e) {
       // expected behavior
@@ -76,12 +78,12 @@ public class RsccTest {
   }
 
   /**
-   * Test for Constructor {@link Rscc#Rscc(SystemCommander, KeyUtil)}.
+   * Test for Constructor {@link Rscc#Rscc(SystemCommander, KeyUtil, CommandHandler)}.
    */
   @Test
   public void testRsccConstructor() {
     try {
-      new Rscc(mockSystemCommander, mockKeyUtil);
+      new Rscc(mockSystemCommander, mockKeyUtil, command);
     } catch (Exception e) {
       fail(e.getMessage());
     }
