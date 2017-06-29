@@ -1,5 +1,6 @@
 package ch.imedias.rsccfx.model;
 
+import ch.imedias.rsccfx.model.util.NoExitSecurityManager;
 import com.tigervnc.vncviewer.VncViewer;
 import java.util.logging.Logger;
 
@@ -96,7 +97,19 @@ public class VncViewerHandler {
     } else {
       viewer = new VncViewer(args);
     }
-    viewer.start();
+
+    // prevent the VncViewer from calling "System.exit(n)"
+    SecurityManager securityManager = System.getSecurityManager();
+    System.setSecurityManager(new NoExitSecurityManager(securityManager)) ;
+    try {
+      // start the VNC viewer
+      viewer.start();
+    } catch( SecurityException e ) {
+      // expected behavior, don't allow the System to be exited
+    } finally {
+      System.setSecurityManager(securityManager);
+    }
+
   }
 
 }
