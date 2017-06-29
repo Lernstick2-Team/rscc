@@ -8,7 +8,6 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,13 +18,14 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.ToggleSwitch;
 
 /**
@@ -34,7 +34,7 @@ import org.controlsfx.control.ToggleSwitch;
 public class ExpertSettingsDialog extends DialogPane {
 
   private static final Logger LOGGER =
-      Logger.getLogger(ExpertSettingsDialog.class.getName());
+      LogManager.getLogger(ExpertSettingsDialog.class.getName());
 
   private final Strings strings = new Strings();
 

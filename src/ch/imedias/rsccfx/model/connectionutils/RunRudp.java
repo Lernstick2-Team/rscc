@@ -13,14 +13,14 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Establishes a RUDP connection between two clients, can be run as server or client.
  */
 public class RunRudp extends Thread {
-  private static final Logger LOGGER = Logger.getLogger(Rscccfp.class.getName());
-
+  private static final Logger LOGGER = LogManager.getLogger(Rscccfp.class.getName());
 
   private boolean exit = false;
   private Rscc model;
@@ -308,7 +308,7 @@ public class RunRudp extends Thread {
             try {
               closeable.close();
             } catch (IOException e) {
-              LOGGER.warning(e.getMessage());
+              LOGGER.warn(e.getMessage());
             }
           }
         }

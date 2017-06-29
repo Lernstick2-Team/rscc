@@ -4,7 +4,6 @@ import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import java.io.InputStream;
-import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -14,13 +13,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Defines all elements shown on the start page.
  */
 public class RsccHomeView extends BorderPane {
   private static final Logger LOGGER =
-      Logger.getLogger(RsccHomeView.class.getName());
+      LogManager.getLogger(RsccHomeView.class.getName());
   private static final Insets BOX_INSETS = new Insets(10, 25, 10, 40);
   final HeaderView headerView;
   final Button requestViewBtn = new Button();

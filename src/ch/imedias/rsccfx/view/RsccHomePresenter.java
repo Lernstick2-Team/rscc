@@ -5,8 +5,9 @@ import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.ViewController;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
-import java.util.logging.Logger;
 import javafx.scene.Scene;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Defines the behaviour of interactions
@@ -14,7 +15,7 @@ import javafx.scene.Scene;
  */
 public class RsccHomePresenter implements ControlledPresenter {
   private static final Logger LOGGER =
-      Logger.getLogger(RsccHomePresenter.class.getName());
+      LogManager.getLogger(RsccHomePresenter.class.getName());
 
   private static final Double IMG_VIEW_DIVISOR = 3d;
   private static final Double VIEW_BTN_HEIGHT_DIVISOR = 2.5d;

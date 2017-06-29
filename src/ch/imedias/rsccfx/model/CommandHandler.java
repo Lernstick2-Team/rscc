@@ -1,9 +1,9 @@
 package ch.imedias.rsccfx.model;
 
-import ch.imedias.rsccfx.model.util.KeyUtil;
-import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Handles all of the different commands depending on the operating system.
@@ -11,7 +11,7 @@ import javafx.beans.property.StringProperty;
 public class CommandHandler {
 
   private static final Logger LOGGER =
-      Logger.getLogger(KeyUtil.class.getName());
+      LogManager.getLogger(CommandHandler.class.getName());
 
   private static final String ARCH_LINUX = "ARCH_LINUX";
   private static final String DEBIAN = "DEBIAN";

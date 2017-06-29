@@ -5,7 +5,6 @@ import ch.imedias.rsccfx.model.Rscc;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import java.util.logging.Logger;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.HPos;
@@ -16,6 +15,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -23,7 +24,7 @@ import javafx.scene.layout.RowConstraints;
  */
 public class HeaderView extends GridPane {
   private static final Logger LOGGER =
-      Logger.getLogger(HeaderView.class.getName());
+      LogManager.getLogger(HeaderView.class.getName());
 
   private static final double ICON_SIZE = 40;
 

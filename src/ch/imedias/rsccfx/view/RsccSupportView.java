@@ -4,7 +4,6 @@ import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.view.util.KeyTextField;
 import ch.imedias.rsccfx.view.util.StatusBar;
-import java.util.logging.Logger;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,13 +20,15 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Defines all elements shown in the support section.
  */
 public class RsccSupportView extends BorderPane {
   private static final Logger LOGGER =
-      Logger.getLogger(RsccSupportView.class.getName());
+      LogManager.getLogger(RsccSupportView.class.getName());
   private static final int GRIDPANE_MARGIN = 25;
   final HeaderView headerView;
 

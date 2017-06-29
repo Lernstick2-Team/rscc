@@ -4,7 +4,6 @@ import ch.imedias.rsccfx.RsccApp;
 import ch.imedias.rsccfx.localization.Strings;
 import ch.imedias.rsccfx.model.Rscc;
 import ch.imedias.rsccfx.view.util.TextSlider;
-import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Orientation;
@@ -16,6 +15,8 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.ToggleSwitch;
 
@@ -24,7 +25,7 @@ import org.controlsfx.control.ToggleSwitch;
  */
 public class PopOverHelper {
   private static final Logger LOGGER =
-      Logger.getLogger(PopOverHelper.class.getName());
+      LogManager.getLogger(PopOverHelper.class.getName());
 
   private static final int COMPRESSION_MIN = 0;
   private static final int COMPRESSION_MAX = 9;

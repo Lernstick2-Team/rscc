@@ -8,7 +8,6 @@ import ch.imedias.rsccfx.view.util.KeyTextField;
 import ch.imedias.rsccfx.view.util.StatusBar;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import java.util.logging.Logger;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,6 +22,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -30,7 +31,7 @@ import javafx.scene.layout.VBox;
  */
 public class RsccRequestView extends BorderPane {
   private static final Logger LOGGER =
-      Logger.getLogger(RsccRequestView.class.getName());
+      LogManager.getLogger(RsccRequestView.class.getName());
 
   private static final double BUTTON_PADDING = 30;
   private static final double ICON_SIZE = 30;

@@ -16,7 +16,6 @@ import java.util.Enumeration;
 import java.util.function.UnaryOperator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -26,6 +25,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -70,7 +71,7 @@ public class Rscc {
   private static final int PACKAGE_SIZE = 10000; // needed, since a static method access it.
   // TODO: make access depend on current setting
   private static final Logger LOGGER =
-      Logger.getLogger(Rscc.class.getName());
+      LogManager.getLogger(Rscc.class.getName());
   /**
    * Points to the "docker-build_p2p" folder inside resources, relative to the build path.
    * Important: Make sure to NOT include a / in the beginning or the end.
@@ -225,13 +226,13 @@ public class Rscc {
    */
   private void defineResourcePath() {
     String userHome = System.getProperty("user.home");
-    LOGGER.fine("userHome " + userHome);
+    LOGGER.trace("userHome " + userHome);
     URL theLocationOftheRunningClass = this.getClass().getProtectionDomain()
         .getCodeSource().getLocation();
-    LOGGER.fine("Source Location: " + theLocationOftheRunningClass);
+    LOGGER.trace("Source Location: " + theLocationOftheRunningClass);
     File actualClass = new File(theLocationOftheRunningClass.getFile());
     if (actualClass.isDirectory()) {
-      LOGGER.fine("Running in IDE");
+      LOGGER.trace("Running in IDE");
       // set paths of the files
       pathToResourceDocker =
           REMOVE_FILE_IN_PATH.apply(
@@ -246,7 +247,7 @@ public class Rscc {
               getClass().getClassLoader().getResource(DEFAULT_OSX_SERVER_FILE_NAME).getFile()
           );
     } else {
-      LOGGER.fine("Running in JAR");
+      LOGGER.trace("Running in JAR");
       pathToResources = userHome + "/" + RSCC_FOLDER_NAME;
       // set paths of the files
       pathToResourceDocker = pathToResources + "/" + DOCKER_FOLDER_NAME;
@@ -266,12 +267,12 @@ public class Rscc {
    */
   private void extractJarContents(URL sourceLocation, String destinationDirectory, String filter) {
     JarFile jarFile = null;
-    LOGGER.fine("Extract Jar Contents");
+    LOGGER.trace("Extract Jar Contents");
     try {
-      LOGGER.fine("sourceLocation: " + sourceLocation.getFile());
+      LOGGER.trace("sourceLocation: " + sourceLocation.getFile());
       jarFile = new JarFile(new File(sourceLocation.getFile()));
     } catch (IOException e) {
-      LOGGER.severe("Exception thrown when trying to get file from: "
+      LOGGER.error("Exception thrown when trying to get file from: "
           + sourceLocation
           + "\n Exception Message: " + e.getMessage());
     }
@@ -279,14 +280,14 @@ public class Rscc {
     while (contentList.hasMoreElements()) {
       JarEntry item = contentList.nextElement();
       if (item.getName().contains(filter)) {
-        LOGGER.fine("JarEntry: " + item.getName());
+        LOGGER.trace("JarEntry: " + item.getName());
         File targetFile = new File(destinationDirectory, item.getName());
         if (!targetFile.exists()) {
           targetFile.getParentFile().mkdirs();
           targetFile = new File(destinationDirectory, item.getName());
         }
         if (item.isDirectory()) {
-          LOGGER.fine("JarEntry: " + item.getName() + " is a directory");
+          LOGGER.trace("JarEntry: " + item.getName() + " is a directory");
           continue;
         }
         try (
@@ -297,11 +298,11 @@ public class Rscc {
             toStream.write(fromStream.read());
           }
         } catch (FileNotFoundException e) {
-          LOGGER.severe("Exception thrown when reading from file: "
+          LOGGER.error("Exception thrown when reading from file: "
               + targetFile.getName()
               + "\n Exception Message: " + e.getMessage());
         } catch (IOException e) {
-          LOGGER.severe("Exception thrown when trying to copy jar file contents to local"
+          LOGGER.error("Exception thrown when trying to copy jar file contents to local"
               + "\n Exception Message: " + e.getMessage());
         }
         targetFile.setExecutable(true);
@@ -319,7 +320,7 @@ public class Rscc {
     SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
 
     if (returnValues.getExitCode() != 0) {
-      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+      LOGGER.error("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
       return;
     }
     isSshRunning.setValue(true);
@@ -377,7 +378,7 @@ public class Rscc {
     SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
 
     if (returnValues.getExitCode() != 0) {
-      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+      LOGGER.error("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
       setStatusBarKeyGeneration(strings.statusBarKeyGeneratedFailed, STATUS_BAR_STYLE_FAIL);
       setIsKeyRefreshInProgress(false);
       return;
@@ -497,7 +498,7 @@ public class Rscc {
     SystemCommanderReturnValues returnValues = systemCommander.executeTerminalCommand(command);
 
     if (returnValues.getExitCode() != 0) {
-      LOGGER.severe("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
+      LOGGER.error("Command failed: " + command + " ExitCode: " + returnValues.getExitCode());
       setStatusBarKeyInput(strings.statusBarKeyNotVerified + getKeyUtil().getKey(),
           STATUS_BAR_STYLE_FAIL);
 
