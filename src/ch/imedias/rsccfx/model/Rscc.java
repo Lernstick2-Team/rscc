@@ -425,10 +425,14 @@ public class Rscc {
     sshSessionHandler("delete");
     sshTunnelPortForwarding("delete", sessionKey);
     remotePort = -1;
-    sessionKey.delete();
-    sessionKey = null;
+
+    if (sessionKey != null) {
+      sessionKey.delete();
+      sessionKey = null;
+    }
 
     keyUtil.setKey("");
+
     LOGGER.info("Everything should be closed");
   }
 
