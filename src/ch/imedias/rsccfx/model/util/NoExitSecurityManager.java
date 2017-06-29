@@ -12,7 +12,7 @@ public class NoExitSecurityManager extends SecurityManager {
 
     @Override
     public void checkPermission(Permission permission) {
-        if (permission.getName().startsWith("exitVM")) {
+        if (permission.getName().startsWith("exitVM.*")) {
             throw new SecurityException("System exit not allowed");
         }
         if (baseSecurityManager != null) {
