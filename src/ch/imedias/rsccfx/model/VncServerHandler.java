@@ -45,10 +45,9 @@ public class VncServerHandler {
           StringBuilder commandArray = new StringBuilder();
           commandArray.append(command.getVncServer());
           commandArray.append(" ").append(command.getVncServerReverse());
-          commandArray.append(" ").append(hostAddress + ":" + vncViewerPort); // TODO: add port command
+          commandArray.append(" ").append(hostAddress + command.getVncServerPort() + vncViewerPort);
           if (isEncrypted) {
-            commandArray.append(" ").append("-ssl");
-            commandArray.append(" ").append("TMP");
+            commandArray.append(" ").append(command.getVncServerEncrypted());
           }
 
           LOGGER.info("Strating VNC-Server with command: " + commandArray.toString());
@@ -119,7 +118,7 @@ public class VncServerHandler {
             commandArray.append(" ").append(command.getVncServerViewOnly());
           }
 
-          LOGGER.info("Strating VNC-Server with command: " + commandArray.toString());
+          LOGGER.info("Starting VNC-Server with command: " + commandArray.toString());
 
           process = model.getSystemCommander().startProcess(commandArray.toString());
 
