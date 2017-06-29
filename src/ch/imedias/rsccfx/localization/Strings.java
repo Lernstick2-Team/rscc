@@ -1,7 +1,7 @@
 package ch.imedias.rsccfx.localization;
 
 /**
- *  Code generated at 12:33:06 29.06.2017
+ *  Code generated at 11:05:01 27.06.2017
  *  by generateStringsClass.py version 0.3.4
  *  based on properties file with hash:
  *  5f9a643e79a002a264559920c253849db3bd7d3b4480835c757408a795e6dbfa

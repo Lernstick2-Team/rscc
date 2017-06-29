@@ -525,16 +525,21 @@ public class Rscc {
     setStatusBarKeyInput(strings.statusBarVncViewerStarting, STATUS_BAR_STYLE_INITIALIZE);
 
     int i = 0;
-    while (!isVncSessionRunning() && i < 10) {
+    try {
+      Thread.sleep(5000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    //while (!isVncSessionRunning() && i < 10) {
       vncViewer.startVncViewerConnecting("localhost",
           (rudp != null) ? getProxyPort() : vncPort.getValue());
-      i++;
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        LOGGER.info(e.getMessage());
-      }
-    }
+    //  i++;
+     // try {
+      //  Thread.sleep(1000);
+     // } catch (InterruptedException e) {
+      //  LOGGER.info(e.getMessage());
+     // }
+   // }
 
     if (isVncSessionRunning()) {
       if (rudp != null) {
@@ -544,11 +549,12 @@ public class Rscc {
         setStatusBarKeyInput(strings.statusBarVncConnectionEstablishedServer,
             STATUS_BAR_STYLE_SUCCESS);
       }
-    } else if (i == 10) {
-      setStatusBarKeyInput(strings.statusBarConnectionFailed,
-          STATUS_BAR_STYLE_SUCCESS);
-    }
+    //} else if (i == 10) {
+    //  setStatusBarKeyInput(strings.statusBarConnectionFailed,
+     //     STATUS_BAR_STYLE_SUCCESS);
+   // }
     setConnectionEstablishmentRunning(false);
+  }
   }
 
   /**
