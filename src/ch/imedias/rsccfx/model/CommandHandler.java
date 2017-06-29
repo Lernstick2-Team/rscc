@@ -13,6 +13,9 @@ public class CommandHandler {
   private static final Logger LOGGER =
       Logger.getLogger(KeyUtil.class.getName());
 
+  private String pathToOsxServer;
+  private String pathToVncViewer;
+
   private static final String ARCH_LINUX = "ARCH_LINUX";
   private static final String DEBIAN = "DEBIAN";
   private static final String MAC_OS = "MAC_OS";
@@ -54,7 +57,7 @@ public class CommandHandler {
    */
   private void initializeCommands() {
     vncViewer =
-        new Command("java -jar " + Rscc.getPathToVncViewer());
+        new Command("java -jar " + pathToVncViewer);
     vncViewerListen =
         new Command("-listen");
     vncViewerCompression =
@@ -68,7 +71,7 @@ public class CommandHandler {
         new Command(
                 "x11vnc",
                 "x11vnc",
-                Rscc.getPathToOsxServer() + Rscc.OSX_SERVER_FILE_NAME + " -rfbnoauth",
+                pathToOsxServer + " -rfbnoauth",
                 null);
     vncServerPort =
         new Command(":", ":", " -connectPort ", null);
@@ -202,5 +205,15 @@ public class CommandHandler {
           return null;
       }
     }
+  }
+
+  public void setPathToOsxServer(String pathToOsxServer) {
+    LOGGER.info("pathToOsxServer: " + pathToOsxServer);
+    this.pathToOsxServer = pathToOsxServer;
+  }
+
+  public void setPathToVncViewer(String pathToVncViewer) {
+    LOGGER.info("pathToVncViewer: " + pathToVncViewer);
+    this.pathToVncViewer = pathToVncViewer;
   }
 }

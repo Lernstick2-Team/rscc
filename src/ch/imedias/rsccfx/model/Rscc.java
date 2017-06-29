@@ -80,7 +80,6 @@ public class Rscc {
   public static final String OSX_SERVER_FILE_NAME = "OSXvnc-server";
   public static final String VNC_VIEWER_FILE_NAME = "VncViewer-1.8.0.jar";
 
-
   /**
    * sh files can not be executed in the JAR file and therefore must be extracted.
    * ".rscc" is a hidden folder in the user's home directory (e.g. /home/user)
@@ -138,8 +137,6 @@ public class Rscc {
   private String pathToResources;
   private String pathToResourceDocker;
   private String pathToDefaultSupporters;
-  private static String pathToOsxServer;
-  private static String pathToVncViewer;
   private boolean isLocalIceSuccessful = false;
   private boolean isRemoteIceSuccessful = false;
   private InetAddress remoteClientIpAddress;
@@ -239,26 +236,30 @@ public class Rscc {
           REMOVE_FILE_IN_PATH.apply(
               getClass().getClassLoader().getResource(DOCKER_FOLDER_NAME).getFile()
           );
+      LOGGER.info("pathToResourceDocker: " + pathToResourceDocker);
       pathToDefaultSupporters =
           REMOVE_FILE_IN_PATH.apply(
               getClass().getClassLoader().getResource(DEFAULT_SUPPORTERS_FILE_NAME).getFile()
           );
-      pathToOsxServer =
+      LOGGER.info("pathToDefaultSupporters: " + pathToDefaultSupporters);
+      command.setPathToOsxServer(
           REMOVE_FILE_IN_PATH.apply(
               getClass().getClassLoader().getResource(OSX_SERVER_FILE_NAME).getFile()
-          );
-      pathToVncViewer =
+          )
+      );
+      command.setPathToVncViewer(
               REMOVE_FILE_IN_PATH.apply(
                       getClass().getClassLoader().getResource(VNC_VIEWER_FILE_NAME).getFile()
-              );
+              )
+      );
     } else {
       LOGGER.fine("Running in JAR");
       pathToResources = userHome + "/" + RSCC_FOLDER_NAME;
       // set paths of the files
       pathToResourceDocker = pathToResources + "/" + DOCKER_FOLDER_NAME;
       pathToDefaultSupporters = pathToResources + "/" + DEFAULT_SUPPORTERS_FILE_NAME;
-      pathToOsxServer = pathToResources + "/" + OSX_SERVER_FILE_NAME;
-      pathToVncViewer = pathToResources + "/" + VNC_VIEWER_FILE_NAME;
+      command.setPathToOsxServer(pathToResources + "/" + OSX_SERVER_FILE_NAME);
+      command.setPathToVncViewer(pathToResources + "/" + VNC_VIEWER_FILE_NAME);
       // extract all resources out of the JAR file
       Arrays.stream(EXTRACTED_RESOURCES).forEach(resource ->
           extractJarContents(theLocationOftheRunningClass, pathToResources, resource)
@@ -1005,11 +1006,4 @@ public class Rscc {
     return command;
   }
 
-  public static String getPathToOsxServer() {
-    return pathToOsxServer;
-  }
-
-  public static String getPathToVncViewer() {
-    return pathToVncViewer;
-  }
 }
