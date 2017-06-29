@@ -58,11 +58,11 @@ public class CommandHandler {
     vncViewerListen =
         new Command("-listen");
     vncViewerCompression =
-        new Command("-compresslevel", "-CompressLevel", "-CompressionLevel", null);
+        new Command("-CompressLevel");
     vncViewerQuality =
-        new Command("-quality", "-QualityLevel", "-QualityLevel", null);
+        new Command("-QualityLevel");
     vncViewerBgr233 =
-        new Command("-bgr233", "-LowColorLevel", "-LowColorLevel", null);
+        new Command("-LowColorLevel");
 
     vncServer =
         new Command(
