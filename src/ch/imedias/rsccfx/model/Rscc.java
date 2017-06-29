@@ -726,7 +726,10 @@ public class Rscc {
     setStatusBarKeyInput(strings.statusBarVncViewerStarting, STATUS_BAR_STYLE_INITIALIZE);
 
     try {
-      Thread.sleep(5000);
+      for(int i=0; i<5; i++){
+        System.out.println("Wait "+i);
+
+      Thread.sleep(1000);}
     } catch (InterruptedException e) {
       e.printStackTrace();
     }

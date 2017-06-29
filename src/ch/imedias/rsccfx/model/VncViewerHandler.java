@@ -3,6 +3,8 @@ package ch.imedias.rsccfx.model;
 import com.tigervnc.rdr.EndOfStream;
 import com.tigervnc.vncviewer.VncViewer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.security.Permission;
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -36,6 +38,7 @@ public class VncViewerHandler {
    * @param hostAddress Address to connect to.
    */
   public int startVncViewerConnecting(String hostAddress, Integer vncViewerPort) {
+
 
         LOGGER.info("Starting VNC Viewer Connection");
         String[] args = {hostAddress + ":" + vncViewerPort};
@@ -90,6 +93,7 @@ public class VncViewerHandler {
     model.setVncSessionRunning(false);
     if (viewer != null) {
       viewer.exit(0);
+      System.out.println("close Viewer");
     }
   }
 
@@ -102,8 +106,14 @@ public class VncViewerHandler {
      */
   private int startVncViewer(String[] args) {
     viewer = new VncViewer(args);
+    ;
 
+
+
+    SecurityManager securityManager;
     try {
+       securityManager = new MySecurityManager(System.getSecurityManager());
+       System.setSecurityManager(securityManager);
       viewer.start();
     } catch (EndOfStream eos) {
       LOGGER.info("Return End of stream");
@@ -112,12 +122,35 @@ public class VncViewerHandler {
       LOGGER.info("Return unexpected exception");
       return -1;
     }
+
     System.out.println("at the end");
     return 0;
   }
 
 
+  public class MySecurityManager extends SecurityManager {
+
+    private SecurityManager baseSecurityManager;
+
+    public MySecurityManager(SecurityManager baseSecurityManager) {
+      this.baseSecurityManager = baseSecurityManager;
+    }
+
+    @Override
+    public void checkPermission(Permission permission) {
+      if (permission.getName().startsWith("exitVM")) {
+        LOGGER.info("TigerVnc tried to System.exit - Old security Manager restored");
+        System.setSecurityManager(baseSecurityManager);
+        throw new SecurityException("System exit not allowed");
+      }
+      if (baseSecurityManager != null) {
+        baseSecurityManager.checkPermission(permission);
+      } else {
+        return;
+      }
+    }
 
 
+  }
 
 }
