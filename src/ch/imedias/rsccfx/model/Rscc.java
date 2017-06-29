@@ -542,12 +542,12 @@ public class Rscc {
     setStatusBarKeyInput(strings.statusBarVncViewerStarting, STATUS_BAR_STYLE_INITIALIZE);
 
     int i = 0;
-    while (!isVncSessionRunning() && i < 10) {
+    while (!isVncSessionRunning() && i < 5) {
       vncViewer.startVncViewerConnecting("localhost",
           (rudp != null) ? getProxyPort() : vncPort.getValue());
       i++;
       try {
-        Thread.sleep(1000);
+        Thread.sleep(5000);
       } catch (InterruptedException e) {
         LOGGER.info(e.getMessage());
       }
