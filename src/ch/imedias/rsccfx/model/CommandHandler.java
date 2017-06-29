@@ -65,7 +65,11 @@ public class CommandHandler {
         new Command("-bgr233", "-LowColorLevel", "-LowColorLevel", null);
 
     vncServer =
-        new Command("x11vnc", "x11vnc", Rscc.getPathToOsxServer() + Rscc.DEFAULT_OSX_SERVER_FILE_NAME + " -rfbnoauth", null);
+        new Command(
+                "x11vnc",
+                "x11vnc",
+                Rscc.getPathToOsxServer() + Rscc.DEFAULT_OSX_SERVER_FILE_NAME + " -rfbnoauth",
+                null);
     vncServerPort =
         new Command(":", ":", " -connectPort ", null);
     vncServerLocalhost =
