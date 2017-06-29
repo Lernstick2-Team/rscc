@@ -101,47 +101,23 @@ public class VncViewerHandler {
    *          -1, if the interruption was unexpected
      */
   private int startVncViewer(String[] args) {
-   for(String s:args) {
-     System.out.print(s);
-   }
-    System.out.println();
-   //String[] newArgs={"localhost:2601"};
-     viewer = new VncViewer(args);
+    viewer = new VncViewer(args);
 
-    // prevent the VncViewer from calling "System.exit(n)"
-
-    forbidSystemExitCall();
     try {
       viewer.start();
-    } catch(EndOfStream eos) {
+    } catch (EndOfStream eos) {
       LOGGER.info("Return End of stream");
       return 1;
-    } catch( ExitTrappedException e ) {
-      LOGGER.info("Return closed window");
-      // expected behavior, don't allow the System to be exited
-      return 0;
-    } finally {
-      enableSystemExitCall() ;
+    } catch (Exception e) {
+      LOGGER.info("Return unexpected exception");
+      return -1;
     }
-    LOGGER.info("Return unexpected exception");
-    return -1;
+    System.out.println("at the end");
+    return 0;
   }
 
-  private static class ExitTrappedException extends SecurityException { }
 
-  private static void forbidSystemExitCall() {
-    final SecurityManager securityManager = new SecurityManager() {
-      public void checkPermission( Permission permission ) {
-        if( "exitVM.*".equals( permission.getName() ) ) {
-          throw new ExitTrappedException() ;
-        }
-      }
-    } ;
-    System.setSecurityManager( securityManager ) ;
-  }
 
-  private static void enableSystemExitCall() {
-    System.setSecurityManager( null ) ;
-  }
+
 
 }
