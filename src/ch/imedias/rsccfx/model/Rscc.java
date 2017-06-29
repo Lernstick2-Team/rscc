@@ -136,7 +136,7 @@ public class Rscc {
   private final BooleanProperty forcingServerMode = new SimpleBooleanProperty(false);
 
   private int remotePort;
-  private File sessionKey;
+  private File sshSessionKey;
   private int p2pPort;
 
   //States
@@ -416,19 +416,13 @@ public class Rscc {
       vncViewer.killVncViewerProcess();
     }
 
-    //    // Execute port_stop.sh with the generated key to kill the SSH connections
-    //    LOGGER.info("SSH connection still active - try closing SSH connection");
-    //    String command = systemCommander.commandStringGenerator(
-    //        pathToResourceDocker, "port_stop.sh", keyUtil.getKey());
-    //    systemCommander.executeTerminalCommand(command);
 
-    sshSessionHandler("delete");
-    sshTunnelPortForwarding("delete", sessionKey);
-    remotePort = -1;
-
-    if (sessionKey != null) {
-      sessionKey.delete();
-      sessionKey = null;
+    if (sshSessionKey != null) {
+      sshSessionHandler("delete");
+      sshTunnelPortForwarding("delete", sshSessionKey);
+      sshSessionKey.delete();
+      sshSessionKey = null;
+      remotePort = -1;
     }
 
     keyUtil.setKey("");
@@ -526,8 +520,12 @@ public class Rscc {
       } else if ("connect".equals(verb)) {
         session.setPortForwardingL(getVncPort(), "localhost", remotePort);
       } else if ("delete".equals(verb)) {
-        session.delPortForwardingR("localhost", remotePort);
-        session.delPortForwardingL("localhost", getVncPort());
+        if (session.getPortForwardingL().length > 0) {
+          session.delPortForwardingL("localhost", getVncPort());
+        }
+        if (session.getPortForwardingR().length > 0) {
+          session.delPortForwardingR("localhost", remotePort);
+        }
         session.disconnect();
       }
     } catch (JSchException e) {
@@ -546,24 +544,9 @@ public class Rscc {
 
     setStatusBarKeyGeneration(strings.statusBarRequestingKey, STATUS_BAR_STYLE_INITIALIZE);
 
-    sessionKey = sshSessionHandler("create");
-    sshTunnelPortForwarding("share",sessionKey);
+    sshSessionKey = sshSessionHandler("create");
+    sshTunnelPortForwarding("share", sshSessionKey);
 
-    //    String command = systemCommander.commandStringGenerator(
-    //        pathToResourceDocker, "port_share.sh", Integer.toString(getVncPort()));
-    //
-    //    SystemCommanderReturnValues returnValues = systemCommander
-    // .executeTerminalCommand(command);
-    //
-    //    if (returnValues.getExitCode() != 0) {
-    //      LOGGER.severe("Command failed: " + command + " ExitCode: "
-    // + returnValues.getExitCode());
-    //      setStatusBarKeyGeneration(strings.statusBarKeyGeneratedFailed, STATUS_BAR_STYLE_FAIL);
-    //      setIsKeyRefreshInProgress(false);
-    //      return;
-    //    }
-    //
-    //    keyUtil.setKey(returnValues.getOutputString()); // update key in model
     rscccfp = new Rscccfp(this, true);
     rscccfp.setDaemon(true);
     rscccfp.start();
