@@ -36,12 +36,11 @@ public class VncViewerHandler {
    * @param hostAddress Address to connect to.
    */
   public int startVncViewerConnecting(String hostAddress, Integer vncViewerPort) {
-    Thread startConnecting = new Thread() {
-      public void run() {
+
         LOGGER.info("Starting VNC Viewer Connection");
         String[] args = {hostAddress + ":" + vncViewerPort};
         LOGGER.info("Starting VNCViewer with args: " + Arrays.toString(args));
-        int result = startVncViewer(args);
+        int result = startVncViewer(args);
         LOGGER.info("Starting VNCViewer with command: " + command);
         model.setVncViewerProcessRunning(true);
 
@@ -57,10 +56,6 @@ public class VncViewerHandler {
 
         return result;
 
-      }
-    };
-    startConnecting.start();
-    return -1;
   }
 
 
@@ -120,13 +115,16 @@ public class VncViewerHandler {
       // start the VNC viewer
       viewer.start();
     } catch(EndOfStream eos) {
+      LOGGER.info("Return End of stream");
       return 1;
     } catch( SecurityException e ) {
+      LOGGER.info("Return closed window");
       // expected behavior, don't allow the System to be exited
       return 0;
     } finally {
       System.setSecurityManager(securityManager);
     }
+      LOGGER.info("Return unexpected exception");
     return -1;
   }
 

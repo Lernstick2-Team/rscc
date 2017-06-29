@@ -533,9 +533,9 @@ public class Rscc {
     setStatusBarKeyInput(strings.statusBarVncViewerStarting, STATUS_BAR_STYLE_INITIALIZE);
 
     int i = 0;
-    int result = 1;
-    while (!isVncSessionRunning() && i < 10 && result == 1) {
-      result = vncViewer.startVncViewerConnecting("localhost",
+    int result = 1;
+    while (i < 10 && result != 0) {
+      result = vncViewer.startVncViewerConnecting("localhost",
           (rudp != null) ? getProxyPort() : vncPort.getValue());
       i++;
      try {
