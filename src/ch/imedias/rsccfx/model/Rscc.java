@@ -166,6 +166,7 @@ public class Rscc {
     this.keyUtil = keyUtil;
     this.command = command;
     defineResourcePath();
+    command.initializeCommands();
     loadUserPreferences();
   }
 

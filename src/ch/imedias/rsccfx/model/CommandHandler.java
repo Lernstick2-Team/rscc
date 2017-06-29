@@ -43,7 +43,6 @@ public class CommandHandler {
     String os = determineOs();
     setOs(os);
     LOGGER.info("Running on the OS: " + os);
-    initializeCommands();
   }
 
   /**
@@ -55,7 +54,7 @@ public class CommandHandler {
    * {@link Command#Command(String)}
    * example = new  Command(command) => will be the same for all OS'es
    */
-  private void initializeCommands() {
+  public void initializeCommands() {
     vncViewer =
         new Command("java -jar " + pathToVncViewer);
     vncViewerListen =
@@ -208,12 +207,12 @@ public class CommandHandler {
   }
 
   public void setPathToOsxServer(String pathToOsxServer) {
-    LOGGER.info("pathToOsxServer: " + pathToOsxServer);
     this.pathToOsxServer = pathToOsxServer;
+    LOGGER.info("pathToOsxServer: " + this.pathToOsxServer);
   }
 
   public void setPathToVncViewer(String pathToVncViewer) {
-    LOGGER.info("pathToVncViewer: " + pathToVncViewer);
     this.pathToVncViewer = pathToVncViewer;
+    LOGGER.info("pathToVncViewer: " + this.pathToVncViewer);
   }
 }
