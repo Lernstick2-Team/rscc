@@ -474,7 +474,7 @@
             <artifactId>tigervnc</artifactId>
             <version>1.8.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/VncViewer-1.8.0.jar</systemPath>
+            <systemPath>${project.basedir}/resources/VncViewer-1.8.0.jar</systemPath>
         </dependency>
 
     </dependencies>

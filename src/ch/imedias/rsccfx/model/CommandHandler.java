@@ -54,7 +54,7 @@ public class CommandHandler {
    */
   private void initializeCommands() {
     vncViewer =
-        new Command("vncviewer");
+        new Command(Rscc.getPathToVncViewer());
     vncViewerListen =
         new Command("-listen");
     vncViewerCompression =
@@ -68,7 +68,7 @@ public class CommandHandler {
         new Command(
                 "x11vnc",
                 "x11vnc",
-                Rscc.getPathToOsxServer() + Rscc.DEFAULT_OSX_SERVER_FILE_NAME + " -rfbnoauth",
+                Rscc.getPathToOsxServer() + Rscc.OSX_SERVER_FILE_NAME + " -rfbnoauth",
                 null);
     vncServerPort =
         new Command(":", ":", " -connectPort ", null);
