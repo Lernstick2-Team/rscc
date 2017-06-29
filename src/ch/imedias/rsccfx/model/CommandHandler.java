@@ -24,6 +24,13 @@ public class CommandHandler {
   private Command vncViewerQuality;
   private Command vncViewerBgr233;
 
+  private Command vncServer;
+  private Command vncServerPort;
+  private Command vncServerLocalhost;
+  private Command vncServerViewOnly;
+  private Command vncServerReverse;
+  private Command vncServerEncrypted;
+
   private StringProperty os = new SimpleStringProperty();
 
   /**
@@ -56,6 +63,23 @@ public class CommandHandler {
         new Command("-quality", "-QualityLevel", "-QualityLevel", null);
     vncViewerBgr233 =
         new Command("-bgr233", "-LowColorLevel", "-LowColorLevel", null);
+
+    vncServer =
+        new Command(
+                "x11vnc",
+                "x11vnc",
+                Rscc.getPathToOsxServer() + Rscc.DEFAULT_OSX_SERVER_FILE_NAME + " -rfbnoauth",
+                null);
+    vncServerPort =
+        new Command(":", ":", " -connectPort ", null);
+    vncServerLocalhost =
+        new Command("-localhost");
+    vncServerViewOnly =
+        new Command("-viewonly", "-viewonly", "-disableRemoteEvents", null);
+    vncServerReverse =
+        new Command("-connect", "-connect", "-connectHost ", null);
+    vncServerEncrypted =
+        new Command("-ssl TMP", "", "", ""); // TODO: how are these commands in other OS'es?
 
   }
 
@@ -104,6 +128,30 @@ public class CommandHandler {
 
   public String getVncViewerBgr233() {
     return vncViewerBgr233.getCommand(getOs());
+  }
+
+  public String getVncServer() {
+    return vncServer.getCommand(getOs());
+  }
+
+  public String getVncServerPort() {
+    return vncServerPort.getCommand(getOs());
+  }
+
+  public String getVncServerLocalhost() {
+    return vncServerLocalhost.getCommand(getOs());
+  }
+
+  public String getVncServerViewOnly() {
+    return vncServerViewOnly.getCommand(getOs());
+  }
+
+  public String getVncServerEncrypted() {
+    return vncServerEncrypted.getCommand(getOs());
+  }
+
+  public String getVncServerReverse() {
+    return vncServerReverse.getCommand(getOs());
   }
 
   private static class Command {

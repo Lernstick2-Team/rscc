@@ -14,7 +14,7 @@ public class VncServerHandler {
   private static final Logger LOGGER =
       Logger.getLogger(VncServerHandler.class.getName());
   private final Rscc model;
-  private final String vncServerName = "x11vnc";
+  private final CommandHandler command;
   private Process process;
 
   /**
@@ -24,6 +24,7 @@ public class VncServerHandler {
    */
   public VncServerHandler(Rscc model) {
     this.model = model;
+    command = model.getCommand();
   }
 
 
@@ -42,12 +43,11 @@ public class VncServerHandler {
         try {
 
           StringBuilder commandArray = new StringBuilder();
-          commandArray.append(vncServerName);
-          commandArray.append(" ").append("-connect");
-          commandArray.append(" ").append(hostAddress + ":" + vncViewerPort);
+          commandArray.append(command.getVncServer());
+          commandArray.append(" ").append(command.getVncServerReverse());
+          commandArray.append(" ").append(hostAddress + command.getVncServerPort() + vncViewerPort);
           if (isEncrypted) {
-            commandArray.append(" ").append("-ssl");
-            commandArray.append(" ").append("TMP");
+            commandArray.append(" ").append(command.getVncServerEncrypted());
           }
 
           LOGGER.info("Strating VNC-Server with command: " + commandArray.toString());
@@ -111,15 +111,14 @@ public class VncServerHandler {
         model.setVncServerProcessRunning(true);
 
         try {
-
           StringBuilder commandArray = new StringBuilder();
-          commandArray.append(vncServerName);
-          commandArray.append(" ").append("-localhost");
+          commandArray.append(command.getVncServer());
+          commandArray.append(" ").append(command.getVncServerLocalhost());
           if (model.getVncViewOnly()) {
-            commandArray.append(" ").append("-viewonly");
+            commandArray.append(" ").append(command.getVncServerViewOnly());
           }
 
-          LOGGER.info("Strating VNC-Server with command: " + commandArray.toString());
+          LOGGER.info("Starting VNC-Server with command: " + commandArray.toString());
 
           process = model.getSystemCommander().startProcess(commandArray.toString());
 
