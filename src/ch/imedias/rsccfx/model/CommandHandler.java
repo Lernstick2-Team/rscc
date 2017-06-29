@@ -74,7 +74,7 @@ public class CommandHandler {
         new Command("-viewonly", "-viewonly", "-disableRemoteEvents", null);
     vncServerReverse =
         new Command("-connect", "-connect", "-connectHost ", null);
-    vncServerEncrypted = 
+    vncServerEncrypted =
         new Command("-ssl TMP", "", "", ""); // TODO: how are these commands in other OS'es?
 
   }
