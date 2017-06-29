@@ -2,6 +2,8 @@ package ch.imedias.rsccfx.model;
 
 import ch.imedias.rsccfx.model.util.NoExitSecurityManager;
 import com.tigervnc.vncviewer.VncViewer;
+
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 
@@ -37,8 +39,8 @@ public class VncViewerHandler {
       public void run() {
         LOGGER.info("Starting VNC Viewer Connection");
         String[] args = {hostAddress + ":" + vncViewerPort};
+        LOGGER.info("Starting VNCViewer with args: " + Arrays.toString(args));
         startVncViewer(args);
-        LOGGER.info("Starting VNCViewer with command: " + command);
         model.setVncViewerProcessRunning(true);
 
         LOGGER.info("VNC - Viewer process has ended");
@@ -64,6 +66,7 @@ public class VncViewerHandler {
     Thread startListening = new Thread() {
       public void run() {
         String[] args = {"-listen"};
+        LOGGER.info("Starting VNCViewer with args: " + Arrays.toString(args));
         startVncViewer(args);
         LOGGER.info("Starting VNC Viewer listening Thread ");
         model.setVncViewerProcessRunning(true);
