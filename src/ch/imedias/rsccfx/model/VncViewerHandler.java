@@ -90,12 +90,13 @@ public class VncViewerHandler {
   }
 
   private void startVncViewer(String[] args) {
-    if (args == null) {
-      String[] defaultArgs = {"192.168.192.112"};
-      viewer = new VncViewer(defaultArgs);
-    } else {
-      viewer = new VncViewer(args);
-    }
+   for(String s:args) {
+     System.out.print(s);
+   }
+    System.out.println();
+   //String[] newArgs={"localhost:2601"};
+     viewer = new VncViewer(args);
+
     viewer.start();
   }
 
