@@ -533,21 +533,17 @@ public class Rscc {
     setStatusBarKeyInput(strings.statusBarVncViewerStarting, STATUS_BAR_STYLE_INITIALIZE);
 
     int i = 0;
-    try {
-      Thread.sleep(5000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-    //while (!isVncSessionRunning() && i < 10) {
-      vncViewer.startVncViewerConnecting("localhost",
+    int result = 1;
+    while (!isVncSessionRunning() && i < 10 && result == 1) {
+      result = vncViewer.startVncViewerConnecting("localhost",
           (rudp != null) ? getProxyPort() : vncPort.getValue());
-    //  i++;
-     // try {
-      //  Thread.sleep(1000);
-     // } catch (InterruptedException e) {
-      //  LOGGER.info(e.getMessage());
-     // }
-   // }
+      i++;
+     try {
+       Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        LOGGER.info(e.getMessage());
+      }
+    }
 
     if (isVncSessionRunning()) {
       if (rudp != null) {

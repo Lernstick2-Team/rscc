@@ -1,6 +1,7 @@
 package ch.imedias.rsccfx.model;
 
 import ch.imedias.rsccfx.model.util.NoExitSecurityManager;
+import com.tigervnc.rdr.EndOfStream;
 import com.tigervnc.vncviewer.VncViewer;
 
 import java.util.Arrays;
@@ -34,13 +35,13 @@ public class VncViewerHandler {
    *
    * @param hostAddress Address to connect to.
    */
-  public void startVncViewerConnecting(String hostAddress, Integer vncViewerPort) {
+  public int startVncViewerConnecting(String hostAddress, Integer vncViewerPort) {
     Thread startConnecting = new Thread() {
       public void run() {
         LOGGER.info("Starting VNC Viewer Connection");
         String[] args = {hostAddress + ":" + vncViewerPort};
         LOGGER.info("Starting VNCViewer with args: " + Arrays.toString(args));
-        startVncViewer(args);
+        int result = startVncViewer(args);
         LOGGER.info("Starting VNCViewer with command: " + command);
         model.setVncViewerProcessRunning(true);
 
@@ -53,10 +54,13 @@ public class VncViewerHandler {
         model.setVncViewerProcessRunning(false);
 
         LOGGER.info("Ending VNC Viewer Thread ");
+
+        return result;
+
       }
     };
     startConnecting.start();
-
+    return -1;
   }
 
 
@@ -94,7 +98,14 @@ public class VncViewerHandler {
     }
   }
 
-  private void startVncViewer(String[] args) {
+  /**
+   * Starts the TigerVNC viewer, implemented as JAR dependency.
+   * @param args the arguments to be used in the viewer
+   * @return 0, if it was exited by the user
+   *          1, if the connection could not be made
+   *          -1, if the interruption was unexpected
+     */
+  private int startVncViewer(String[] args) {
    for(String s:args) {
      System.out.print(s);
    }
@@ -108,11 +119,15 @@ public class VncViewerHandler {
     try {
       // start the VNC viewer
       viewer.start();
+    } catch(EndOfStream eos) {
+      return 1;
     } catch( SecurityException e ) {
       // expected behavior, don't allow the System to be exited
+      return 0;
     } finally {
       System.setSecurityManager(securityManager);
     }
+    return -1;
   }
 
 }
