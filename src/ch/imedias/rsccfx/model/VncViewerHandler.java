@@ -101,7 +101,7 @@ public class VncViewerHandler {
       commandArray.append(" ").append(command.getVncViewerBgr233());
     }
     if (!listenMode) {
-      commandArray.append(" ").append(hostAddress + "::" + vncViewerPort);
+      commandArray.append(" ").append(hostAddress + ":" + vncViewerPort);
     }
     return commandArray.toString();
   }
