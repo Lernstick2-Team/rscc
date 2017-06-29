@@ -468,5 +468,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- TigerVNC from https://github.com/TigerVNC/tigervnc -->
+        <dependency>
+            <groupId>tigervnc</groupId>
+            <artifactId>tigervnc</artifactId>
+            <version>1.8.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/VncViewer-1.8.0.jar</systemPath>
+        </dependency>
+
     </dependencies>
 </project>
