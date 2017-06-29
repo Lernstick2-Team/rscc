@@ -1,8 +1,9 @@
 package ch.imedias.rsccfx.model;
 
-import ch.imedias.rsccfx.model.util.NoExitSecurityManager;
+import com.tigervnc.rdr.EndOfStream;
 import com.tigervnc.vncviewer.VncViewer;
 
+import java.security.Permission;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -34,13 +35,12 @@ public class VncViewerHandler {
    *
    * @param hostAddress Address to connect to.
    */
-  public void startVncViewerConnecting(String hostAddress, Integer vncViewerPort) {
-    Thread startConnecting = new Thread() {
-      public void run() {
+  public int startVncViewerConnecting(String hostAddress, Integer vncViewerPort) {
+
         LOGGER.info("Starting VNC Viewer Connection");
         String[] args = {hostAddress + ":" + vncViewerPort};
         LOGGER.info("Starting VNCViewer with args: " + Arrays.toString(args));
-        startVncViewer(args);
+        int result = startVncViewer(args);
         LOGGER.info("Starting VNCViewer with command: " + command);
         model.setVncViewerProcessRunning(true);
 
@@ -53,9 +53,8 @@ public class VncViewerHandler {
         model.setVncViewerProcessRunning(false);
 
         LOGGER.info("Ending VNC Viewer Thread ");
-      }
-    };
-    startConnecting.start();
+
+        return result;
 
   }
 
@@ -94,7 +93,14 @@ public class VncViewerHandler {
     }
   }
 
-  private void startVncViewer(String[] args) {
+  /**
+   * Starts the TigerVNC viewer, implemented as JAR dependency.
+   * @param args the arguments to be used in the viewer
+   * @return 0, if it was exited by the user
+   *          1, if the connection could not be made
+   *          -1, if the interruption was unexpected
+     */
+  private int startVncViewer(String[] args) {
    for(String s:args) {
      System.out.print(s);
    }
@@ -103,16 +109,39 @@ public class VncViewerHandler {
      viewer = new VncViewer(args);
 
     // prevent the VncViewer from calling "System.exit(n)"
-    SecurityManager securityManager = System.getSecurityManager();
-    System.setSecurityManager(new NoExitSecurityManager(securityManager)) ;
+
+    forbidSystemExitCall();
     try {
-      // start the VNC viewer
       viewer.start();
-    } catch( SecurityException e ) {
+    } catch(EndOfStream eos) {
+      LOGGER.info("Return End of stream");
+      return 1;
+    } catch( ExitTrappedException e ) {
+      LOGGER.info("Return closed window");
       // expected behavior, don't allow the System to be exited
+      return 0;
     } finally {
-      System.setSecurityManager(securityManager);
+      enableSystemExitCall() ;
     }
+    LOGGER.info("Return unexpected exception");
+    return -1;
+  }
+
+  private static class ExitTrappedException extends SecurityException { }
+
+  private static void forbidSystemExitCall() {
+    final SecurityManager securityManager = new SecurityManager() {
+      public void checkPermission( Permission permission ) {
+        if( "exitVM".equals( permission.getName() ) ) {
+          throw new ExitTrappedException() ;
+        }
+      }
+    } ;
+    System.setSecurityManager( securityManager ) ;
+  }
+
+  private static void enableSystemExitCall() {
+    System.setSecurityManager( null ) ;
   }
 
 }
