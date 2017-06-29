@@ -88,10 +88,9 @@ public class Rscc {
   private static final Logger LOGGER =
       Logger.getLogger(Rscc.class.getName());
   /**
-   * Points to the "docker-build_p2p" folder inside resources, relative to the build path.
    * Important: Make sure to NOT include a / in the beginning or the end.
    */
-  private static final String DOCKER_FOLDER_NAME = "docker-build_p2p";
+  private static final String KEYS_FOLDER_NAME = "keys";
   public static final String DEFAULT_SUPPORTERS_FILE_NAME = "rscc-defaults-lernstick.xml";
 
   /**
@@ -100,7 +99,7 @@ public class Rscc {
    */
   private static final String RSCC_FOLDER_NAME = ".config/rscc";
   private static final String[] EXTRACTED_RESOURCES =
-      {DOCKER_FOLDER_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
+      {KEYS_FOLDER_NAME, DEFAULT_SUPPORTERS_FILE_NAME};
   public static final UnaryOperator<String> REMOVE_FILE_IN_PATH =
       string -> string.replaceFirst("file:", "");
   private final SystemCommander systemCommander;
@@ -135,6 +134,7 @@ public class Rscc {
   private final IntegerProperty stunServerPort = new SimpleIntegerProperty();
   private final BooleanProperty forcingServerMode = new SimpleBooleanProperty(false);
 
+  private static final String KEYSERVER_USER_NAME = "vnc";
   private int remotePort;
   private File sshSessionKey;
   private int p2pPort;
@@ -153,7 +153,7 @@ public class Rscc {
   public final Strings strings = new Strings();
   private final KeyUtil keyUtil;
   private String pathToResources;
-  private String pathToResourceDocker;
+  private String pathToResourceKeys;
   private String pathToDefaultSupporters;
   private boolean isLocalIceSuccessful = false;
   private boolean isRemoteIceSuccessful = false;
@@ -251,9 +251,9 @@ public class Rscc {
     if (actualClass.isDirectory()) {
       LOGGER.fine("Running in IDE");
       // set paths of the files
-      pathToResourceDocker =
+      pathToResourceKeys =
           REMOVE_FILE_IN_PATH.apply(
-              getClass().getClassLoader().getResource(DOCKER_FOLDER_NAME).getFile()
+              getClass().getClassLoader().getResource(KEYS_FOLDER_NAME).getFile()
           );
       pathToDefaultSupporters =
           REMOVE_FILE_IN_PATH.apply(
@@ -263,7 +263,7 @@ public class Rscc {
       LOGGER.fine("Running in JAR");
       pathToResources = userHome + "/" + RSCC_FOLDER_NAME;
       // set paths of the files
-      pathToResourceDocker = pathToResources + "/" + DOCKER_FOLDER_NAME;
+      pathToResourceKeys = pathToResources + "/" + KEYS_FOLDER_NAME;
       pathToDefaultSupporters = pathToResources + "/" + DEFAULT_SUPPORTERS_FILE_NAME;
       // extract all resources out of the JAR file
       Arrays.stream(EXTRACTED_RESOURCES).forEach(resource ->
@@ -342,17 +342,17 @@ public class Rscc {
     String urlString = "http://" + getKeyServerIp() + ":" + getKeyServerHttpPort() + "/port";
     try {
       URL oracle = new URL(urlString);
-      URLConnection yc = oracle.openConnection();
-      BufferedReader in = new BufferedReader(new InputStreamReader(
-          yc.getInputStream()));
-      String inputLine = in.readLine();
+      URLConnection urlConnection = oracle.openConnection();
+      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+          urlConnection.getInputStream()));
+      String inputLine = bufferedReader.readLine();
 
       if (inputLine != null) {
         p2pPort = Integer.parseInt(inputLine);
-        LOGGER.info("Received  and set P2P-Ports to: " + p2pPort);
+        LOGGER.info("Received and set P2P-Port to: " + p2pPort);
       }
+      bufferedReader.close();
 
-      in.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -368,21 +368,21 @@ public class Rscc {
       try {
         String urlString = "http://" + getKeyServerIp() + ":" + getKeyServerHttpPort()
             + "/keys/" + keyName + ".key";
-        File a = new File(pathToResourceDocker + "/keys/" + keyName + ".key");
+        File a = new File(pathToResourceKeys + "/" + keyName + ".key");
         a.delete();
 
-        String outputFile = pathToResources + "";
         URL website = new URL(urlString);
-        ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-        FileOutputStream fos = new FileOutputStream(
-            pathToResourceDocker + "/keys/" + keyName + ".key");
+        ReadableByteChannel byteChannel = Channels.newChannel(website.openStream());
+        FileOutputStream outputStream = new FileOutputStream(
+            pathToResourceKeys + "/" + keyName + ".key");
 
-        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        outputStream.getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
         a.setReadable(false, false);
         a.setReadable(true, true);
         a.setWritable(false, false);
         a.setExecutable(false, false);
         a.setExecutable(true, true);
+        LOGGER.info("Loaded key from server: " + keyName);
 
       } catch (IOException e) {
         e.printStackTrace();
@@ -432,13 +432,13 @@ public class Rscc {
 
 
   /**
-   *
+   * Contacts the KeyServer to receive Token, SessionKeyFile and port-nr to share.
    * @param verb  Can be get, create, delete
    * @return The SessionKeyFile.
    */
   private File sshSessionHandler(String verb) {
     JSch jsch;
-    File sessionKeyFile = new File(pathToResourceDocker + "/keys/tmp.key");
+    File sessionKeyFile = new File(pathToResourceKeys + "/session.key");
     BufferedInputStream bufferedInputStream;
     BufferedOutputStream bufferedOutputStream;
     OutputStreamWriter outputStreamWriter;
@@ -446,13 +446,13 @@ public class Rscc {
 
     try {
       jsch = new JSch();
-      jsch.addIdentity(pathToResourceDocker + "/keys/" + verb + ".key");
+      jsch.addIdentity(pathToResourceKeys + "/" + verb + ".key");
       LOGGER.info("set keyfile");
 
-      Session session = jsch.getSession("vnc", getKeyServerIp(), p2pPort);
-      Properties config = new Properties();
-      config.put("StrictHostKeyChecking", "no");
-      session.setConfig(config);
+      Session session = jsch.getSession(KEYSERVER_USER_NAME, getKeyServerIp(), p2pPort);
+      Properties hostKeyChackingConfig = new Properties();
+      hostKeyChackingConfig.put("StrictHostKeyChecking", "no");
+      session.setConfig(hostKeyChackingConfig);
       session.connect();
       LOGGER.info("session connected");
 
@@ -510,7 +510,7 @@ public class Rscc {
     try {
       jsch = new JSch();
       jsch.addIdentity(sessionKeyFile.getPath());
-      Session session = jsch.getSession("vnc", getKeyServerIp(), p2pPort);
+      Session session = jsch.getSession(KEYSERVER_USER_NAME, getKeyServerIp(), p2pPort);
       Properties config = new Properties();
       config.put("StrictHostKeyChecking", "no");
       session.setConfig(config);
@@ -655,23 +655,7 @@ public class Rscc {
     File sessionKey = sshSessionHandler("get");
     sshTunnelPortForwarding("connect", sessionKey);
 
-    //    String command = systemCommander.commandStringGenerator(pathToResourceDocker,
-    //        "port_connect.sh", Integer.toString(getVncPort()), keyUtil.getKey());
-    //
-    //    setStatusBarKeyInput(strings.statusBarKeyserverConnected, STATUS_BAR_STYLE_INITIALIZE);
-    //
-    //    SystemCommanderReturnValues returnValues = systemCommander
-    // .executeTerminalCommand(command);
-    //
-    //    if (returnValues.getExitCode() != 0) {
-    //      LOGGER.severe("Command failed: " + command + " ExitCode: "
-    // + returnValues.getExitCode());
-    //      setStatusBarKeyInput(strings.statusBarKeyNotVerified + getKeyUtil().getKey(),
-    //          STATUS_BAR_STYLE_FAIL);
-    //
-    //      setConnectionEstablishmentRunning(false);
-    //      return;
-    //    }
+    setStatusBarKeyInput(strings.statusBarKeyserverConnected, STATUS_BAR_STYLE_INITIALIZE);
 
     rscccfp = new Rscccfp(this, false);
     rscccfp.setDaemon(true);
