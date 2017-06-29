@@ -54,7 +54,7 @@ public class CommandHandler {
    */
   private void initializeCommands() {
     vncViewer =
-        new Command(Rscc.getPathToVncViewer());
+        new Command("java -jar " + Rscc.getPathToVncViewer());
     vncViewerListen =
         new Command("-listen");
     vncViewerCompression =
