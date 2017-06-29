@@ -532,9 +532,14 @@ public class Rscc {
     LOGGER.info("RSCC: Starting VNCViewer");
     setStatusBarKeyInput(strings.statusBarVncViewerStarting, STATUS_BAR_STYLE_INITIALIZE);
 
+    try {
+      Thread.sleep(5000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
     int i = 0;
     int result = 1;
-    while (i < 10 && result != 0) {
+    while (i < 2 && result != 0) {
       result = vncViewer.startVncViewerConnecting("localhost",
           (rudp != null) ? getProxyPort() : vncPort.getValue());
       i++;
