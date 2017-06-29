@@ -28,38 +28,58 @@
  *
  */
 
-package ch.imedias.rsccfx.model.connectionutils.rudp.src;
+package ch.imedias.rsccfx.model.connectionutils.rudp.impl;
 
-/**
- * The listener interface for receiving socket events.
- * The class that is interested in processing a socket
- * event implements this interface.
+
+/*
+ *  Data Segment
  *
- * @author Adrian Granados
+ *   0 1 2 3 4 5 6 7 8            15
+ *  +-+-+-+-+-+-+-+-+---------------+
+ *  |0|1|0|0|0|0|0|0|       6       |
+ *  +-+-+-+-+-+-+-+-+---------------+
+ *  | Sequence #    |   Ack Number  |
+ *  +---------------+---------------+
+ *  |           Checksum            |
+ *  +---------------+---------------+
+ *  | ...                           |
+ *  +-------------------------------+
+ *
  */
-public interface ReliableSocketStateListener {
-  /**
-   * Invoked when the connection is opened.
-   */
-  public void connectionOpened(ReliableSocket sock);
+public class DATSegment extends Segment {
+  private byte[] _data;
 
-  /**
-   * Invoked when the attempt to establish a connection is refused.
-   */
-  public void connectionRefused(ReliableSocket sock);
+  protected DATSegment() {
+  }
 
-  /**
-   * Invoked when the connection is closed.
-   */
-  public void connectionClosed(ReliableSocket sock);
+  public DATSegment(int seqn, int ackn, byte[] b, int off, int len) {
+    init(ACK_FLAG, seqn, RUDP_HEADER_LEN);
+    setAck(ackn);
+    _data = new byte[len];
+    System.arraycopy(b, off, _data, 0, len);
+  }
 
-  /**
-   * Invoked when the (established) connection fails.
-   */
-  public void connectionFailure(ReliableSocket sock);
+  public int length() {
+    return _data.length + super.length();
+  }
 
-  /**
-   * Invoked when the connection is reset.
-   */
-  public void connectionReset(ReliableSocket sock);
+  public String type() {
+    return "DAT";
+  }
+
+  public byte[] getData() {
+    return _data;
+  }
+
+  public byte[] getBytes() {
+    byte[] buffer = super.getBytes();
+    System.arraycopy(_data, 0, buffer, RUDP_HEADER_LEN, _data.length);
+    return buffer;
+  }
+
+  public void parseBytes(byte[] buffer, int off, int len) {
+    super.parseBytes(buffer, off, len);
+    _data = new byte[len - RUDP_HEADER_LEN];
+    System.arraycopy(buffer, off + RUDP_HEADER_LEN, _data, 0, _data.length);
+  }
 }

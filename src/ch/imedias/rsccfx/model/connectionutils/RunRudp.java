@@ -1,9 +1,9 @@
 package ch.imedias.rsccfx.model.connectionutils;
 
 import ch.imedias.rsccfx.model.Rscc;
-import ch.imedias.rsccfx.model.connectionutils.rudp.src.ReliableServerSocket;
-import ch.imedias.rsccfx.model.connectionutils.rudp.src.ReliableSocket;
-import ch.imedias.rsccfx.model.connectionutils.rudp.src.ReliableSocketProfile;
+import ch.imedias.rsccfx.model.connectionutils.rudp.ReliableServerSocket;
+import ch.imedias.rsccfx.model.connectionutils.rudp.ReliableSocket;
+import ch.imedias.rsccfx.model.connectionutils.rudp.ReliableSocketProfile;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import java.io.Closeable;

@@ -28,32 +28,38 @@
  *
  */
 
-package ch.imedias.rsccfx.model.connectionutils.rudp.src.impl;
+package ch.imedias.rsccfx.model.connectionutils.rudp;
 
-/*
- *  RST Segment
+/**
+ * The listener interface for receiving socket events.
+ * The class that is interested in processing a socket
+ * event implements this interface.
  *
- *   0 1 2 3 4 5 6 7 8            15
- *  +-+-+-+-+-+-+-+-+---------------+
- *  | |A| | | | | | |               |
- *  |0|C|0|1|0|0|0|0|        6      |
- *  | |K| | | | | | |               |
- *  +-+-+-+-+-+-+-+-+---------------+
- *  | Sequence #    |   Ack Number  |
- *  +---------------+---------------+
- *  |         Header Checksum       |
- *  +---------------+---------------+
- *
+ * @author Adrian Granados
  */
-public class RSTSegment extends Segment {
-  protected RSTSegment() {
-  }
+public interface ReliableSocketStateListener {
+  /**
+   * Invoked when the connection is opened.
+   */
+  public void connectionOpened(ReliableSocket sock);
 
-  public RSTSegment(int seqn) {
-    init(RST_FLAG, seqn, RUDP_HEADER_LEN);
-  }
+  /**
+   * Invoked when the attempt to establish a connection is refused.
+   */
+  public void connectionRefused(ReliableSocket sock);
 
-  public String type() {
-    return "RST";
-  }
+  /**
+   * Invoked when the connection is closed.
+   */
+  public void connectionClosed(ReliableSocket sock);
+
+  /**
+   * Invoked when the (established) connection fails.
+   */
+  public void connectionFailure(ReliableSocket sock);
+
+  /**
+   * Invoked when the connection is reset.
+   */
+  public void connectionReset(ReliableSocket sock);
 }

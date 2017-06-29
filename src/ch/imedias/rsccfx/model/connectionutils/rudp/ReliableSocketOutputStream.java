@@ -28,7 +28,7 @@
  *
  */
 
-package ch.imedias.rsccfx.model.connectionutils.rudp.src;
+package ch.imedias.rsccfx.model.connectionutils.rudp;
 
 import java.io.IOException;
 import java.io.OutputStream;

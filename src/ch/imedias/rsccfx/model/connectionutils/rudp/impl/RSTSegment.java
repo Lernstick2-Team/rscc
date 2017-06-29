@@ -28,33 +28,32 @@
  *
  */
 
-package ch.imedias.rsccfx.model.connectionutils.rudp.src;
+package ch.imedias.rsccfx.model.connectionutils.rudp.impl;
 
-/**
- * The listener interface for receiving packet events.
- * The class that is interested in processing a packet
- * event implements this interface.
+/*
+ *  RST Segment
  *
- * @author Adrian Granados
+ *   0 1 2 3 4 5 6 7 8            15
+ *  +-+-+-+-+-+-+-+-+---------------+
+ *  | |A| | | | | | |               |
+ *  |0|C|0|1|0|0|0|0|        6      |
+ *  | |K| | | | | | |               |
+ *  +-+-+-+-+-+-+-+-+---------------+
+ *  | Sequence #    |   Ack Number  |
+ *  +---------------+---------------+
+ *  |         Header Checksum       |
+ *  +---------------+---------------+
+ *
  */
-public interface ReliableSocketListener {
-  /**
-   * Invoked when a data packet is sent.
-   */
-  public void packetSent();
+public class RSTSegment extends Segment {
+  protected RSTSegment() {
+  }
 
-  /**
-   * Invoked when a data packet is retransmitted.
-   */
-  public void packetRetransmitted();
+  public RSTSegment(int seqn) {
+    init(RST_FLAG, seqn, RUDP_HEADER_LEN);
+  }
 
-  /**
-   * Invoked when a data packet is received in-order.
-   */
-  public void packetReceivedInOrder();
-
-  /**
-   * Invoked when a out of sequence data packet is received.
-   */
-  public void packetReceivedOutOfOrder();
+  public String type() {
+    return "RST";
+  }
 }

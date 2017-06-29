@@ -28,7 +28,7 @@
  *
  */
 
-package ch.imedias.rsccfx.model.connectionutils.rudp.src.impl;
+package ch.imedias.rsccfx.model.connectionutils.rudp.impl;
 
 public abstract class Segment {
   public static final int RUDP_VERSION = 1;

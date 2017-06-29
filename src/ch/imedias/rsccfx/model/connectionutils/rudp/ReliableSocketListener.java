@@ -28,31 +28,33 @@
  *
  */
 
-package ch.imedias.rsccfx.model.connectionutils.rudp.src.impl;
+package ch.imedias.rsccfx.model.connectionutils.rudp;
 
-
-/*
- *  NUL Segment
+/**
+ * The listener interface for receiving packet events.
+ * The class that is interested in processing a packet
+ * event implements this interface.
  *
- *   0 1 2 3 4 5 6 7 8            15
- *  +-+-+-+-+-+-+-+-+---------------+
- *  |0|1|0|0|1|0|0|0|       6       |
- *  +-+-+-+-+-+-+-+-+---------------+
- *  | Sequence #    |  Ack Number   |
- *  +---------------+---------------+
- *  |            Checksum           |
- *  +---------------+---------------+
- *
+ * @author Adrian Granados
  */
-public class NULSegment extends Segment {
-  protected NULSegment() {
-  }
+public interface ReliableSocketListener {
+  /**
+   * Invoked when a data packet is sent.
+   */
+  public void packetSent();
 
-  public NULSegment(int seqn) {
-    init(NUL_FLAG, seqn, RUDP_HEADER_LEN);
-  }
+  /**
+   * Invoked when a data packet is retransmitted.
+   */
+  public void packetRetransmitted();
 
-  public String type() {
-    return "NUL";
-  }
+  /**
+   * Invoked when a data packet is received in-order.
+   */
+  public void packetReceivedInOrder();
+
+  /**
+   * Invoked when a out of sequence data packet is received.
+   */
+  public void packetReceivedOutOfOrder();
 }

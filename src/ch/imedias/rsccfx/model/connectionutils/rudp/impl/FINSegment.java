@@ -28,58 +28,32 @@
  *
  */
 
-package ch.imedias.rsccfx.model.connectionutils.rudp.src.impl;
-
+package ch.imedias.rsccfx.model.connectionutils.rudp.impl;
 
 /*
- *  Data Segment
+ *  FIN Segment
  *
  *   0 1 2 3 4 5 6 7 8            15
  *  +-+-+-+-+-+-+-+-+---------------+
- *  |0|1|0|0|0|0|0|0|       6       |
+ *  | |A| | | | | | |               |
+ *  |0|C|0|0|0|0|1|0|        6      |
+ *  | |K| | | | | | |               |
  *  +-+-+-+-+-+-+-+-+---------------+
  *  | Sequence #    |   Ack Number  |
  *  +---------------+---------------+
- *  |           Checksum            |
+ *  |         Header Checksum       |
  *  +---------------+---------------+
- *  | ...                           |
- *  +-------------------------------+
  *
  */
-public class DATSegment extends Segment {
-  private byte[] _data;
-
-  protected DATSegment() {
+public class FINSegment extends Segment {
+  protected FINSegment() {
   }
 
-  public DATSegment(int seqn, int ackn, byte[] b, int off, int len) {
-    init(ACK_FLAG, seqn, RUDP_HEADER_LEN);
-    setAck(ackn);
-    _data = new byte[len];
-    System.arraycopy(b, off, _data, 0, len);
-  }
-
-  public int length() {
-    return _data.length + super.length();
+  public FINSegment(int seqn) {
+    init(FIN_FLAG, seqn, RUDP_HEADER_LEN);
   }
 
   public String type() {
-    return "DAT";
-  }
-
-  public byte[] getData() {
-    return _data;
-  }
-
-  public byte[] getBytes() {
-    byte[] buffer = super.getBytes();
-    System.arraycopy(_data, 0, buffer, RUDP_HEADER_LEN, _data.length);
-    return buffer;
-  }
-
-  public void parseBytes(byte[] buffer, int off, int len) {
-    super.parseBytes(buffer, off, len);
-    _data = new byte[len - RUDP_HEADER_LEN];
-    System.arraycopy(buffer, off + RUDP_HEADER_LEN, _data, 0, _data.length);
+    return "FIN";
   }
 }

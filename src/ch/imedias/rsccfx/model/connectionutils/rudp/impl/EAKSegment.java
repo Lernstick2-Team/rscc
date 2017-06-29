@@ -28,32 +28,63 @@
  *
  */
 
-package ch.imedias.rsccfx.model.connectionutils.rudp.src.impl;
+package ch.imedias.rsccfx.model.connectionutils.rudp.impl;
+
 
 /*
- *  FIN Segment
+ *  EACK Segment
  *
  *   0 1 2 3 4 5 6 7 8            15
  *  +-+-+-+-+-+-+-+-+---------------+
- *  | |A| | | | | | |               |
- *  |0|C|0|0|0|0|1|0|        6      |
- *  | |K| | | | | | |               |
+ *  |0|1|1|0|0|0|0|0|     N + 6     |
  *  +-+-+-+-+-+-+-+-+---------------+
  *  | Sequence #    |   Ack Number  |
  *  +---------------+---------------+
- *  |         Header Checksum       |
+ *  |1st out of seq |2nd out of seq |
+ *  |  ack number   |   ack number  |
+ *  +---------------+---------------+
+ *  |  . . .        |Nth out of seq |
+ *  |               |   ack number  |
+ *  +---------------+---------------+
+ *  |            Checksum           |
  *  +---------------+---------------+
  *
  */
-public class FINSegment extends Segment {
-  protected FINSegment() {
+public class EAKSegment extends ACKSegment {
+  private int[] _acks;
+
+  protected EAKSegment() {
   }
 
-  public FINSegment(int seqn) {
-    init(FIN_FLAG, seqn, RUDP_HEADER_LEN);
+  public EAKSegment(int seqn, int ackn, int[] acks) {
+    init(EAK_FLAG, seqn, RUDP_HEADER_LEN + acks.length);
+    setAck(ackn);
+    _acks = acks;
   }
 
   public String type() {
-    return "FIN";
+    return "EAK";
+  }
+
+  public int[] getACKs() {
+    return _acks;
+  }
+
+  public byte[] getBytes() {
+    byte[] buffer = super.getBytes();
+
+    for (int i = 0; i < _acks.length; i++) {
+      buffer[4 + i] = (byte) (_acks[i] & 0xFF);
+    }
+
+    return buffer;
+  }
+
+  protected void parseBytes(byte[] buffer, int off, int len) {
+    super.parseBytes(buffer, off, len);
+    _acks = new int[len - RUDP_HEADER_LEN];
+    for (int i = 0; i < _acks.length; i++) {
+      _acks[i] = (buffer[off + 4 + i] & 0xFF);
+    }
   }
 }
