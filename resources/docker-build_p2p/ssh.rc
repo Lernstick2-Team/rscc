@@ -4,7 +4,7 @@
 #### Connection setup
 ### IP or DomainName of the p2p server
 ### Port of the http service in the p2p server
-p2p_server=86.119.39.89
+p2p_server=agora.imedias.ch
 http_port=800
 
 #### Configuration received from th server
