@@ -37,7 +37,7 @@ public class RsccTest {
     mockSystemCommander = mock(SystemCommander.class);
     mockKeyUtil = mock(KeyUtil.class);
     command = new CommandHandler(); // TODO: replace with Mock
-    model = new Rscc(mockSystemCommander, mockKeyUtil, command);
+    model = new Rscc(mockSystemCommander, mockKeyUtil);
     returnValues = new SystemCommanderReturnValues();
     // since commandStringGenerator is mainly a utility function and is being tested separately
     // call the real method
@@ -51,26 +51,26 @@ public class RsccTest {
   }
 
   /**
-   * Test for Constructor {@link Rscc#Rscc(SystemCommander, KeyUtil, CommandHandler)}.
+   * Test for Constructor {@link Rscc#Rscc(SystemCommander, KeyUtil)}.
    */
   @Test
   public void testRsccConstructorIllegalArguments() {
     try {
-      new Rscc(null, mockKeyUtil, command);
+      new Rscc(null, mockKeyUtil);
       fail("IllegalArgumentException was expected when SystemCommander is null");
     } catch (IllegalArgumentException e) {
       // expected behavior
     }
 
     try {
-      new Rscc(mockSystemCommander, null, command);
+      new Rscc(mockSystemCommander, null);
       fail("IllegalArgumentException was expected when KeyUtil is null");
     } catch (IllegalArgumentException e) {
       // expected behavior
     }
 
     try {
-      new Rscc(null, null, command);
+      new Rscc(null, null);
       fail("IllegalArgumentException was expected when all parameters are null");
     } catch (IllegalArgumentException e) {
       // expected behavior
@@ -78,12 +78,12 @@ public class RsccTest {
   }
 
   /**
-   * Test for Constructor {@link Rscc#Rscc(SystemCommander, KeyUtil, CommandHandler)}.
+   * Test for Constructor {@link Rscc#Rscc(SystemCommander, KeyUtil)}.
    */
   @Test
   public void testRsccConstructor() {
     try {
-      new Rscc(mockSystemCommander, mockKeyUtil, command);
+      new Rscc(mockSystemCommander, mockKeyUtil);
     } catch (Exception e) {
       fail(e.getMessage());
     }
