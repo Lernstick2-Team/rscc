@@ -194,26 +194,6 @@
                 </executions>
             </plugin>
 
-            <!-- Set permission on shell-scripts when starting app from IDE -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
-                <executions>
-                    <execution>
-                        <id>process-classes</id>
-                        <phase>process-classes</phase>
-                        <configuration>
-                            <target>
-                                <chmod file="target/classes/docker-build_p2p/*" perm="744"/>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
             <!-- Generates CodeCoverage Report -->
             <plugin>
@@ -466,6 +446,13 @@
             <artifactId>equalsverifier</artifactId>
             <version>[2.3,]</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- JSch - Java Secure Channel -->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.54</version>
         </dependency>
 
     </dependencies>

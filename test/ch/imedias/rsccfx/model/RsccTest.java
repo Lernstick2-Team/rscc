@@ -103,6 +103,7 @@ public class RsccTest {
   /**
    * Test for {@link Rscc#killConnection()}.
    */
+  @Ignore
   @Test
   public void testKillConnection() throws Exception {
     model.killConnection();
