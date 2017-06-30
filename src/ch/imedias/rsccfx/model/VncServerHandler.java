@@ -113,7 +113,9 @@ public class VncServerHandler {
         try {
           StringBuilder commandArray = new StringBuilder();
           commandArray.append(command.getVncServer());
-          commandArray.append(" ").append(command.getVncServerLocalhost());
+          if (command.getVncServerLocalhost() != null){
+            commandArray.append(" ").append(command.getVncServerLocalhost());
+          }
           if (model.getVncViewOnly()) {
             commandArray.append(" ").append(command.getVncServerViewOnly());
           }

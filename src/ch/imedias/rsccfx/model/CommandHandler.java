@@ -73,7 +73,7 @@ public class CommandHandler {
     vncServerPort =
         new Command(":", ":", " -connectPort ", " -PortNumber");
     vncServerLocalhost =
-        new Command("-localhost");
+        new Command("-localhost","-localhost","-localhost",null);
     vncServerViewOnly =
         new Command("-viewonly", "-viewonly", "-disableRemoteEvents", null);
     vncServerReverse =
