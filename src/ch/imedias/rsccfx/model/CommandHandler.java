@@ -69,15 +69,15 @@ public class CommandHandler {
                 "x11vnc",
                 "x11vnc",
                 Rscc.getPathToOsxServer() + Rscc.DEFAULT_OSX_SERVER_FILE_NAME + " -rfbnoauth",
-                null);
+                Rscc.getPathToWindowsServer() + " -SecurityTypes=none");
     vncServerPort =
-        new Command(":", ":", " -connectPort ", null);
+        new Command(":", ":", " -connectPort ", " -PortNumber");
     vncServerLocalhost =
         new Command("-localhost");
     vncServerViewOnly =
         new Command("-viewonly", "-viewonly", "-disableRemoteEvents", null);
     vncServerReverse =
-        new Command("-connect", "-connect", "-connectHost ", null);
+        new Command("-connect", "-connect", "-connectHost ", "-connect");
     vncServerEncrypted =
         new Command("-ssl TMP", "", "", ""); // TODO: how are these commands in other OS'es?
 

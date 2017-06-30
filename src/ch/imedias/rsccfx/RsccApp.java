@@ -118,10 +118,7 @@ public class RsccApp extends Application {
     styleSheet = getClass().getClassLoader()
         .getResource("css/styles.css").toExternalForm();
 
-
-
-    SystemCommander systemCommander = new SystemCommander();
-    model = new Rscc(systemCommander, new KeyUtil(), new CommandHandler());
+    model = new Rscc(new SystemCommander(), new KeyUtil());
     ViewController mainView = new ViewController();
 
     // Initialize StatusBars

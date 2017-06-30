@@ -93,6 +93,7 @@ public class Rscc {
   private static final String KEYS_FOLDER_NAME = "keys";
   public static final String DEFAULT_SUPPORTERS_FILE_NAME = "rscc-defaults-lernstick.xml";
   public static final String DEFAULT_OSX_SERVER_FILE_NAME = "OSXvnc-server";
+  public static final String DEFAULT_WINDOWS_SERVER_FILE_NAME = "winvnc4.exe";
 
 
   /**
@@ -158,6 +159,7 @@ public class Rscc {
   private String pathToResourceKeys;
   private String pathToDefaultSupporters;
   private static String pathToOsxServer;
+  private static String pathToWindowsServer;
   private boolean isLocalIceSuccessful = false;
   private boolean isRemoteIceSuccessful = false;
   private InetAddress remoteClientIpAddress;
@@ -174,7 +176,7 @@ public class Rscc {
    * @param systemCommander a SystemComander-object that executes shell commands.
    * @param keyUtil         a KeyUtil-object which stores the key, validates and formats it.
    */
-  public Rscc(SystemCommander systemCommander, KeyUtil keyUtil, CommandHandler command) {
+  public Rscc(SystemCommander systemCommander, KeyUtil keyUtil) {
     if (systemCommander == null) {
       LOGGER.info("Parameter SystemCommander is NULL");
       throw new IllegalArgumentException("Parameter SystemCommander is NULL");
@@ -185,10 +187,9 @@ public class Rscc {
     }
     this.systemCommander = systemCommander;
     this.keyUtil = keyUtil;
-    this.command = command;
     defineResourcePath();
     loadUserPreferences();
-
+    this.command = new CommandHandler();
   }
 
   /**
@@ -266,6 +267,10 @@ public class Rscc {
           REMOVE_FILE_IN_PATH.apply(
               getClass().getClassLoader().getResource(DEFAULT_OSX_SERVER_FILE_NAME).getFile()
           );
+      pathToWindowsServer =
+          REMOVE_FILE_IN_PATH.apply(
+              getClass().getClassLoader().getResource(DEFAULT_WINDOWS_SERVER_FILE_NAME).getFile()
+          );
     } else {
       LOGGER.fine("Running in JAR");
       pathToResources = userHome + "/" + RSCC_FOLDER_NAME;
@@ -273,6 +278,7 @@ public class Rscc {
       pathToResourceKeys = pathToResources + "/" + KEYS_FOLDER_NAME;
       pathToDefaultSupporters = pathToResources + "/" + DEFAULT_SUPPORTERS_FILE_NAME;
       pathToOsxServer = pathToResources + "/" + DEFAULT_OSX_SERVER_FILE_NAME;
+      pathToWindowsServer = pathToResources + "/" + DEFAULT_WINDOWS_SERVER_FILE_NAME;
       // extract all resources out of the JAR file
       Arrays.stream(EXTRACTED_RESOURCES).forEach(resource ->
           extractJarContents(theLocationOftheRunningClass, pathToResources, resource)
@@ -545,6 +551,8 @@ public class Rscc {
    * Requests a key from the key server.
    */
   public void requestKeyFromServer() {
+    System.out.println(command.getVncServer());
+
     setConnectionEstablishmentRunning(true);
     setStatusBarKeyGeneration(strings.statusBarSettingKeyserver, STATUS_BAR_STYLE_INITIALIZE);
 
@@ -1160,5 +1168,9 @@ public class Rscc {
 
   public static String getPathToOsxServer() {
     return pathToOsxServer;
+  }
+
+  public static String getPathToWindowsServer() {
+    return pathToWindowsServer;
   }
 }
