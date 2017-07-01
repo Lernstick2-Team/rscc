@@ -58,7 +58,6 @@ public class RunRudp extends Thread {
    */
   public void run() {
     try {
-
       String remoteAddressAsString = model.getRemoteClientIpAddress().getHostAddress();
 
       if (viewerIsRudpClient && callAsViewer) {
@@ -105,11 +104,23 @@ public class RunRudp extends Thread {
 
 
       if (viewerIsRudpClient && !callAsViewer) {
+
         //RUDP Server & TCP Client
 
         //RUDP Server
         LOGGER.info("Create new rudp-server on " + model.getIcePort());
-        rudpServerSocket = new ReliableServerSocket(model.getIcePort());
+
+        int rudpSErverStartAttemptsCounter = 0;
+        while (rudpServerSocket == null && rudpSErverStartAttemptsCounter < 10){
+          try{
+            rudpServerSocket = new ReliableServerSocket(model.getIcePort());
+          } catch (IOException e){
+            rudpSErverStartAttemptsCounter++;
+            model.setIcePort(model.getIcePort() + rudpSErverStartAttemptsCounter);
+            LOGGER.info("Raised IcePort by one, because it seems occupied");
+          }
+        }
+
         rudpSocket2 = rudpServerSocket.accept();
 
         rudpInputStream = rudpSocket2.getInputStream();
@@ -142,7 +153,16 @@ public class RunRudp extends Thread {
 
         //RUDP Server
         LOGGER.info("Create new rudp-server on " + model.getIcePort());
-        rudpServerSocket = new ReliableServerSocket(model.getIcePort());
+        int rudpSErverStartAttemptsCounter = 0;
+        while (rudpServerSocket == null && rudpSErverStartAttemptsCounter < 10){
+          try{
+            rudpServerSocket = new ReliableServerSocket(model.getIcePort());
+          } catch (IOException e){
+            rudpSErverStartAttemptsCounter++;
+            model.setIcePort(model.getIcePort() + rudpSErverStartAttemptsCounter);
+            LOGGER.info("Raised IcePort by one, because it seems occupied ");
+          }
+        }
         rudpSocket2 = rudpServerSocket.accept();
         LOGGER.info("Accepted incoming rudp connection from" + rudpSocket2.getInetAddress()
             .getHostAddress());
