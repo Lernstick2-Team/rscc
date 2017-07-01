@@ -131,7 +131,8 @@ public class VncServerHandler {
           while (process.isAlive()) {
             errorString = errorReader.readLine();
 
-            if (errorString != null && errorString.contains("connection from client")) {
+            if (errorString != null && errorString.contains(
+                command.getVncServerClientConnectedMessage())) {
               LOGGER.info("Client has connected");
               model.setVncSessionRunning(true);
               if (model.getRudp() != null) {
@@ -142,6 +143,10 @@ public class VncServerHandler {
                     model.strings.statusBarVncConnectionEstablishedServer,
                     model.STATUS_BAR_STYLE_SUCCESS);
               }
+            }
+            if (errorString != null && errorString.contains(
+                command.getVncSeverClientDisconnectedMessage())) {
+                process.destroy();
             }
           }
 

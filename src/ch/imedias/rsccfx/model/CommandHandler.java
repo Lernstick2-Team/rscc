@@ -32,6 +32,8 @@ public class CommandHandler {
   private Command vncServerEncrypted;
 
   private StringProperty os = new SimpleStringProperty();
+  private Command vncSeverClientDisconnectedMessage;
+  private Command vncServerClientConnectedMessage;
 
   /**
    * Sets the currently used OS and also initializes all commands.
@@ -69,18 +71,21 @@ public class CommandHandler {
                 "x11vnc",
                 "x11vnc",
                 Rscc.getPathToOsxServer() + Rscc.DEFAULT_OSX_SERVER_FILE_NAME + " -rfbnoauth",
-                Rscc.getPathToWindowsServer() + " -SecurityTypes=none");
+                Rscc.getPathToWindowsServer() + " -SecurityTypes=none -Log=*:stderr:1 -DisableClose -DisableOptions");
     vncServerPort =
         new Command(":", ":", " -connectPort ", " -PortNumber");
     vncServerLocalhost =
-        new Command("-localhost","-localhost","-localhost",null);
+        new Command("-localhost","-localhost","-localhost","-LocalHost");
     vncServerViewOnly =
-        new Command("-viewonly", "-viewonly", "-disableRemoteEvents", null);
+        new Command("-viewonly", "-viewonly", "-disableRemoteEvents", "-AcceptKeyEvents=0 -AcceptPointerEvents=0");
     vncServerReverse =
         new Command("-connect", "-connect", "-connectHost ", "-connect");
     vncServerEncrypted =
         new Command("-ssl TMP", "", "", ""); // TODO: how are these commands in other OS'es?
-
+    vncServerClientConnectedMessage =
+        new Command("connection from client",null,null,"Connections: accepted:");
+    vncSeverClientDisconnectedMessage =
+        new Command(null,null,null, "Connections: closed:");
   }
 
   private String determineOs() {
@@ -152,6 +157,14 @@ public class CommandHandler {
 
   public String getVncServerReverse() {
     return vncServerReverse.getCommand(getOs());
+  }
+
+  public String getVncSeverClientDisconnectedMessage() {
+    return vncSeverClientDisconnectedMessage.getCommand(getOs());
+  }
+
+  public String getVncServerClientConnectedMessage() {
+    return vncServerClientConnectedMessage.getCommand(getOs());
   }
 
   private static class Command {
