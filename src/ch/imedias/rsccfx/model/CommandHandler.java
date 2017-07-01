@@ -71,13 +71,18 @@ public class CommandHandler {
                 "x11vnc",
                 "x11vnc",
                 Rscc.getPathToOsxServer() + Rscc.DEFAULT_OSX_SERVER_FILE_NAME + " -rfbnoauth",
-                Rscc.getPathToWindowsServer() + " -SecurityTypes=none -Log=*:stderr:1 -DisableClose -DisableOptions");
+                Rscc.getPathToWindowsServer()
+                    + " -SecurityTypes=none -Log=*:stderr:1 -DisableClose -DisableOptions");
     vncServerPort =
-        new Command(":", ":", " -connectPort ", " -PortNumber");
+        new Command(":", ":", " -connectPort ", " -PortNumber=");
     vncServerLocalhost =
         new Command("-localhost","-localhost","-localhost","-LocalHost");
     vncServerViewOnly =
-        new Command("-viewonly", "-viewonly", "-disableRemoteEvents", "-AcceptKeyEvents=0 -AcceptPointerEvents=0");
+        new Command(
+            "-viewonly",
+            "-viewonly",
+            "-disableRemoteEvents",
+            "-AcceptKeyEvents=0 -AcceptPointerEvents=0");
     vncServerReverse =
         new Command("-connect", "-connect", "-connectHost ", "-connect");
     vncServerEncrypted =

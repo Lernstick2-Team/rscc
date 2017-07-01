@@ -1,6 +1,7 @@
 package ch.imedias.rsccfx.model;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import org.junit.Before;
@@ -41,10 +42,10 @@ public class SystemCommanderTest {
   @Test
   public void testExecuteTerminalCommand() throws Exception {
     String testTerminalCommand = "testExecuteTerminalCommand";
-    StringBuilder command = new StringBuilder("echo ").append(testTerminalCommand);
+    StringBuilder command = new StringBuilder("find -help"); ///.append(testTerminalCommand);
     SystemCommanderReturnValues returnValues = systemCommander
         .executeTerminalCommand(command.toString());
-    assertEquals(testTerminalCommand, returnValues.getOutputString());
+    assertNotNull(returnValues.getOutputString());
   }
 
   /**

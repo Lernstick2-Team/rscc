@@ -111,10 +111,10 @@ public class RunRudp extends Thread {
         LOGGER.info("Create new rudp-server on " + model.getIcePort());
 
         int rudpSErverStartAttemptsCounter = 0;
-        while (rudpServerSocket == null && rudpSErverStartAttemptsCounter < 10){
-          try{
+        while (rudpServerSocket == null && rudpSErverStartAttemptsCounter < 10) {
+          try {
             rudpServerSocket = new ReliableServerSocket(model.getIcePort());
-          } catch (IOException e){
+          } catch (IOException e) {
             rudpSErverStartAttemptsCounter++;
             model.setIcePort(model.getIcePort() + rudpSErverStartAttemptsCounter);
             LOGGER.info("Raised IcePort by one, because it seems occupied");
@@ -154,10 +154,10 @@ public class RunRudp extends Thread {
         //RUDP Server
         LOGGER.info("Create new rudp-server on " + model.getIcePort());
         int rudpSErverStartAttemptsCounter = 0;
-        while (rudpServerSocket == null && rudpSErverStartAttemptsCounter < 10){
-          try{
+        while (rudpServerSocket == null && rudpSErverStartAttemptsCounter < 10) {
+          try {
             rudpServerSocket = new ReliableServerSocket(model.getIcePort());
-          } catch (IOException e){
+          } catch (IOException e) {
             rudpSErverStartAttemptsCounter++;
             model.setIcePort(model.getIcePort() + rudpSErverStartAttemptsCounter);
             LOGGER.info("Raised IcePort by one, because it seems occupied ");
