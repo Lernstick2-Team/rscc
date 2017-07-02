@@ -246,7 +246,7 @@ public class Rscc {
    */
   private void defineResourcePath() {
     String userHome = System.getProperty("user.home");
-    String apppdata = System.getenv("APPDATA");
+    String apppdata = System.getenv("LOCALAPPDATA");
     LOGGER.info("userHome " + userHome);
     LOGGER.info("appData " + apppdata);
 
