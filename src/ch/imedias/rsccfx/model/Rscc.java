@@ -246,7 +246,10 @@ public class Rscc {
    */
   private void defineResourcePath() {
     String userHome = System.getProperty("user.home");
-    LOGGER.fine("userHome " + userHome);
+    String apppdata = System.getenv("APPDATA");
+    LOGGER.info("userHome " + userHome);
+    LOGGER.info("appData " + apppdata);
+
     URL theLocationOftheRunningClass = this.getClass().getProtectionDomain()
         .getCodeSource().getLocation();
     LOGGER.fine("Source Location: " + theLocationOftheRunningClass);
